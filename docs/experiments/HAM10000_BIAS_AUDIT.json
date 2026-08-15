@@ -1,0 +1,127 @@
+{
+  "metadata_rows": 10015,
+  "class_counts_total": {
+    "akiec": 327,
+    "bcc": 514,
+    "bkl": 1099,
+    "df": 115,
+    "mel": 1113,
+    "nv": 6705,
+    "vasc": 142
+  },
+  "class_prevalence_total": {
+    "akiec": 0.032651023464802795,
+    "bcc": 0.05132301547678482,
+    "bkl": 0.10973539690464304,
+    "df": 0.011482775836245632,
+    "mel": 0.11113330004992511,
+    "nv": 0.6694957563654518,
+    "vasc": 0.014178731902146779
+  },
+  "rare_classes_below_2_percent": [
+    "df",
+    "vasc"
+  ],
+  "split_class_counts": {
+    "train": {
+      "akiec": 230,
+      "bcc": 351,
+      "bkl": 782,
+      "df": 67,
+      "mel": 779,
+      "nv": 4689,
+      "vasc": 101
+    },
+    "val": {
+      "akiec": 49,
+      "bcc": 97,
+      "bkl": 145,
+      "df": 38,
+      "mel": 148,
+      "nv": 1000,
+      "vasc": 12
+    },
+    "test": {
+      "akiec": 48,
+      "bcc": 66,
+      "bkl": 172,
+      "df": 10,
+      "mel": 186,
+      "nv": 1016,
+      "vasc": 29
+    }
+  },
+  "split_class_prevalence": {
+    "train": {
+      "akiec": 0.03286183740534362,
+      "bcc": 0.05015002143163309,
+      "bkl": 0.1117302471781683,
+      "df": 0.009572796113730533,
+      "mel": 0.11130161451635948,
+      "nv": 0.669952850407201,
+      "vasc": 0.014430632947563938
+    },
+    "val": {
+      "akiec": 0.03290799194089993,
+      "bcc": 0.0651443922095366,
+      "bkl": 0.09738079247817327,
+      "df": 0.02552048354600403,
+      "mel": 0.09939556749496306,
+      "nv": 0.6715916722632639,
+      "vasc": 0.008059100067159167
+    },
+    "test": {
+      "akiec": 0.03143418467583497,
+      "bcc": 0.043222003929273084,
+      "bkl": 0.11263916175507531,
+      "df": 0.006548788474132285,
+      "mel": 0.12180746561886051,
+      "nv": 0.6653569089718402,
+      "vasc": 0.01899148657498363
+    }
+  },
+  "available_demographic_columns": [
+    "age",
+    "sex",
+    "localization"
+  ],
+  "missing_demographic_columns": [
+    "patient_id",
+    "skin_tone",
+    "fitzpatrick",
+    "fitzpatrick_type",
+    "melanin_index"
+  ],
+  "missing_values": {
+    "age": 57,
+    "sex": 0,
+    "localization": 0
+  },
+  "sex_distribution": {
+    "male": 5406,
+    "female": 4552,
+    "unknown": 57
+  },
+  "localization_distribution": {
+    "back": 2192,
+    "lower extremity": 2077,
+    "trunk": 1404,
+    "upper extremity": 1118,
+    "abdomen": 1022,
+    "face": 745,
+    "chest": 407,
+    "foot": 319,
+    "unknown": 234,
+    "neck": 168,
+    "scalp": 128,
+    "hand": 90,
+    "ear": 56,
+    "genital": 48,
+    "acral": 7
+  },
+  "skin_tone_analysis": {
+    "performed": false,
+    "reason": "HAM10000 metadata does not provide a validated skin-tone or Fitzpatrick label; no tone group was inferred from pixels.",
+    "external_validation_recommended": true
+  }
+}

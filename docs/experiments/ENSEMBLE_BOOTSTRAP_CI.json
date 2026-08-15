@@ -1,0 +1,45 @@
+{
+  "predictions": "ml_artifacts/ham10000/ensemble/test_predictions.npz",
+  "sample_count": 1527,
+  "bootstrap_repeats": 1000,
+  "seed": 42,
+  "confidence_level": 0.95,
+  "intervals": {
+    "multiclass_macro_f1": {
+      "n": 1000,
+      "estimate": 0.472673531021359,
+      "lower": 0.428161380156374,
+      "upper": 0.5185877564582859
+    },
+    "multiclass_auroc_macro_ovr": {
+      "n": 1000,
+      "estimate": 0.9095404182395694,
+      "lower": 0.8922614092524636,
+      "upper": 0.9241671427334077
+    },
+    "binary_auroc": {
+      "n": 1000,
+      "estimate": 0.8606992695326284,
+      "lower": 0.8398366220362461,
+      "upper": 0.8813594184156601
+    },
+    "binary_sensitivity": {
+      "n": 1000,
+      "estimate": 0.7159973588253847,
+      "lower": 0.6610452963640884,
+      "upper": 0.76925
+    },
+    "binary_specificity": {
+      "n": 1000,
+      "estimate": 0.8055781499190648,
+      "lower": 0.7831024172183,
+      "upper": 0.8272905608929894
+    },
+    "binary_f1": {
+      "n": 1000,
+      "estimate": 0.5694521549808046,
+      "lower": 0.5261360762571734,
+      "upper": 0.613124771834991
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "dataset": "HAM10000",
+  "source_doi": "10.7910/DVN/DBW86T",
+  "source_url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T",
+  "version": "4.0",
+  "license": "CC BY-NC 4.0",
+  "academic_noncommercial_use_confirmed": true,
+  "seed": 42,
+  "image_count": 10015,
+  "metadata_row_count": 10015,
+  "missing_image_count": 0,
+  "unique_lesion_groups": 7470,
+  "classes": [
+    "akiec",
+    "bcc",
+    "bkl",
+    "df",
+    "mel",
+    "nv",
+    "vasc"
+  ],
+  "malignant_classes": [
+    "akiec",
+    "bcc",
+    "mel"
+  ],
+  "class_counts": {
+    "train": {
+      "akiec": 230,
+      "bcc": 351,
+      "bkl": 782,
+      "df": 67,
+      "mel": 779,
+      "nv": 4689,
+      "vasc": 101
+    },
+    "val": {
+      "akiec": 49,
+      "bcc": 97,
+      "bkl": 145,
+      "df": 38,
+      "mel": 148,
+      "nv": 1000,
+      "vasc": 12
+    },
+    "test": {
+      "akiec": 48,
+      "bcc": 66,
+      "bkl": 172,
+      "df": 10,
+      "mel": 186,
+      "nv": 1016,
+      "vasc": 29
+    }
+  },
+  "group_counts": {
+    "train": 5228,
+    "val": 1121,
+    "test": 1121
+  },
+  "split_fractions": {
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "metadata_sha256": "de17ec44cb25ea9c3f6378ba18d69224c740afd62e86ec2edc6a894d6aa663d3"
+}
