@@ -1,48 +1,59 @@
-# Análise de prontidão do sistema
+# Análise de prontidão e lacunas
 
-## Estado atual
+## Diagnóstico executivo
 
-O núcleo científico está executável: CNN ResNet-50, ViT, híbrido CNN–ViT, ensemble, triagem OOD, incerteza e heatmaps funcionam com os artefatos locais. A verificação TypeScript passou, os oito testes Python passaram e o teste end-to-end direto do serviço TypeScript executou triagem, os três modelos, ensemble e heatmaps sobre uma imagem HAM10000 real.
+O projeto está **funcional como protótipo científico integrado**. O núcleo de aprendizado de máquina, a triagem OOD, a explicabilidade e a integração TypeScript–Python foram implementados. Os checkpoints locais CNN, ViT e híbrido existem, o ensemble foi recalculado e os testes automatizados continuam aprovados.
 
-Entretanto, o projeto ainda deve ser tratado como um **protótipo científico integrado**, e não como um sistema de produção ou dispositivo clínico pronto. A diferença principal está nos testes de integração HTTP/tRPC, na persistência real, na autenticação visível e em algumas telas que ainda usam dados simulados.
+O projeto ainda não deve ser descrito como produto clínico pronto. Os bloqueios restantes são de ambiente de produção, validação científica final e publicação. Nesta sessão também foi corrigido um problema de execução: o servidor de desenvolvimento não resolvia `@shared/const` porque faltava um `tsconfig.json` raiz; o arquivo foi adicionado e o servidor passou a iniciar na porta 3000.
 
-## Pendências críticas para declarar o sistema completo
+## Estado por área
 
-| Prioridade | Pendência | Estado atual | Trabalho necessário | Critério de conclusão |
-|---|---|---|---|---|
-| P0 | Banco de dados | `DATABASE_URL` não estava configurada no ambiente de validação; o seed de métricas não foi executado | Aplicar as migrações, executar `scripts/seed_model_metrics.ts` e verificar `metrics.getAllMetrics` com dados reais | As quatro linhas de métricas aparecem na interface e permanecem após reinício |
-| P0 | Persistência de imagens | O upload implementado grava no diretório local `runtime/uploads`; isso é adequado para teste local, mas não é armazenamento persistente de produção | Usar o armazenamento persistente configurado, salvar a chave/URL no banco e baixar temporariamente a imagem apenas durante a inferência | Upload, classificação e consulta histórica continuam funcionando depois de reiniciar o processo |
-| P0 | Autenticação da interface | As mutations de upload/classificação são protegidas, mas a página de diagnóstico não mostra um fluxo explícito de login quando não há sessão | Adicionar estado de sessão, botão de entrada e mensagem clara para usuário não autenticado | Usuário não autenticado vê orientação de login; usuário autenticado consegue completar o fluxo |
-| P0 | Histórico | `HistoryTab.tsx` ainda exibe três registros fictícios e não chama `diagnosis.getHistory` | Substituir `mockHistory` por `trpc.diagnosis.getHistory.useQuery`, ligar detalhes ao registro real e remover botões sem ação | A tela mostra zero registros quando vazia e os diagnósticos reais após uma classificação |
-| P0 | Integração tRPC | O teste end-to-end atual chama o serviço TypeScript diretamente, sem passar por autenticação, upload, banco e HTTP | Criar testes com caller tRPC/contexto autenticado e, quando possível, teste HTTP de upload → classificação → histórico | O caminho completo é coberto por teste automatizado, incluindo rejeição OOD |
-
-## Pendências importantes do back-end
-
-| Área | O que falta | Observação científica ou operacional |
+| Área | Estado atual | Classificação |
 |---|---|---|
-| Testes TypeScript | Há somente um teste Vitest de logout | Faltam testes de upload, autorização por usuário, rejeição OOD, classificação aceita, métricas e histórico |
-| Modelo de dados | A migração não declara chave única para `(model_name, model_version)`, nem índices ou chaves estrangeiras para imagens/diagnósticos | O `upsert` das métricas não é plenamente idempotente sem uma restrição única; isso deve ser corrigido antes de produção |
-| Armazenamento de heatmaps | Os heatmaps são gerados no filesystem e expostos por uma rota estática de runtime | Para produção, devem ser enviados ao armazenamento persistente e referenciados por URL/chave |
-| Observabilidade | Não há health check específico para Python, checkpoints, referência OOD e pesos do ensemble | Adicionar verificação de inicialização, logs estruturados, latência, timeout e mensagens operacionais sem vazar caminhos sensíveis |
-| Limites de entrada | O upload usa base64 dentro de uma mutation tRPC | Funciona para o protótipo, mas multipart ou upload direto ao armazenamento é mais adequado para arquivos grandes |
-| Documentação | `ml/README.md` ainda não descreve todas as variáveis novas, como referência OOD e pesos do ensemble | Atualizar o procedimento de instalação e configuração para outro computador ou servidor |
+| CNN ResNet-50 | Checkpoint treinado e avaliado no HAM10000 | Concluída para protótipo |
+| ViT | Checkpoint treinado e avaliado no HAM10000 | Concluída para protótipo |
+| Híbrido CNN–ViT | Checkpoint treinado e avaliado no HAM10000 | Concluída para protótipo |
+| Ensemble | Pesos calibrados na validação e métricas de teste salvas | Concluída para protótipo |
+| Calibração e incerteza | Temperatura, TTA, entropia e abstensão implementadas | Concluída para protótipo |
+| Heatmaps | Grad-CAM, tokens, atenção e mapa híbrido produzidos | Concluída para protótipo |
+| Gate OOD | HAM10000 aceito; carro e cabeça/cabelo rejeitados | Smoke test concluído |
+| TypeScript e tRPC | Rotas, serviço Python, autorização e build funcionando | Concluída localmente |
+| Servidor de desenvolvimento | Inicia após correção do `tsconfig.json` raiz | Concluída localmente |
+| Banco | Schema e migrações verificadas, mas sem `DATABASE_URL` | Pendente de ambiente |
+| Armazenamento persistente | Código preparado, credenciais ausentes | Pendente de ambiente |
+| Teste visual autenticado | Browser da sessão indisponível | Pendente de execução visual |
+| GitHub | Commit local `412a3f4` pronto, conector desabilitado | Bloqueado por permissão |
 
-## Pendências científicas antes da versão final da dissertação
+## Pendências críticas operacionais
 
-O conjunto atual foi treinado com poucas épocas, resolução 160×160 e backbone congelado para permitir execução em CPU. Para uma versão experimental final, é recomendável repetir o treinamento em GPU com 224×224, descongelamento progressivo, mais épocas, múltiplas sementes e intervalos de confiança por bootstrap. Também faltam validação externa, agrupamento por paciente caso o identificador esteja disponível, análise por sexo/idade/localização, estudo de limiar clínico, curva de calibração multiclasses e conjunto OOD externo maior.
+### Banco de dados
 
-Os casos de carro, cabeça/cabelo e imagem uniforme são testes de fumaça úteis, mas não constituem uma validação abrangente do detector de domínio. O sistema deve rejeitar esses exemplos, porém não é cientificamente correto afirmar rejeição perfeita para qualquer fotografia fora do domínio sem um conjunto externo representativo.
+`DATABASE_URL` não está configurada nesta sessão. É necessário provisionar MySQL/TiDB, aplicar as migrações e executar `scripts/seed_model_metrics.ts`. O critério de conclusão é conseguir carregar as quatro linhas de métricas pela rota real, persistir um diagnóstico e recuperar seu histórico após reiniciar o servidor.
 
-## Pendências de interface e acabamento
+### Armazenamento persistente
 
-A tela de resultados já recebe a resposta real e exibe qualidade, OOD, incerteza, abstensão e heatmaps. A tela de métricas já consulta a API real. Ainda é necessário validar visualmente no navegador os estados de carregamento, rejeição, erro de sessão, ausência de métricas, heatmap ausente e histórico vazio.
+As imagens e heatmaps usam filesystem local somente no modo de desenvolvimento. Em produção, o código exige armazenamento persistente configurado e falha explicitamente quando ele não existe. É necessário configurar o serviço de armazenamento, testar upload, materialização temporária para inferência, remoção do temporário e persistência das URLs dos heatmaps.
 
-O HTML de entrada ainda contém placeholders de analytics que produzem avisos no build quando as variáveis não estão definidas. Isso não bloqueia o algoritmo, mas deve ser removido ou configurado antes da publicação. Também é recomendável revisar acessibilidade, textos sem acentuação em telas antigas, foco por teclado e responsividade em telas pequenas.
+### Autenticação e validação no navegador
+
+As rotas protegidas respondem `401 UNAUTHORIZED` sem sessão, e a interface contém o fluxo explícito de autenticação. Ainda falta executar o teste visual em um navegador com sessão válida, verificando upload, estado de carregamento, resultado aceito, rejeição OOD, erro, ausência de métricas, histórico vazio e histórico preenchido.
+
+### Publicação
+
+O projeto está na branch local `feat/scientific-ml-backend`, commit `412a3f4`, com árvore de trabalho limpa. O GitHub permanece desabilitado na sessão; por isso, o push não foi concluído. É necessário habilitar o conector GitHub e executar `git push -u origin feat/scientific-ml-backend`, ou baixar o pacote-fonte seguro e executar esse comando em um ambiente com credencial de escrita.
+
+## Pendências científicas
+
+A rodada disponível foi executada em CPU com duas épocas, resolução 160×160 e backbone congelado. Para a versão final da dissertação, recomenda-se retreinar com GPU, 224×224, mais épocas, descongelamento progressivo, ajuste de hiperparâmetros e múltiplas sementes. O ensemble e os intervalos de confiança devem ser recalculados após o retreinamento.
+
+O HAM10000 possui desbalanceamento severo, suporte de teste baixo para `df` e `vasc`, ausência de `patient_id` no metadata utilizado e ausência de rótulo validado de tom de pele/Fitzpatrick. Não é permitido afirmar equidade para peles negras ou desempenho clínico geral somente com essa base. É necessária validação externa autorizada com anotação tonal confiável, análise por subgrupo e relato de suporte e intervalos.
+
+Os exemplos de carro, cabeça/cabelo e imagem uniforme comprovam apenas um smoke test do gate de domínio. Uma avaliação científica deverá incluir um conjunto OOD externo documentado, com objetos, rostos, cabelos, fotografias clínicas não dermatoscópicas, desfoque, iluminação extrema e imagens de outras modalidades.
+
+Os heatmaps são explicações aproximadas. Sem máscaras clínicas ou anotação de localização, não devem ser apresentados como prova de causalidade, delimitação anatômica ou garantia de que o modelo ignorou artefatos.
 
 ## Ordem recomendada de fechamento
 
-Primeiro, configurar e migrar o banco, executar o seed de métricas e substituir o histórico simulado. Em seguida, corrigir persistência de imagens e heatmaps, adicionar o estado de login e criar os testes de integração tRPC. Depois, executar os testes no navegador em todos os estados e validar o build com as variáveis de produção. Por fim, registrar os resultados científicos finais, atualizar a documentação e publicar o branch quando a permissão de escrita estiver habilitada.
+A ordem prática é configurar banco e armazenamento persistente; executar seed e fluxo completo de upload, classificação e histórico; validar a interface com sessão autenticada; treinar a versão científica final na GPU; executar validação externa e análise de subgrupos; recalcular ensemble, calibração e bootstrap; atualizar a dissertação; habilitar o conector GitHub; e publicar a branch segura.
 
-## Conclusão
-
-O sistema **não está bloqueado no núcleo de aprendizado de máquina**, que já funciona e foi testado. Os bloqueios para considerá-lo totalmente pronto são principalmente de integração e operação: banco configurado e populado, armazenamento persistente, autenticação explícita, histórico real, testes tRPC/HTTP e validação visual da interface. Para a dissertação, ainda existe uma segunda camada de trabalho científico: treinamento mais robusto, validação externa e quantificação de incerteza com intervalos de confiança.
+Até que essas etapas sejam concluídas, a formulação correta é: **backend científico integrado e testado localmente, pronto para a etapa de implantação e validação científica final**.

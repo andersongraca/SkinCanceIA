@@ -44,7 +44,7 @@ pip install -r requirements-ml.txt
 pnpm install
 ```
 
-A aplicação web exige Node.js 18 ou superior, pnpm e um banco MySQL/TiDB quando o histórico e as métricas persistidas forem habilitados.
+A aplicação web exige Node.js 18 ou superior, pnpm e um banco MySQL/TiDB quando o histórico e as métricas persistidas forem habilitados. O arquivo [`.env.example`](.env.example) lista as variáveis necessárias sem conter credenciais reais; copie-o para um arquivo local e preencha somente os valores do seu ambiente.
 
 ## Preparação e treinamento
 
