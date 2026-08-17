@@ -185,6 +185,29 @@ def train_one(model_name: str, config: ExperimentConfig) -> dict[str, Any]:
     best_epoch = -1
     history: list[dict[str, Any]] = []
     for epoch in range(config.epochs):
+        should_freeze = bool(
+            config.freeze_backbone
+            and (config.unfreeze_backbone_after == 0 or epoch < config.unfreeze_backbone_after)
+        )
+        if getattr(model, "freeze_backbone", False) != should_freeze:
+            _set_backbone_trainability(model, freeze=should_freeze)
+            model.freeze_backbone = should_freeze
+            if not should_freeze:
+                unfrozen_parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
+                optimizer = torch.optim.AdamW(
+                    unfrozen_parameters,
+                    lr=config.learning_rate * 0.1,
+                    weight_decay=config.weight_decay,
+                )
+                scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                    optimizer,
+                    T_max=max(config.epochs - epoch, 1),
+                )
+                print(json.dumps({
+                    "event": "backbone_unfrozen",
+                    "epoch": epoch + 1,
+                    "learning_rate": config.learning_rate * 0.1,
+                }, ensure_ascii=False))
         train_loss, train_metrics, _ = _run_epoch(model, train_loader, optimizer, class_loss, binary_loss, device, scaler, list(config.classes))
         with torch.no_grad():
             val_loss, val_metrics, val_raw = _run_epoch(model, val_loader, None, class_loss, binary_loss, device, None, list(config.classes))
@@ -205,7 +228,7 @@ def train_one(model_name: str, config: ExperimentConfig) -> dict[str, Any]:
         temperatures = {"multiclass": 1.0, "binary": 1.0}
     (output_dir / "calibration.json").write_text(json.dumps(temperatures, indent=2), encoding="utf-8")
     (output_dir / "history.json").write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
-    summary = {"model": model_name, "device": str(device), "best_epoch": best_epoch, "best_validation_score": best_score, "used_pretrained": used_pretrained, "freeze_backbone": bool(config.freeze_backbone), "balanced_sampling": bool(config.balanced_sampling), "sampling_strategy": sampling_strategy, "trainable_parameter_count": int(sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)), "calibration": temperatures, "last_epoch": best}
+    summary = {"model": model_name, "device": str(device), "best_epoch": best_epoch, "best_validation_score": best_score, "used_pretrained": used_pretrained, "freeze_backbone": bool(config.freeze_backbone), "unfreeze_backbone_after": int(config.unfreeze_backbone_after), "balanced_sampling": bool(config.balanced_sampling), "sampling_strategy": sampling_strategy, "trainable_parameter_count": int(sum(parameter.numel() for parameter in model.parameters() if parameter.requires_grad)), "calibration": temperatures, "last_epoch": best}
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False, default=float), encoding="utf-8")
     return summary
 
@@ -221,6 +244,7 @@ def main() -> None:
     parser.add_argument("--image-size", type=int, default=224)
     parser.add_argument("--no-pretrained", action="store_true")
     parser.add_argument("--freeze-backbone", action="store_true", help="Congela o backbone e treina somente as cabeças/transformer")
+    parser.add_argument("--unfreeze-backbone-after", type=int, default=0, help="Descongela o backbone após este número de épocas congeladas; requer --freeze-backbone")
     parser.add_argument("--balanced-sampler", action="store_true", help="Usa amostragem com raiz inversa da frequência somente no treino")
     args = parser.parse_args()
     config = ExperimentConfig(
@@ -233,6 +257,7 @@ def main() -> None:
         image_size=args.image_size,
         pretrained=not args.no_pretrained,
         freeze_backbone=args.freeze_backbone,
+        unfreeze_backbone_after=max(args.unfreeze_backbone_after, 0),
         balanced_sampling=args.balanced_sampler,
     )
     names = ["cnn", "vit", "hybrid"] if args.model == "all" else [args.model]

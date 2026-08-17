@@ -20,10 +20,12 @@ python3 -m ml.skin_cancer_ml.train \
   --model all \
   --epochs 20 \
   --batch-size 16 \
+  --freeze-backbone \
+  --unfreeze-backbone-after 5 \
   --balanced-sampler
 ```
 
-A configuração padrão usa transferência de aprendizado quando os pesos podem ser obtidos, focal loss com pesos por número efetivo de amostras, supervisão multitarefa, divisão por grupo, AdamW, clipping de gradiente, scheduler cosseno e calibração de temperatura no conjunto de validação. A opção `--balanced-sampler` ativa, somente no treino, amostragem com raiz inversa da frequência e reposição; validação e teste permanecem com a distribuição original. Se pesos externos não estiverem disponíveis, o treinador registra a inicialização sem pré-treinamento; isso não deve ser confundido com resultado final.
+A configuração usa transferência de aprendizado quando os pesos podem ser obtidos, focal loss com pesos por número efetivo de amostras, supervisão multitarefa, divisão por grupo, AdamW, clipping de gradiente, scheduler cosseno e calibração de temperatura no conjunto de validação. A opção `--balanced-sampler` ativa, somente no treino, amostragem com raiz inversa da frequência e reposição; validação e teste permanecem com a distribuição original. Com `--freeze-backbone --unfreeze-backbone-after 5`, as cinco primeiras épocas treinam as cabeças e as épocas seguintes descongelam o backbone com taxa de aprendizagem dez vezes menor, reduzindo o risco de destruir as representações pré-treinadas. O valor padrão `0` mantém o backbone congelado durante toda a execução. Se pesos externos não estiverem disponíveis, o treinador registra a inicialização sem pré-treinamento; isso não deve ser confundido com resultado final.
 
 ## Inferência
 
@@ -48,7 +50,7 @@ Para CNN, o pipeline gera Grad-CAM. Para ViT, gera atribuição dos tokens por g
 
 ## Integração com o servidor
 
-O servidor TypeScript chama os módulos Python por processo controlado, sem `shell` intermediário e com timeout. Configure `ML_PROJECT_ROOT`, `ML_PYTHON_PATH`, `ML_CNN_CHECKPOINT`, `ML_VIT_CHECKPOINT`, `ML_HYBRID_CHECKPOINT` e `ML_MODEL_VERSION` no ambiente de execução. Não commite essas variáveis em arquivos `.env` ou no repositório.
+O servidor TypeScript chama os módulos Python por processo controlado, sem `shell` intermediário e com timeout. Configure `ML_PROJECT_ROOT`, `ML_PYTHON_PATH`, `ML_CNN_CHECKPOINT`, `ML_VIT_CHECKPOINT`, `ML_HYBRID_CHECKPOINT`, `ML_DOMAIN_REFERENCE`, `ML_ENSEMBLE_WEIGHTS_PATH`, `ML_MODEL_VERSION` e `ML_INFERENCE_TIMEOUT_MS` no ambiente de execução. Para produção, configure também `DATABASE_URL`, `BUILT_IN_FORGE_API_URL` e `BUILT_IN_FORGE_API_KEY` para banco e armazenamento persistente. Não commite essas variáveis em arquivos `.env` ou no repositório.
 
 A mutação protegida `diagnosis.classifyStoredImage` recebe o identificador de uma imagem já persistida, valida a propriedade pelo usuário autenticado, executa a inferência e grava o diagnóstico. A rota não aceita caminho arbitrário informado por usuário não autenticado.
 

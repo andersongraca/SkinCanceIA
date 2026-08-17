@@ -27,6 +27,7 @@ class ExperimentConfig:
     model_name: str = "all"
     pretrained: bool = True
     freeze_backbone: bool = False
+    unfreeze_backbone_after: int = 0
     use_class_balanced_focal: bool = True
     balanced_sampling: bool = False
     focal_gamma: float = 2.0
