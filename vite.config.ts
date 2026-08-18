@@ -5,7 +5,7 @@ import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/SkinCancerCADDermoIA/",
+  base: "/SkinCanceIA/",
   plugins: [react(), tailwindcss(), jsxLocPlugin()],
   resolve: {
     alias: {
