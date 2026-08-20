@@ -1,63 +1,88 @@
-import fs from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { upsertModelMetric } from "../server/db";
 
-const root = path.join(process.env.ML_PROJECT_ROOT || process.cwd(), "ml_artifacts", "ham10000");
-const version = "ham10000-160px-cpu-epoch2";
+type BinaryMetrics = {
+  accuracy: number;
+  sensitivity: number;
+  specificity: number;
+  precision: number;
+  f1: number;
+  auroc: number;
+};
 
-interface MetricSource {
-  name: string;
-  dir: string;
+type MetricsPayload = {
+  test_sample_count: number;
+  component_test_metrics: Record<string, { binary?: BinaryMetrics }>;
+  ensemble_test_metrics?: { binary?: BinaryMetrics };
+};
+
+const projectRoot = process.env.ML_PROJECT_ROOT || process.cwd();
+const metricsPath = path.join(
+  projectRoot,
+  "ml_artifacts",
+  "ham10000",
+  "ensemble",
+  "test_metrics.json",
+);
+const modelVersion = process.env.ML_MODEL_VERSION || "ham10000-160px-epoch2";
+
+function percent(value: number | undefined): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw new Error("Métrica ausente ou inválida no test_metrics.json");
+  }
+  return Math.round(value * 100);
 }
 
-const sources: MetricSource[] = [
-  { name: "CNN (ResNet-50)", dir: "cnn" },
-  { name: "Vision Transformer", dir: "vit" },
-  { name: "Hibrido CNN-ViT", dir: "hybrid" },
-  { name: "Ensemble Learning", dir: "ensemble" },
-];
+function toDatabaseMetric(modelName: string, binary: BinaryMetrics, sampleCount: number) {
+  return {
+    modelName,
+    modelVersion,
+    accuracy: percent(binary.accuracy),
+    sensitivity: percent(binary.sensitivity),
+    specificity: percent(binary.specificity),
+    f1Score: percent(binary.f1),
+    auc: percent(binary.auroc),
+    precision: percent(binary.precision),
+    sampleCount,
+  };
+}
 
 async function main() {
-  console.log(`Persistindo métricas reais para versão: ${version}`);
-  
-  for (const source of sources) {
-    const metricsPath = path.join(root, source.dir, "test_metrics.json");
-    if (!fs.existsSync(metricsPath)) {
-      console.warn(`Aviso: Métricas não encontradas para ${source.name} em ${metricsPath}`);
-      continue;
-    }
+  const payload = JSON.parse(await fs.readFile(metricsPath, "utf8")) as MetricsPayload;
+  const sampleCount = payload.test_sample_count;
+  if (!Number.isInteger(sampleCount) || sampleCount <= 0) {
+    throw new Error("test_sample_count inválido no test_metrics.json");
+  }
 
-    const text = fs.readFileSync(metricsPath, "utf8").trim();
-    const raw = source.dir === "ensemble"
-      ? JSON.parse(text)
-      : JSON.parse(text.split(/\r?\n/, 1)[0]);
-    // O ensemble tem uma estrutura levemente diferente no JSON gerado pelo script ensemble.py
-    const data = source.dir === "ensemble" ? raw.ensemble_test_metrics : raw.metrics;
-    
-    if (!data || !data.binary || !data.multiclass) {
-      console.warn(`Aviso: Formato de métricas inválido para ${source.name}`);
-      continue;
-    }
+  const modelSpecs = [
+    ["CNN (ResNet-50)", "cnn"],
+    ["Vision Transformer", "vit"],
+    ["Hibrido CNN-ViT", "hybrid"],
+  ] as const;
 
-    const payload = {
-      modelName: source.name,
-      modelVersion: version,
-      accuracy: Math.round(data.binary.accuracy * 100),
-      sensitivity: Math.round(data.binary.sensitivity * 100),
-      specificity: Math.round(data.binary.specificity * 100),
-      f1Score: Math.round(data.binary.f1 * 100),
-      auc: Math.round(data.binary.auroc * 100),
-      precision: Math.round(data.binary.precision * 100),
-      sampleCount: 1527,
-    };
+  const metrics = modelSpecs.map(([modelName, key]) => {
+    const binary = payload.component_test_metrics[key]?.binary;
+    if (!binary) throw new Error(`Métricas binárias ausentes para ${key}`);
+    return toDatabaseMetric(modelName, binary, sampleCount);
+  });
 
-    const saved = await upsertModelMetric(payload);
-    if (saved) {
-      console.log(`[OK] ${source.name}: ${payload.auc}% AUROC, ${payload.f1Score}% F1 (binário)`);
-    } else {
-      console.warn(`[SKIP] ${source.name}: Banco de dados não disponível.`);
-    }
+  const ensembleBinary = payload.ensemble_test_metrics?.binary;
+  if (!ensembleBinary) throw new Error("Métricas binárias ausentes para ensemble");
+  metrics.push(toDatabaseMetric("Ensemble Learning", ensembleBinary, sampleCount));
+
+  for (const metric of metrics) {
+    const saved = await upsertModelMetric(metric);
+    if (!saved) throw new Error("Banco de dados indisponível para persistir as métricas.");
+    console.log(
+      `${metric.modelName}: AUROC=${metric.auc}% | sensibilidade=${metric.sensitivity}% | especificidade=${metric.specificity}% | F1=${metric.f1Score}% | n=${metric.sampleCount}`,
+    );
   }
 }
 
-main().catch(console.error);
+main()
+  .then(() => process.exit(0))
+  .catch(error => {
+    console.error("Falha ao persistir métricas reais:", error);
+    process.exit(1);
+  });
