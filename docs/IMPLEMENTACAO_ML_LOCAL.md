@@ -90,7 +90,14 @@ PYTHONPATH=ml python3 ml/bootstrap_metrics.py \
 pnpm exec tsx scripts/persist_real_metrics.ts
 ```
 
-Para iniciar o servidor local, copie `.env.example` para `.env`, ajuste os caminhos absolutos e configure um banco MySQL/TiDB se desejar histórico e métricas persistidas. A configuração mínima dos modelos é `ML_PROJECT_ROOT`, `ML_PYTHON_PATH`, `ML_DOMAIN_REFERENCE`, `ML_MODEL_VERSION` e os três caminhos de checkpoint. O armazenamento persistente de produção também exige as variáveis do serviço de storage.
+Para configurar o banco local de forma automatizada em Ubuntu/Debian com MariaDB ou MySQL instalado, execute:
+
+```bash
+chmod +x scripts/setup_local_db.sh
+./scripts/setup_local_db.sh
+```
+
+O script cria o schema `skincancer`, um usuário de aplicação restrito ao próprio banco, grava um `.env` com permissão `600` e aplica `pnpm db:push`. Ele é idempotente: se `DATABASE_URL` já existir, preserva a configuração atual e apenas verifica/aplica o schema. Para iniciar o servidor local, copie `.env.example` para `.env` caso ainda não use o script, ajuste os caminhos absolutos e configure um banco MySQL/TiDB se desejar histórico e métricas persistidas. A configuração mínima dos modelos é `ML_PROJECT_ROOT`, `ML_PYTHON_PATH`, `ML_DOMAIN_REFERENCE`, `ML_MODEL_VERSION` e os três caminhos de checkpoint. O armazenamento persistente de produção também exige as variáveis do serviço de storage.
 
 ## Verificações realizadas
 
