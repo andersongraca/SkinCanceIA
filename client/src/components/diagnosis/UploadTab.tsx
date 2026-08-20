@@ -86,6 +86,7 @@ export default function UploadTab({
     }
 
     onClassificationStart();
+
     try {
       const dataUrl = await fileToDataUrl(selectedImage);
       const uploaded = await uploadMutation.mutateAsync({

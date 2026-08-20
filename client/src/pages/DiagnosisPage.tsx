@@ -12,7 +12,7 @@ import { Upload, History, BarChart3, FileText, Loader2, LogIn } from 'lucide-rea
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/_core/hooks/useAuth';
-import { getLoginUrl } from '@/const';
+import { getLoginUrl, isAuthConfigured } from '@/const';
 import UploadTab from '@/components/diagnosis/UploadTab';
 import ResultsTab from '@/components/diagnosis/ResultsTab';
 import HistoryTab from '@/components/diagnosis/HistoryTab';
@@ -37,6 +37,7 @@ interface ClassificationState {
  */
 export default function DiagnosisPage() {
   const auth = useAuth();
+  const authConfigured = isAuthConfigured;
 
   // Estado para controlar qual aba está ativa
   const [activeTab, setActiveTab] = useState<string>('upload');
@@ -60,7 +61,7 @@ export default function DiagnosisPage() {
   }
 
   if (!auth.isAuthenticated) {
-    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-6"><Card className="max-w-md w-full"><CardHeader><CardTitle>Acesso à análise dermatológica</CardTitle><CardDescription>Entre para carregar imagens, executar a triagem e consultar o histórico protegido.</CardDescription></CardHeader><CardContent><Button className="w-full" onClick={() => { window.location.href = getLoginUrl(); }}><LogIn className="h-4 w-4 mr-2" />Entrar para continuar</Button></CardContent></Card></div>;
+    return <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-6"><Card className="max-w-md w-full"><CardHeader><CardTitle>Acesso à análise dermatológica</CardTitle><CardDescription>Entre para carregar imagens, executar a triagem e consultar o histórico protegido.</CardDescription></CardHeader><CardContent><Button className="w-full" disabled={!authConfigured} onClick={() => { window.location.href = getLoginUrl(); }}><LogIn className="h-4 w-4 mr-2" />{authConfigured ? 'Entrar para continuar' : 'Autenticação não configurada'}</Button></CardContent></Card></div>;
   }
 
   /**
