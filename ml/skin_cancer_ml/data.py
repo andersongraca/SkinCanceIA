@@ -68,7 +68,9 @@ def build_transforms(image_size: int, train: bool) -> transforms.Compose:
 
 
 def discover_images(data_dir: str | Path, metadata_csv: str | Path, config: ExperimentConfig) -> pd.DataFrame:
-    metadata = pd.read_csv(metadata_csv)
+    metadata_path = Path(metadata_csv)
+    separator = "\t" if metadata_path.suffix.lower() in {".tab", ".tsv"} else ","
+    metadata = pd.read_csv(metadata_path, sep=separator)
     required = {config.image_column, config.label_column}
     missing = required.difference(metadata.columns)
     if missing:

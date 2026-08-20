@@ -88,7 +88,9 @@ abstract class PythonBackedModel extends BaseClassificationModel {
   ) {
     super(modelName, modelVersion, metrics);
     this.modelKey = modelKey;
-    this.checkpointPath = checkpointPath || process.env[`ML_${modelKey.toUpperCase()}_CHECKPOINT`];
+    this.checkpointPath = checkpointPath
+      || process.env[`ML_${modelKey.toUpperCase()}_CHECKPOINT`]
+      || path.join(process.env.ML_PROJECT_ROOT || process.cwd(), "ml_artifacts", "ham10000", modelKey, "best.pt");
   }
 
   public getCheckpointPath(): string | undefined {

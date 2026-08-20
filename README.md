@@ -8,6 +8,8 @@ A arquitetura experimental reúne três componentes: uma CNN baseada em ResNet-5
 
 > O sistema é uma ferramenta de apoio à pesquisa e triagem computacional. Não realiza diagnóstico autônomo, não substitui avaliação dermatológica e não deve ser usado para decisões clínicas sem validação externa e supervisão profissional.
 
+A implementação local reproduzível, os comandos de preparação, os resultados da rodada CPU e as limitações científicas estão documentados em [`docs/IMPLEMENTACAO_ML_LOCAL.md`](docs/IMPLEMENTACAO_ML_LOCAL.md).
+
 ## Funcionalidades científicas
 
 O pipeline Python contém preparação determinística do HAM10000, divisão agrupada por `lesion_id`, perdas focais, amostragem balanceada opcional, métricas multiclasses e binárias, calibração por temperatura, intervalos de confiança por bootstrap, avaliação por subgrupos externos e auditoria de classes raras.
