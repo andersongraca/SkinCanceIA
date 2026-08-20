@@ -99,6 +99,18 @@ chmod +x scripts/setup_local_db.sh
 
 O script cria o schema `skincancer`, um usuário de aplicação restrito ao próprio banco, grava um `.env` com permissão `600` e aplica `pnpm db:push`. Ele é idempotente: se `DATABASE_URL` já existir, preserva a configuração atual e apenas verifica/aplica o schema. Para iniciar o servidor local, copie `.env.example` para `.env` caso ainda não use o script, ajuste os caminhos absolutos e configure um banco MySQL/TiDB se desejar histórico e métricas persistidas. A configuração mínima dos modelos é `ML_PROJECT_ROOT`, `ML_PYTHON_PATH`, `ML_DOMAIN_REFERENCE`, `ML_MODEL_VERSION` e os três caminhos de checkpoint. O armazenamento persistente de produção também exige as variáveis do serviço de storage.
 
+No Windows com MariaDB instalado pelo winget, os scripts equivalentes são:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_local_db_windows.ps1
+```
+
+Esse script inicia o MariaDB em `127.0.0.1:3306`, cria o banco e o usuário restrito caso `DATABASE_URL` ainda não exista, preserva o `.env` existente quando já configurado e executa `corepack pnpm db:push`. O inicializador isolado pode ser chamado depois de reiniciar o computador:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\start_mariadb_windows.ps1
+```
+
 ## Verificações realizadas
 
 O smoke test do serviço TypeScript aceitou uma imagem HAM10000 de 600×450 pixels, executou os três modelos e gerou os três heatmaps. Os dois ativos OOD públicos de teste foram rejeitados com `IMAGE_NOT_ELIGIBLE` e motivo `outside_dermoscopy_domain`. A verificação TypeScript passou, a suíte Vitest passou com quatro testes e o build de produção deve ser executado antes de qualquer publicação.

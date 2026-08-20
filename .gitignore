@@ -59,3 +59,8 @@ logs/
 
 # Runtime uploads and generated public artifacts
 runtime/
+
+# Banco local Windows e backups de credenciais
+.mariadb-log/
+.mysql-data/
+.env.backup.*
