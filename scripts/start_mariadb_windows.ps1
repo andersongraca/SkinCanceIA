@@ -11,7 +11,7 @@ $log = Join-Path $logDir 'mariadb-console.log'
 $errorLog = Join-Path $logDir 'mariadb-error.log'
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
 $arguments = @(
-  "--datadir=$data",
+  "--datadir=`"$data`"",
   '--port=3306',
   '--bind-address=127.0.0.1',
   '--character-set-server=utf8mb4',
