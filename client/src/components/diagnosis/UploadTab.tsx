@@ -29,6 +29,14 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
+function formatClassificationError(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  if (/failed to fetch|fetch failed|networkerror/i.test(message)) {
+    return 'Não foi possível conectar ao backend local. Inicie o MariaDB e o servidor em http://localhost:3000 e tente novamente.';
+  }
+  return message || 'Erro ao classificar imagem.';
+}
+
 export default function UploadTab({
   onImageSelected,
   onClassificationStart,
@@ -97,7 +105,7 @@ export default function UploadTab({
       const response = await classifyMutation.mutateAsync({ imageId: uploaded.imageId });
       onClassificationComplete(response as ClassificationResponse);
     } catch (error) {
-      onClassificationError(error instanceof Error ? error.message : 'Erro ao classificar imagem.');
+      onClassificationError(formatClassificationError(error));
     }
   };
 
