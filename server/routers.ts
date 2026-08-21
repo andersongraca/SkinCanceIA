@@ -27,7 +27,7 @@ const uploadRoot = path.resolve(
 );
 const persistentStorageConfigured = Boolean(ENV.forgeApiUrl && ENV.forgeApiKey);
 
-type HeatmapPaths = { cnnHeatmapPath: string; vitHeatmapPath: string; hybridHeatmapPath: string };
+type HeatmapPaths = { cnnHeatmapPath: string; vitHeatmapPath: string; hybridHeatmapPath: string; ensembleHeatmapPath: string };
 
 type MaterializedImage = { localPath: string; cleanup: boolean };
 
@@ -108,6 +108,7 @@ async function persistHeatmaps(paths: HeatmapPaths, userId: number, imageId: num
       cnnHeatmapPath: publicArtifactUrl(paths.cnnHeatmapPath),
       vitHeatmapPath: publicArtifactUrl(paths.vitHeatmapPath),
       hybridHeatmapPath: publicArtifactUrl(paths.hybridHeatmapPath),
+      ensembleHeatmapPath: publicArtifactUrl(paths.ensembleHeatmapPath),
     };
   }
   const upload = async (filePath: string, model: string) => {
@@ -115,12 +116,13 @@ async function persistHeatmaps(paths: HeatmapPaths, userId: number, imageId: num
     const stored = await storagePut(`diagnosis-heatmaps/${userId}/${imageId}/${randomUUID()}-${model}.png`, content, "image/png");
     return stored.url;
   };
-  const [cnnHeatmapPath, vitHeatmapPath, hybridHeatmapPath] = await Promise.all([
+  const [cnnHeatmapPath, vitHeatmapPath, hybridHeatmapPath, ensembleHeatmapPath] = await Promise.all([
     upload(paths.cnnHeatmapPath, "cnn-gradcam"),
     upload(paths.vitHeatmapPath, "vit-token-gradient"),
     upload(paths.hybridHeatmapPath, "hybrid-combined"),
+    upload(paths.ensembleHeatmapPath, "ensemble-learning"),
   ]);
-  return { cnnHeatmapPath, vitHeatmapPath, hybridHeatmapPath };
+  return { cnnHeatmapPath, vitHeatmapPath, hybridHeatmapPath, ensembleHeatmapPath };
 }
 
 export const appRouter = router({

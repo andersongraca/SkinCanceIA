@@ -83,6 +83,7 @@ export class ClassificationService {
     cnnHeatmapPath: string;
     vitHeatmapPath: string;
     hybridHeatmapPath: string;
+    ensembleHeatmapPath: string;
   }> {
     try {
       const [cnn, vit, hybrid] = await Promise.all([
@@ -90,13 +91,27 @@ export class ClassificationService {
         pythonInferenceService.explain(this.vitModel.getCheckpointPath(), "vit", imagePath, `${outputDir}/vit.png`),
         pythonInferenceService.explain(this.hybridModel.getCheckpointPath(), "hybrid", imagePath, `${outputDir}/hybrid.png`),
       ]);
-      const paths = {
+      const componentPaths = {
         cnnHeatmapPath: cnn.paths.gradcam,
         vitHeatmapPath: vit.paths.token_gradient,
         hybridHeatmapPath: hybrid.paths.hybrid,
       };
-      if (!paths.cnnHeatmapPath || !paths.vitHeatmapPath || !paths.hybridHeatmapPath) {
-        throw new Error("Um ou mais heatmaps não foram gerados.");
+      if (!componentPaths.cnnHeatmapPath || !componentPaths.vitHeatmapPath || !componentPaths.hybridHeatmapPath) {
+        throw new Error("Um ou mais heatmaps componentes não foram gerados.");
+      }
+      const ensemble = await pythonInferenceService.generateEnsembleHeatmap(
+        imagePath,
+        componentPaths.cnnHeatmapPath,
+        componentPaths.vitHeatmapPath,
+        componentPaths.hybridHeatmapPath,
+        `${outputDir}/ensemble.png`,
+      );
+      const paths = {
+        ...componentPaths,
+        ensembleHeatmapPath: ensemble.paths.ensemble,
+      };
+      if (!paths.ensembleHeatmapPath) {
+        throw new Error("O heatmap do Ensemble Learning não foi gerado.");
       }
       return paths;
     } catch (error) {

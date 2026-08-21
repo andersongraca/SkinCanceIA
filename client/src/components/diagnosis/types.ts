@@ -38,6 +38,7 @@ export interface ClassificationResponse {
       cnnHeatmapPath: string;
       vitHeatmapPath: string;
       hybridHeatmapPath: string;
+      ensembleHeatmapPath?: string;
     };
   };
   diagnosis?: { id: number } | null;

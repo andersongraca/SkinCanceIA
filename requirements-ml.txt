@@ -6,5 +6,5 @@ opencv-python-headless==5.0.0.93
 pillow==12.3.0
 pyyaml==6.0.3
 pandas==3.0.5
-numpy==2.5.1
-pytest==9.1.1
+numpy==2.4.6
+matplotlib

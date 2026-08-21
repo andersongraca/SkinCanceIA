@@ -88,6 +88,7 @@ export default function ResultsTab({ imagePreview, selectedImage, isProcessing, 
     ['CNN — Grad-CAM', heatmaps.cnnHeatmapPath],
     ['ViT — atribuição de tokens', heatmaps.vitHeatmapPath],
     ['Híbrido — mapa combinado', heatmaps.hybridHeatmapPath],
+    ...(heatmaps.ensembleHeatmapPath ? [['Ensemble Learning — mapa agregado', heatmaps.ensembleHeatmapPath] as const] : []),
   ] as const : [];
 
   return (

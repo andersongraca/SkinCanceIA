@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import path from "node:path";
@@ -118,6 +119,55 @@ export class PythonInferenceService {
     );
     if (stderr.trim()) console.warn(`[XAI:${modelName}] ${stderr.trim().slice(0, 1000)}`);
     return parseJsonLine(stdout) as PythonHeatmapResult;
+  }
+
+  async generateEnsembleHeatmap(
+    imagePath: string,
+    cnnHeatmapPath: string,
+    vitHeatmapPath: string,
+    hybridHeatmapPath: string,
+    outputPath: string,
+  ): Promise<PythonHeatmapResult> {
+    const weightsPath = process.env.ML_ENSEMBLE_WEIGHTS_PATH || path.join(
+      configuredRoot(),
+      "ml_artifacts",
+      "ham10000",
+      "ensemble",
+      "weights.json",
+    );
+    const { stdout, stderr } = await execFileAsync(
+      configuredPython(),
+      [
+        "-m",
+        "ml.skin_cancer_ml.ensemble_heatmap",
+        "--image",
+        path.resolve(imagePath),
+        "--cnn",
+        path.resolve(cnnHeatmapPath),
+        "--vit",
+        path.resolve(vitHeatmapPath),
+        "--hybrid",
+        path.resolve(hybridHeatmapPath),
+        "--output",
+        path.resolve(outputPath),
+        "--weights",
+        path.resolve(weightsPath),
+      ],
+      {
+        cwd: configuredRoot(),
+        env: { ...process.env, PYTHONPATH: configuredRoot() },
+        timeout: this.timeoutMs,
+        maxBuffer: 4 * 1024 * 1024,
+      },
+    );
+    if (stderr.trim()) console.warn(`[XAI:ensemble] ${stderr.trim().slice(0, 1000)}`);
+    const payload = parseJsonLine(stdout) as { targetClass: string; method: string[]; path: string };
+    if (!payload.path) throw new Error("O pipeline Python não retornou o heatmap do ensemble.");
+    return {
+      targetClass: payload.targetClass,
+      method: payload.method,
+      paths: { ensemble: payload.path },
+    };
   }
 }
 
