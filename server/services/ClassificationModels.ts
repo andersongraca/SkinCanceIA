@@ -75,6 +75,16 @@ function mapPythonResult(result: Awaited<ReturnType<typeof pythonInferenceServic
   };
 }
 
+function envNumber(name: string, fallback: number): number {
+  const value = Number(process.env[name]);
+  return Number.isFinite(value) && value >= 0 ? value : fallback;
+}
+
+function envInteger(name: string, fallback: number): number {
+  const value = Number.parseInt(process.env[name] || "", 10);
+  return Number.isInteger(value) && value >= 1 ? value : fallback;
+}
+
 abstract class PythonBackedModel extends BaseClassificationModel {
   protected readonly checkpointPath: string | undefined;
   protected readonly modelKey: "cnn" | "vit" | "hybrid";
@@ -88,9 +98,7 @@ abstract class PythonBackedModel extends BaseClassificationModel {
   ) {
     super(modelName, modelVersion, metrics);
     this.modelKey = modelKey;
-    this.checkpointPath = checkpointPath
-      || process.env[`ML_${modelKey.toUpperCase()}_CHECKPOINT`]
-      || path.join(process.env.ML_PROJECT_ROOT || process.cwd(), "ml_artifacts", "ham10000", modelKey, "best.pt");
+    this.checkpointPath = checkpointPath || process.env[`ML_${modelKey.toUpperCase()}_CHECKPOINT`];
   }
 
   public getCheckpointPath(): string | undefined {
@@ -180,6 +188,22 @@ export class EnsembleModel extends BaseClassificationModel {
         fineGrainedProbabilities[label] = (fineGrainedProbabilities[label] || 0) + weights[index] * probability;
       }
     }
+    const predictiveEntropy = results.reduce(
+      (sum, result) => sum + (result.uncertainty?.predictiveEntropy || 0),
+      0,
+    ) / results.length;
+    const ttaVariance = results.reduce(
+      (sum, result) => sum + (result.uncertainty?.ttaVariance || 0),
+      0,
+    ) / results.length;
+    const abstainVotes = results.filter(result => result.uncertainty?.abstain).length;
+    const requiredVotes = Math.min(
+      results.length,
+      envInteger("ML_ENSEMBLE_ABSTAIN_VOTES", 2),
+    );
+    const entropyThreshold = envNumber("ML_ENSEMBLE_ENTROPY_THRESHOLD", 0.65);
+    const ttaVarianceThreshold = envNumber("ML_ENSEMBLE_TTA_VARIANCE_THRESHOLD", 0.02);
+
     return {
       classification,
       confidence,
@@ -188,9 +212,11 @@ export class EnsembleModel extends BaseClassificationModel {
       fineGrainedClass: Object.entries(fineGrainedProbabilities).sort((a, b) => b[1] - a[1])[0]?.[0],
       fineGrainedProbabilities: Object.keys(fineGrainedProbabilities).length ? fineGrainedProbabilities : undefined,
       uncertainty: {
-        predictiveEntropy: results.reduce((sum, result) => sum + (result.uncertainty?.predictiveEntropy || 0), 0) / results.length,
-        ttaVariance: results.reduce((sum, result) => sum + (result.uncertainty?.ttaVariance || 0), 0) / results.length,
-        abstain: results.some(result => result.uncertainty?.abstain),
+        predictiveEntropy,
+        ttaVariance,
+        abstain: abstainVotes >= requiredVotes
+          || predictiveEntropy > entropyThreshold
+          || ttaVariance > ttaVarianceThreshold,
       },
       modelVersion: this.modelVersion,
     };

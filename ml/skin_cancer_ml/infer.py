@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 import argparse
 import json
+import os
 
 import numpy as np
 import torch
@@ -19,6 +20,14 @@ def _config_from_dict(raw: dict[str, Any]) -> ExperimentConfig:
     raw["classes"] = tuple(raw.get("classes", []))
     raw["malignant_classes"] = tuple(raw.get("malignant_classes", []))
     return ExperimentConfig(**raw)
+
+
+def _env_float(name: str, default: float) -> float:
+    try:
+        value = float(os.getenv(name, str(default)))
+        return value if np.isfinite(value) and value >= 0 else default
+    except (TypeError, ValueError):
+        return default
 
 
 def load_model(checkpoint_path: str | Path, device: torch.device) -> tuple[torch.nn.Module, ExperimentConfig, dict[str, Any]]:
@@ -55,6 +64,8 @@ def predict_image(checkpoint_path: str | Path, image_path: str | Path, tta: bool
     binary_probability = float(binary_probability_samples.mean())
     predictive_entropy = float(-(class_probabilities * np.log(np.clip(class_probabilities, 1e-8, 1.0))).sum() / np.log(len(config.classes)))
     tta_variance = float(binary_probability_samples.var())
+    entropy_threshold = _env_float("ML_ENTROPY_THRESHOLD", 0.65)
+    tta_variance_threshold = _env_float("ML_TTA_VARIANCE_THRESHOLD", 0.02)
     fine_index = int(class_probabilities.argmax())
     fine_class = config.classes[fine_index]
     classification = "malignant" if binary_probability >= 0.5 else "benign"
@@ -65,7 +76,14 @@ def predict_image(checkpoint_path: str | Path, image_path: str | Path, tta: bool
         "probabilities": {"benign": round(1.0 - binary_probability, 8), "malignant": round(binary_probability, 8)},
         "fineGrainedClass": fine_class,
         "fineGrainedProbabilities": {label: round(float(prob), 8) for label, prob in zip(config.classes, class_probabilities)},
-        "uncertainty": {"predictiveEntropy": predictive_entropy, "ttaVariance": tta_variance, "abstain": bool(predictive_entropy > 0.65 or tta_variance > 0.02)},
+        "uncertainty": {
+            "predictiveEntropy": predictive_entropy,
+            "ttaVariance": tta_variance,
+            "abstain": bool(
+                predictive_entropy > entropy_threshold
+                or tta_variance > tta_variance_threshold
+            ),
+        },
         "ttaSamples": len(tensors),
         "modelVersion": str(checkpoint.get("config", {}).get("model_name", checkpoint["model_name"])),
     }
