@@ -27,6 +27,11 @@ FEATURE_NAMES = (
     "center_std",
 )
 
+# HAM10000 is stored at a nearly fixed 4:3 ratio.  Using its raw dispersion
+# for OOD scoring would assign an almost-zero scale to aspect_ratio and reject
+# valid dermoscopic images from other cameras/crops before model inference.
+ASPECT_RATIO_SCALE_FLOOR = 0.05
+
 
 @dataclass(frozen=True)
 class QualityConfig:
@@ -74,7 +79,12 @@ def feature_vector(features: dict[str, float]) -> np.ndarray:
 
 
 def _robust_distance(vector: np.ndarray, center: np.ndarray, scale: np.ndarray) -> float:
-    z = (vector - center) / np.maximum(scale, 1e-6)
+    safe_scale = np.maximum(scale, 1e-6).copy()
+    safe_scale[FEATURE_NAMES.index("aspect_ratio")] = max(
+        safe_scale[FEATURE_NAMES.index("aspect_ratio")],
+        ASPECT_RATIO_SCALE_FLOOR,
+    )
+    z = (vector - center) / safe_scale
     return float(np.sqrt(np.mean(np.square(z))))
 
 
