@@ -42,12 +42,20 @@ def main() -> None:
 
     original = Image.open(args.image).convert("RGB")
     size = original.size
-    weights_payload = json.loads(args.weights.read_text(encoding="utf-8"))
-    raw_weights = [
-        float(weights_payload["cnn"]),
-        float(weights_payload["vit"]),
-        float(weights_payload["hybrid"]),
-    ]
+    weights_source = "configured"
+    if args.weights.exists():
+        weights_payload = json.loads(args.weights.read_text(encoding="utf-8"))
+        raw_weights = [
+            float(weights_payload["cnn"]),
+            float(weights_payload["vit"]),
+            float(weights_payload["hybrid"]),
+        ]
+    else:
+        # The component maps are still valid without the optional learned
+        # weights artifact; use a transparent equal-weight fallback instead
+        # of dropping all heatmaps from the result.
+        weights_source = "equal_fallback_missing_weights"
+        raw_weights = [1.0, 1.0, 1.0]
     total = sum(raw_weights)
     if total <= 0:
         raise ValueError("Os pesos do ensemble devem somar um valor positivo.")
@@ -70,6 +78,7 @@ def main() -> None:
         "method": ["weighted_component_saliency", "cnn", "vit", "hybrid"],
         "path": str(args.output.resolve()),
         "weights": {"cnn": weights[0], "vit": weights[1], "hybrid": weights[2]},
+        "weightsSource": weights_source,
     }, ensure_ascii=False))
 
 

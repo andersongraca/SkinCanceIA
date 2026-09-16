@@ -161,8 +161,11 @@ export class PythonInferenceService {
       },
     );
     if (stderr.trim()) console.warn(`[XAI:ensemble] ${stderr.trim().slice(0, 1000)}`);
-    const payload = parseJsonLine(stdout) as { targetClass: string; method: string[]; path: string };
+    const payload = parseJsonLine(stdout) as { targetClass: string; method: string[]; path: string; weightsSource?: string };
     if (!payload.path) throw new Error("O pipeline Python não retornou o heatmap do ensemble.");
+    if (payload.weightsSource === "equal_fallback_missing_weights") {
+      console.warn("[XAI:ensemble] weights.json ausente; usando pesos iguais (1/3 por modelo).");
+    }
     return {
       targetClass: payload.targetClass,
       method: payload.method,
