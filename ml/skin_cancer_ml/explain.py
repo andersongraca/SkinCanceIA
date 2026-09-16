@@ -162,7 +162,8 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
         f"mode={sensitivity.get('mode', 'n/a')} "
         f"threshold={sensitivity.get('threshold', 'n/a')} "
         f"kernel={sensitivity.get('kernel', 'n/a')}x{sensitivity.get('kernel', 'n/a')} "
-        f"area={segmentation.get('postprocessedAreaFraction', segmentation.get('areaFraction', 'n/a'))}",
+        f"area={segmentation.get('postprocessedAreaFraction', segmentation.get('areaFraction', 'n/a'))} "
+        f"sourceSize={original.shape[1]}x{original.shape[0]}",
         file=sys.stderr,
         flush=True,
     )
