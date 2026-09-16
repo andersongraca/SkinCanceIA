@@ -5,6 +5,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
+import type { DermatologicalImage } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { ENV } from "./_core/env";
 import { systemRouter } from "./_core/systemRouter";
@@ -38,6 +39,12 @@ const rateLimitWindowMs = 10 * 60 * 1000;
 const rateLimitStore = new Map<string, RateLimitEntry>();
 const maxConcurrentInference = Math.max(Number.parseInt(process.env.ML_MAX_CONCURRENT_INFERENCE || "", 10) || 1, 1);
 let activeInferences = 0;
+const localImages = new Map<number, DermatologicalImage>();
+let nextLocalImageId = 1;
+
+function isLocalInferenceMode(): boolean {
+  return ENV.isLocalDemoMode && !ENV.isProduction && !process.env.DATABASE_URL;
+}
 
 function requesterKey(req: { ip?: string; headers?: Record<string, unknown>; socket?: { remoteAddress?: string } }, userId: number, action: string): string {
   const forwarded = typeof req.headers?.["x-forwarded-for"] === "string" ? req.headers["x-forwarded-for"].split(",")[0]?.trim() : undefined;
@@ -226,13 +233,29 @@ export const appRouter = router({
         enforceRateLimit(ctx.req, ctx.user.id, "upload", Math.max(Number.parseInt(process.env.ML_UPLOAD_RATE_LIMIT || "", 10) || 30, 1));
         const buffer = decodeImageDataUrl(input.dataUrl, input.mimeType);
         const stored = await persistImage(buffer, input.fileName, input.mimeType, ctx.user.id);
-        const image = await insertDermatologicalImage({
+        let image = await insertDermatologicalImage({
           userId: ctx.user.id,
           fileName: input.fileName,
           imagePath: stored.imagePath,
           fileSize: buffer.length,
           mimeType: input.mimeType,
         });
+        if (!image && isLocalInferenceMode()) {
+          const localImage: DermatologicalImage = {
+            id: nextLocalImageId++,
+            userId: ctx.user.id,
+            fileName: input.fileName,
+            imagePath: stored.imagePath,
+            thumbnailPath: null,
+            fileSize: buffer.length,
+            mimeType: input.mimeType,
+            description: null,
+            uploadedAt: new Date(),
+            updatedAt: new Date(),
+          };
+          localImages.set(localImage.id, localImage);
+          image = localImage;
+        }
         if (!image) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Não foi possível registrar a imagem." });
         return { imageId: image.id, fileName: image.fileName, imageUrl: stored.imageUrl };
       }),
@@ -244,7 +267,7 @@ export const appRouter = router({
         const analysisRunId = randomUUID();
         const analysisStartedAt = new Date();
         const releaseInferenceSlot = acquireInferenceSlot();
-        const image = await getImageById(input.imageId);
+        const image = localImages.get(input.imageId) ?? await getImageById(input.imageId);
         if (!image || image.userId !== ctx.user.id) {
           releaseInferenceSlot();
           throw new TRPCError({ code: "NOT_FOUND", message: "Imagem não encontrada ou acesso negado." });

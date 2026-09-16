@@ -16,19 +16,35 @@ export async function createContext(
   let user: User | null = null;
 
   if (ENV.isLocalDemoMode && !ENV.isProduction) {
+    const demoUser: User = {
+      id: 1,
+      openId: "local-demo",
+      name: "Usuário de demonstração",
+      email: null,
+      loginMethod: "local-demo",
+      role: "user",
+      createdAt: new Date(0),
+      updatedAt: new Date(0),
+      lastSignedIn: new Date(0),
+    };
     try {
-      await db.upsertUser({
-        openId: "local-demo",
-        name: "Usuário de demonstração",
-        email: null,
-        loginMethod: "local-demo",
-        role: "user",
-        lastSignedIn: new Date(),
-      });
-      user = (await db.getUserByOpenId("local-demo")) ?? null;
+      const database = await db.getDb();
+      if (!database) {
+        user = demoUser;
+      } else {
+        await db.upsertUser({
+          openId: "local-demo",
+          name: "Usuário de demonstração",
+          email: null,
+          loginMethod: "local-demo",
+          role: "user",
+          lastSignedIn: new Date(),
+        });
+        user = (await db.getUserByOpenId("local-demo")) ?? demoUser;
+      }
     } catch (error) {
       console.error("[Auth] Falha ao preparar usuário local demo:", error);
-      user = null;
+      user = demoUser;
     }
   } else {
     try {
