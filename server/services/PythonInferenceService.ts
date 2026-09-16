@@ -1,7 +1,10 @@
 import "dotenv/config";
 import { execFile } from "node:child_process";
+import fs from "node:fs/promises";
+import os from "node:os";
 import { promisify } from "node:util";
 import path from "node:path";
+import { randomUUID } from "node:crypto";
 
 const execFileAsync = promisify(execFile);
 
@@ -128,49 +131,59 @@ export class PythonInferenceService {
     hybridHeatmapPath: string,
     outputPath: string,
   ): Promise<PythonHeatmapResult> {
-    const weightsPath = process.env.ML_ENSEMBLE_WEIGHTS_PATH || path.join(
+    let weightsPath = process.env.ML_ENSEMBLE_WEIGHTS_PATH || path.join(
       configuredRoot(),
       "ml_artifacts",
       "ham10000",
       "ensemble",
       "weights.json",
     );
-    const { stdout, stderr } = await execFileAsync(
-      configuredPython(),
-      [
-        "-m",
-        "ml.skin_cancer_ml.ensemble_heatmap",
-        "--image",
-        path.resolve(imagePath),
-        "--cnn",
-        path.resolve(cnnHeatmapPath),
-        "--vit",
-        path.resolve(vitHeatmapPath),
-        "--hybrid",
-        path.resolve(hybridHeatmapPath),
-        "--output",
-        path.resolve(outputPath),
-        "--weights",
-        path.resolve(weightsPath),
-      ],
-      {
-        cwd: configuredRoot(),
-        env: { ...process.env, PYTHONPATH: configuredRoot() },
-        timeout: this.timeoutMs,
-        maxBuffer: 4 * 1024 * 1024,
-      },
-    );
-    if (stderr.trim()) console.warn(`[XAI:ensemble] ${stderr.trim().slice(0, 1000)}`);
-    const payload = parseJsonLine(stdout) as { targetClass: string; method: string[]; path: string; weightsSource?: string };
-    if (!payload.path) throw new Error("O pipeline Python não retornou o heatmap do ensemble.");
-    if (payload.weightsSource === "equal_fallback_missing_weights") {
-      console.warn("[XAI:ensemble] weights.json ausente; usando pesos iguais (1/3 por modelo).");
+    let temporaryWeightsPath: string | undefined;
+    try {
+      try {
+        await fs.access(weightsPath);
+      } catch {
+        temporaryWeightsPath = path.join(os.tmpdir(), `ensemble-weights-${randomUUID()}.json`);
+        await fs.writeFile(temporaryWeightsPath, JSON.stringify({ cnn: 1, vit: 1, hybrid: 1 }), { encoding: "utf8", flag: "wx" });
+        weightsPath = temporaryWeightsPath;
+        console.warn("[XAI:ensemble] weights.json ausente; criado fallback temporário com pesos iguais.");
+      }
+      const { stdout, stderr } = await execFileAsync(
+        configuredPython(),
+        [
+          "-m",
+          "ml.skin_cancer_ml.ensemble_heatmap",
+          "--image",
+          path.resolve(imagePath),
+          "--cnn",
+          path.resolve(cnnHeatmapPath),
+          "--vit",
+          path.resolve(vitHeatmapPath),
+          "--hybrid",
+          path.resolve(hybridHeatmapPath),
+          "--output",
+          path.resolve(outputPath),
+          "--weights",
+          path.resolve(weightsPath),
+        ],
+        {
+          cwd: configuredRoot(),
+          env: { ...process.env, PYTHONPATH: configuredRoot() },
+          timeout: this.timeoutMs,
+          maxBuffer: 4 * 1024 * 1024,
+        },
+      );
+      if (stderr.trim()) console.warn(`[XAI:ensemble] ${stderr.trim().slice(0, 1000)}`);
+      const payload = parseJsonLine(stdout) as { targetClass: string; method: string[]; path: string; weightsSource?: string };
+      if (!payload.path) throw new Error("O pipeline Python não retornou o heatmap do ensemble.");
+      return {
+        targetClass: payload.targetClass,
+        method: payload.method,
+        paths: { ensemble: payload.path },
+      };
+    } finally {
+      if (temporaryWeightsPath) await fs.rm(temporaryWeightsPath, { force: true });
     }
-    return {
-      targetClass: payload.targetClass,
-      method: payload.method,
-      paths: { ensemble: payload.path },
-    };
   }
 }
 
