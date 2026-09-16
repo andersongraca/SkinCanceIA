@@ -15,7 +15,9 @@ export async function createContext(
 ): Promise<TrpcContext> {
   let user: User | null = null;
 
-  if (ENV.isLocalDemoMode && !ENV.isProduction) {
+  const localInferenceMode = !ENV.isProduction && (ENV.isLocalDemoMode || !process.env.DATABASE_URL);
+
+  if (localInferenceMode) {
     const demoUser: User = {
       id: 1,
       openId: "local-demo",

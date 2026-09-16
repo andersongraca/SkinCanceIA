@@ -26,7 +26,11 @@ const requireUser = t.middleware(async opts => {
     updatedAt: new Date(0),
     lastSignedIn: new Date(0),
   };
-  const user = ctx.user ?? (!ENV.isProduction && ENV.isLocalDemoMode ? localUser : null);
+  const localInferenceMode = !ENV.isProduction && (
+    ENV.isLocalDemoMode ||
+    (process.env.NODE_ENV === "development" && !ENV.databaseUrl)
+  );
+  const user = ctx.user ?? (localInferenceMode ? localUser : null);
 
   if (!user) {
     throw new TRPCError({ code: "UNAUTHORIZED", message: UNAUTHED_ERR_MSG });
