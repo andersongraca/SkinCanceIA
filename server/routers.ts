@@ -43,7 +43,7 @@ const localImages = new Map<number, DermatologicalImage>();
 let nextLocalImageId = 1;
 
 function isLocalInferenceMode(): boolean {
-  return ENV.isLocalDemoMode && !ENV.isProduction && !process.env.DATABASE_URL;
+  return ENV.isLocalDemoMode && !ENV.isProduction;
 }
 
 function requesterKey(req: { ip?: string; headers?: Record<string, unknown>; socket?: { remoteAddress?: string } }, userId: number, action: string): string {
@@ -233,13 +233,19 @@ export const appRouter = router({
         enforceRateLimit(ctx.req, ctx.user.id, "upload", Math.max(Number.parseInt(process.env.ML_UPLOAD_RATE_LIMIT || "", 10) || 30, 1));
         const buffer = decodeImageDataUrl(input.dataUrl, input.mimeType);
         const stored = await persistImage(buffer, input.fileName, input.mimeType, ctx.user.id);
-        let image = await insertDermatologicalImage({
-          userId: ctx.user.id,
-          fileName: input.fileName,
-          imagePath: stored.imagePath,
-          fileSize: buffer.length,
-          mimeType: input.mimeType,
-        });
+        let image: DermatologicalImage | null = null;
+        try {
+          image = await insertDermatologicalImage({
+            userId: ctx.user.id,
+            fileName: input.fileName,
+            imagePath: stored.imagePath,
+            fileSize: buffer.length,
+            mimeType: input.mimeType,
+          });
+        } catch (error) {
+          if (!isLocalInferenceMode()) throw error;
+          console.warn("[Local inference] Banco indisponível; upload mantido temporariamente.");
+        }
         if (!image && isLocalInferenceMode()) {
           const localImage: DermatologicalImage = {
             id: nextLocalImageId++,
