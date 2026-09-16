@@ -129,7 +129,7 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
     model, config, _ = load_model(checkpoint_path, device)
     with Image.open(image_path) as source:
         source = source.convert("RGB")
-        original = np.asarray(source.resize((config.image_size, config.image_size)), dtype=np.float32)
+        original = np.asarray(source, dtype=np.float32)
         tensor = build_transforms(config.image_size, train=False)(source).unsqueeze(0).to(device)
         tensor.requires_grad_(True)
     output = model(tensor)
@@ -196,10 +196,15 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     written: dict[str, str] = {}
     for name, heatmap in maps.items():
+        heatmap_original = cv2.resize(
+            np.clip(heatmap, 0.0, 1.0),
+            (original.shape[1], original.shape[0]),
+            interpolation=cv2.INTER_LINEAR,
+        )
         saliency_path = output_path.with_name(f"{output_path.stem}_{name}_saliency.png")
         overlay_path = output_path.with_name(f"{output_path.stem}_{name}.png")
-        Image.fromarray(np.uint8(np.clip(heatmap, 0.0, 1.0) * 255)).save(saliency_path)
-        Image.fromarray(_overlay(original, heatmap)).save(overlay_path)
+        Image.fromarray(np.uint8(heatmap_original * 255)).save(saliency_path)
+        Image.fromarray(_overlay(original, heatmap_original)).save(overlay_path)
         written[name] = str(overlay_path)
         written[f"{name}_saliency"] = str(saliency_path)
     return {
