@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, dermatologicalImages, diagnoses, modelMetrics, DermatologicalImage, Diagnosis, ModelMetric, InsertDermatologicalImage, InsertDiagnosis, InsertModelMetric } from "../drizzle/schema";
+import { AnalysisRun, Diagnosis, DermatologicalImage, InsertAnalysisRun, InsertDermatologicalImage, InsertDiagnosis, InsertModelMetric, InsertUser, ModelMetric, analysisRuns, diagnoses, dermatologicalImages, modelMetrics, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -251,6 +251,37 @@ export async function getImageDiagnoses(imageId: number): Promise<Diagnosis[]> {
     console.error("[Database] Falha ao obter diagnósticos da imagem:", error);
     throw error;
   }
+}
+
+/**
+ * Registra uma execução científica completa, incluindo elegibilidade, incerteza e artefatos.
+ */
+export async function insertAnalysisRun(run: InsertAnalysisRun): Promise<AnalysisRun | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Não é possível inserir execução científica: banco de dados não disponível");
+    return null;
+  }
+  try {
+    const result = await db.insert(analysisRuns).values(run);
+    const inserted = await db.select().from(analysisRuns).where(eq(analysisRuns.id, Number(result[0].insertId))).limit(1);
+    return inserted.length > 0 ? inserted[0] : null;
+  } catch (error) {
+    console.error("[Database] Falha ao inserir execução científica:", error);
+    throw error;
+  }
+}
+
+/**
+ * Obtém as execuções científicas associadas a uma imagem.
+ */
+export async function getAnalysisRunsByImage(imageId: number): Promise<AnalysisRun[]> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Não é possível obter execuções científicas: banco de dados não disponível");
+    return [];
+  }
+  return db.select().from(analysisRuns).where(eq(analysisRuns.imageId, imageId)).orderBy(desc(analysisRuns.startedAt));
 }
 
 /**

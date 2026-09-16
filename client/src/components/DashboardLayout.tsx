@@ -19,7 +19,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { getLoginUrl } from "@/const";
+import { getLoginUrl, isAuthConfigured } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
@@ -69,13 +69,15 @@ export default function DashboardLayout({
             </p>
           </div>
           <Button
+            disabled={!isAuthConfigured}
             onClick={() => {
-              window.location.href = getLoginUrl();
+              const loginUrl = getLoginUrl();
+              if (loginUrl) window.location.href = loginUrl;
             }}
             size="lg"
             className="w-full shadow-lg hover:shadow-xl transition-all"
           >
-            Sign in
+            {isAuthConfigured ? "Sign in" : "Authentication not configured"}
           </Button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
@@ -15,7 +15,9 @@ import {
   getDiagnosisById,
   getAllModelMetrics,
   getModelMetrics,
+  getAnalysisRunsByImage,
   getImageById,
+  insertAnalysisRun,
   insertDiagnosis,
   insertDermatologicalImage,
 } from "./db";
@@ -30,6 +32,79 @@ const persistentStorageConfigured = Boolean(ENV.forgeApiUrl && ENV.forgeApiKey);
 type HeatmapPaths = { cnnHeatmapPath: string; vitHeatmapPath: string; hybridHeatmapPath: string; ensembleHeatmapPath: string };
 
 type MaterializedImage = { localPath: string; cleanup: boolean };
+
+type RateLimitEntry = { windowStartedAt: number; count: number };
+const rateLimitWindowMs = 10 * 60 * 1000;
+const rateLimitStore = new Map<string, RateLimitEntry>();
+const maxConcurrentInference = Math.max(Number.parseInt(process.env.ML_MAX_CONCURRENT_INFERENCE || "", 10) || 1, 1);
+let activeInferences = 0;
+
+function requesterKey(req: { ip?: string; headers?: Record<string, unknown>; socket?: { remoteAddress?: string } }, userId: number, action: string): string {
+  const forwarded = typeof req.headers?.["x-forwarded-for"] === "string" ? req.headers["x-forwarded-for"].split(",")[0]?.trim() : undefined;
+  return `${action}:${userId}:${forwarded || req.ip || req.socket?.remoteAddress || "unknown"}`;
+}
+
+function enforceRateLimit(req: Parameters<typeof requesterKey>[0], userId: number, action: string, maxRequests: number): void {
+  const now = Date.now();
+  const key = requesterKey(req, userId, action);
+  const current = rateLimitStore.get(key);
+  if (!current || now - current.windowStartedAt >= rateLimitWindowMs) {
+    rateLimitStore.set(key, { windowStartedAt: now, count: 1 });
+    return;
+  }
+  if (current.count >= maxRequests) {
+    throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Limite temporário de solicitações excedido. Tente novamente mais tarde." });
+  }
+  current.count += 1;
+}
+
+function acquireInferenceSlot(): () => void {
+  if (activeInferences >= maxConcurrentInference) {
+    throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "O servidor está processando outras análises. Tente novamente em instantes." });
+  }
+  activeInferences += 1;
+  let released = false;
+  return () => {
+    if (!released) {
+      released = true;
+      activeInferences = Math.max(0, activeInferences - 1);
+    }
+  };
+}
+
+function hasExpectedImageSignature(buffer: Buffer, mimeType: (typeof imageMimeTypes)[number]): boolean {
+  if (mimeType === "image/jpeg") return buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  return buffer.length >= 8 && Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).equals(buffer.subarray(0, 8));
+}
+
+const checkpointHashCache = new Map<string, string>();
+
+async function getCheckpointHashes(): Promise<Record<string, string>> {
+  const root = path.resolve(process.env.ML_PROJECT_ROOT || process.cwd());
+  const paths: Record<string, string> = {
+    cnn: process.env.ML_CNN_CHECKPOINT || path.join(root, "ml_artifacts", "ham10000", "cnn", "best.pt"),
+    vit: process.env.ML_VIT_CHECKPOINT || path.join(root, "ml_artifacts", "ham10000", "vit", "best.pt"),
+    hybrid: process.env.ML_HYBRID_CHECKPOINT || path.join(root, "ml_artifacts", "ham10000", "hybrid", "best.pt"),
+  };
+  const result: Record<string, string> = {};
+  for (const [model, checkpointPath] of Object.entries(paths)) {
+    const resolved = path.resolve(checkpointPath);
+    const cached = checkpointHashCache.get(resolved);
+    if (cached) {
+      result[model] = cached;
+      continue;
+    }
+    try {
+      const content = await fs.readFile(resolved);
+      const hash = createHash("sha256").update(content).digest("hex");
+      checkpointHashCache.set(resolved, hash);
+      result[model] = hash;
+    } catch {
+      result[model] = "unavailable";
+    }
+  }
+  return result;
+}
 
 function safeStem(fileName: string): string {
   const stem = path.basename(fileName, path.extname(fileName));
@@ -57,6 +132,9 @@ function decodeImageDataUrl(dataUrl: string, mimeType: (typeof imageMimeTypes)[n
   const buffer = Buffer.from(base64, "base64");
   if (!buffer.length || buffer.length > 10 * 1024 * 1024) {
     throw new TRPCError({ code: "BAD_REQUEST", message: "A imagem deve possuir entre 1 byte e 10 MB." });
+  }
+  if (!hasExpectedImageSignature(buffer, mimeType)) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "O conteúdo não corresponde a um JPEG ou PNG válido." });
   }
   return buffer;
 }
@@ -145,6 +223,7 @@ export const appRouter = router({
         dataUrl: z.string().max(15_000_000),
       }))
       .mutation(async ({ ctx, input }) => {
+        enforceRateLimit(ctx.req, ctx.user.id, "upload", Math.max(Number.parseInt(process.env.ML_UPLOAD_RATE_LIMIT || "", 10) || 30, 1));
         const buffer = decodeImageDataUrl(input.dataUrl, input.mimeType);
         const stored = await persistImage(buffer, input.fileName, input.mimeType, ctx.user.id);
         const image = await insertDermatologicalImage({
@@ -161,19 +240,59 @@ export const appRouter = router({
     classifyStoredImage: protectedProcedure
       .input(z.object({ imageId: z.number().int().positive() }))
       .mutation(async ({ ctx, input }) => {
+        enforceRateLimit(ctx.req, ctx.user.id, "classification", Math.max(Number.parseInt(process.env.ML_CLASSIFICATION_RATE_LIMIT || "", 10) || 20, 1));
+        const analysisRunId = randomUUID();
+        const analysisStartedAt = new Date();
+        const releaseInferenceSlot = acquireInferenceSlot();
         const image = await getImageById(input.imageId);
         if (!image || image.userId !== ctx.user.id) {
+          releaseInferenceSlot();
           throw new TRPCError({ code: "NOT_FOUND", message: "Imagem não encontrada ou acesso negado." });
         }
-        const materialized = await materializeImage(image.imagePath, image.mimeType);
+        let materialized: MaterializedImage | null = null;
         try {
+          materialized = await materializeImage(image.imagePath, image.mimeType);
           let result;
           try {
             result = await classificationService.classifyImage(materialized.localPath);
           } catch (error) {
-            const candidate = error as Error & { code?: string; eligibility?: { accepted: boolean; status: "accepted" | "rejected"; reasons: string[]; warnings: string[]; width?: number; height?: number; quality_score?: number; ood_score?: number | null; ood_threshold?: number | null } };
+            const candidate = error as Error & { code?: string; eligibility?: { accepted: boolean; status: "accepted" | "rejected"; reasons: string[]; warnings: string[]; width?: number; height?: number; quality_score?: number; ood_score?: number | null; ood_threshold?: number | null; features?: Record<string, number> } };
             if (candidate.code === "IMAGE_NOT_ELIGIBLE" && candidate.eligibility) {
+              try {
+                await insertAnalysisRun({
+                  imageId: image.id,
+                  userId: ctx.user.id,
+                  runId: analysisRunId,
+                  status: "rejected",
+                  rejectionReasons: JSON.stringify(candidate.eligibility.reasons),
+                  oodScore: candidate.eligibility.ood_score ?? null,
+                  oodThreshold: candidate.eligibility.ood_threshold ?? null,
+                  qualityScore: candidate.eligibility.quality_score ?? null,
+                  eligibilityFeatures: candidate.eligibility.features ? JSON.stringify(candidate.eligibility.features) : null,
+                  thresholds: JSON.stringify({
+                    ood: candidate.eligibility.ood_threshold ?? null,
+                    quality: candidate.eligibility.quality_score ?? null,
+                  }),
+                  startedAt: analysisStartedAt,
+                  completedAt: new Date(),
+                });
+              } catch (runError) {
+                console.warn("Execução científica recusada não persistida:", runError);
+              }
               return { status: "rejected" as const, imageId: image.id, eligibility: candidate.eligibility };
+            }
+            try {
+              await insertAnalysisRun({
+                imageId: image.id,
+                userId: ctx.user.id,
+                runId: analysisRunId,
+                status: "failed",
+                rejectionReasons: JSON.stringify([candidate.message || "Falha na triagem ou classificação da imagem."]),
+                startedAt: analysisStartedAt,
+                completedAt: new Date(),
+              });
+            } catch (runError) {
+              console.warn("Execução científica com falha não persistida:", runError);
             }
             throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Falha na triagem ou classificação da imagem." });
           }
@@ -202,9 +321,47 @@ export const appRouter = router({
             heatmapPath: heatmaps ? JSON.stringify(heatmaps) : null,
             modelVersion: result.ensembleResult.modelVersion || process.env.ML_MODEL_VERSION || "untrained",
           });
+          try {
+            await insertAnalysisRun({
+              imageId: image.id,
+              userId: ctx.user.id,
+              runId: analysisRunId,
+              status: result.ensembleResult.uncertainty?.abstain ? "abstained" : "classified",
+              qualityScore: result.eligibility.quality_score ?? null,
+              eligibilityFeatures: result.eligibility.features ? JSON.stringify(result.eligibility.features) : null,
+              oodScore: result.eligibility.ood_score ?? null,
+              oodThreshold: result.eligibility.ood_threshold ?? null,
+              finalClassification: result.finalClassification,
+              finalConfidence: result.finalConfidence,
+              abstained: result.ensembleResult.uncertainty?.abstain ? 1 : 0,
+              predictiveEntropy: result.ensembleResult.uncertainty?.predictiveEntropy ?? null,
+              ttaVariance: result.ensembleResult.uncertainty?.ttaVariance ?? null,
+              modelVersion: result.ensembleResult.modelVersion || process.env.ML_MODEL_VERSION || "untrained",
+              modelHashes: JSON.stringify(await getCheckpointHashes()),
+              thresholds: JSON.stringify({
+                entropy: process.env.ML_ENTROPY_THRESHOLD || "0.65",
+                ttaVariance: process.env.ML_TTA_VARIANCE_THRESHOLD || "0.02",
+                ensembleVotes: process.env.ML_ENSEMBLE_ABSTAIN_VOTES || "2",
+                ensembleEntropy: process.env.ML_ENSEMBLE_ENTROPY_THRESHOLD || "0.65",
+                ensembleTtaVariance: process.env.ML_ENSEMBLE_TTA_VARIANCE_THRESHOLD || "0.02",
+              }),
+              modelResults: JSON.stringify({
+                cnn: result.cnnResult,
+                vit: result.vitResult,
+                hybrid: result.hybridResult,
+                ensemble: result.ensembleResult,
+              }),
+              heatmapPaths: heatmaps ? JSON.stringify(heatmaps) : null,
+              startedAt: analysisStartedAt,
+              completedAt: new Date(),
+            });
+          } catch (runError) {
+            console.warn("Execução científica classificada não persistida:", runError);
+          }
           return { status: "classified" as const, diagnosis, result: resultWithHeatmaps };
         } finally {
-          if (materialized.cleanup) await fs.rm(materialized.localPath, { force: true });
+          if (materialized?.cleanup) await fs.rm(materialized.localPath, { force: true });
+          releaseInferenceSlot();
         }
       }),
 
@@ -225,6 +382,16 @@ export const appRouter = router({
           throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado ou acesso negado." });
         }
         return diagnosis;
+      }),
+
+    getAnalysisRuns: protectedProcedure
+      .input(z.object({ imageId: z.number().int().positive() }))
+      .query(async ({ ctx, input }) => {
+        const image = await getImageById(input.imageId);
+        if (!image || image.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Imagem não encontrada ou acesso negado." });
+        }
+        return getAnalysisRunsByImage(input.imageId);
       }),
   }),
 

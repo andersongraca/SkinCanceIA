@@ -1,5 +1,6 @@
-import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { COOKIE_NAME, decodeOAuthState, OAUTH_STATE_COOKIE, ONE_YEAR_MS } from "@shared/const";
 import type { Express, Request, Response } from "express";
+import { parse as parseCookieHeader } from "cookie";
 import * as db from "../db";
 import { getSessionCookieOptions } from "./cookies";
 import { sdk } from "./sdk";
@@ -18,6 +19,20 @@ export function registerOAuthRoutes(app: Express) {
       res.status(400).json({ error: "code and state are required" });
       return;
     }
+
+    const decodedState = decodeOAuthState(state);
+    const cookies = parseCookieHeader(req.headers.cookie ?? "");
+    const expectedNonce = cookies[OAUTH_STATE_COOKIE];
+    if (!decodedState || !expectedNonce || decodedState.nonce !== expectedNonce) {
+      res.status(403).json({ error: "invalid oauth state" });
+      return;
+    }
+
+    res.clearCookie(OAUTH_STATE_COOKIE, {
+      path: "/",
+      secure: true,
+      sameSite: "none",
+    });
 
     try {
       const tokenResponse = await sdk.exchangeCodeForToken(code, state);
@@ -43,7 +58,6 @@ export function registerOAuthRoutes(app: Express) {
 
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-
       res.redirect(302, "/");
     } catch (error) {
       console.error("[OAuth] Callback failed", error);

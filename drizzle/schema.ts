@@ -1,4 +1,4 @@
-import { int, index, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
+import { double, int, index, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -62,6 +62,38 @@ export const diagnoses = mysqlTable("diagnoses", {
 
 export type Diagnosis = typeof diagnoses.$inferSelect;
 export type InsertDiagnosis = typeof diagnoses.$inferInsert;
+
+export const analysisRuns = mysqlTable("analysis_runs", {
+  id: int("id").autoincrement().primaryKey(),
+  imageId: int("image_id").notNull().references(() => dermatologicalImages.id, { onDelete: "cascade" }),
+  userId: int("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  runId: varchar("run_id", { length: 64 }).notNull().unique(),
+  status: varchar("status", { length: 32 }).notNull(),
+  rejectionReasons: text("rejection_reasons"),
+  oodScore: double("ood_score"),
+  oodThreshold: double("ood_threshold"),
+  qualityScore: double("quality_score"),
+  eligibilityFeatures: text("eligibility_features"),
+  finalClassification: varchar("final_classification", { length: 50 }),
+  finalConfidence: double("final_confidence"),
+  abstained: int("abstained").notNull().default(0),
+  predictiveEntropy: double("predictive_entropy"),
+  ttaVariance: double("tta_variance"),
+  modelVersion: varchar("model_version", { length: 100 }),
+  modelHashes: text("model_hashes"),
+  thresholds: text("thresholds"),
+  modelResults: text("model_results"),
+  heatmapPaths: text("heatmap_paths"),
+  startedAt: timestamp("started_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+}, (table) => ({
+  imageIdx: index("analysis_runs_image_idx").on(table.imageId),
+  userIdx: index("analysis_runs_user_idx").on(table.userId),
+  startedAtIdx: index("analysis_runs_started_at_idx").on(table.startedAt),
+}));
+
+export type AnalysisRun = typeof analysisRuns.$inferSelect;
+export type InsertAnalysisRun = typeof analysisRuns.$inferInsert;
 
 export const modelMetrics = mysqlTable("model_metrics", {
   id: int("id").autoincrement().primaryKey(),

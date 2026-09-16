@@ -1,4 +1,5 @@
 import { AXIOS_TIMEOUT_MS, COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { decodeOAuthState } from "@shared/const";
 import { ForbiddenError } from "@shared/_core/errors";
 import axios, { type AxiosInstance } from "axios";
 import { parse as parseCookieHeader } from "cookie";
@@ -39,14 +40,21 @@ class OAuthService {
   }
 
   private decodeState(state: string): string {
-    const redirectUri = atob(state);
-    return redirectUri;
+    const decoded = decodeOAuthState(state);
+    if (!decoded) {
+      throw ForbiddenError("Invalid OAuth state");
+    }
+    return decoded.redirectUri;
   }
 
   async getTokenByCode(
     code: string,
     state: string
   ): Promise<ExchangeTokenResponse> {
+    if (!ENV.appId || !ENV.oAuthServerUrl) {
+      throw ForbiddenError("OAuth is not configured");
+    }
+
     const payload: ExchangeTokenRequest = {
       clientId: ENV.appId,
       grantType: "authorization_code",
@@ -156,6 +164,9 @@ class SDKServer {
 
   private getSessionSecret() {
     const secret = ENV.cookieSecret;
+    if (!isNonEmptyString(secret) || secret.length < 32) {
+      throw new Error("JWT_SECRET must contain at least 32 characters");
+    }
     return new TextEncoder().encode(secret);
   }
 

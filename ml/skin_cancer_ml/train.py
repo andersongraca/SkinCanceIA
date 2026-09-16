@@ -242,6 +242,9 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--image-size", type=int, default=224)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--validation-fraction", type=float, default=0.15)
+    parser.add_argument("--test-fraction", type=float, default=0.15)
     parser.add_argument("--no-pretrained", action="store_true")
     parser.add_argument("--freeze-backbone", action="store_true", help="Congela o backbone e treina somente as cabeças/transformer")
     parser.add_argument("--unfreeze-backbone-after", type=int, default=0, help="Descongela o backbone após este número de épocas congeladas; requer --freeze-backbone")
@@ -255,6 +258,9 @@ def main() -> None:
         epochs=args.epochs,
         batch_size=args.batch_size,
         image_size=args.image_size,
+        seed=args.seed,
+        validation_fraction=args.validation_fraction,
+        test_fraction=args.test_fraction,
         pretrained=not args.no_pretrained,
         freeze_backbone=args.freeze_backbone,
         unfreeze_backbone_after=max(args.unfreeze_backbone_after, 0),

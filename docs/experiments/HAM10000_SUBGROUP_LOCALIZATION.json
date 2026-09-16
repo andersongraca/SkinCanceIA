@@ -1,0 +1,2630 @@
+{
+  "predictions": "ml_artifacts\\ham10000\\ensemble\\test_predictions.npz",
+  "metadata": "ml_artifacts\\ham10000\\test.csv",
+  "group_column": "localization",
+  "sample_count": 1527,
+  "class_names": [
+    "akiec",
+    "bcc",
+    "bkl",
+    "df",
+    "mel",
+    "nv",
+    "vasc"
+  ],
+  "min_group_support_for_gaps": 20,
+  "subgroups": {
+    "abdomen": {
+      "support": 162,
+      "positive_support": 14,
+      "negative_support": 148,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.7592592592592593,
+          "balanced_accuracy": 0.5066666666666667,
+          "macro_f1": 0.356676056388457,
+          "weighted_f1": 0.8033119000493073,
+          "macro_precision": 0.33304843304843307,
+          "macro_recall": 0.4222222222222223,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.4080662221139985,
+          "ece": 0.19790318930222667,
+          "brier": 0.3834939539061226,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              2,
+              4,
+              4,
+              0
+            ],
+            [
+              0,
+              2,
+              7,
+              3,
+              8,
+              112,
+              8
+            ],
+            [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              5
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 4,
+              "precision": 0.4,
+              "recall": 0.5,
+              "f1": 0.4444444444444444,
+              "auroc_ovr": 0.9778481012658228,
+              "auprc_ovr": 0.4409090909090909
+            },
+            "bkl": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": 0.984375,
+              "auprc_ovr": 0.3666666666666667
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 10,
+              "precision": 0.3076923076923077,
+              "recall": 0.4,
+              "f1": 0.34782608695652173,
+              "auroc_ovr": 0.8526315789473684,
+              "auprc_ovr": 0.2203838612368024
+            },
+            "nv": {
+              "support": 140,
+              "precision": 0.9572649572649573,
+              "recall": 0.8,
+              "f1": 0.8715953307392996,
+              "auroc_ovr": 0.909090909090909,
+              "auprc_ovr": 0.9844868419683356
+            },
+            "vasc": {
+              "support": 6,
+              "precision": 0.3333333333333333,
+              "recall": 0.8333333333333334,
+              "f1": 0.47619047619047616,
+              "auroc_ovr": 0.9775641025641025,
+              "auprc_ovr": 0.844017094017094
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.8703703703703703,
+          "balanced_accuracy": 0.7997104247104247,
+          "sensitivity": 0.7142857142857143,
+          "specificity": 0.8851351351351351,
+          "precision": 0.37037037037037035,
+          "f1": 0.4878048780487805,
+          "mcc": 0.4519370578378191,
+          "auroc": 0.9136100386100385,
+          "auprc": 0.4511312100597814,
+          "ece": 0.062459992198848444,
+          "brier": 0.08764934614048121,
+          "confusion_matrix": [
+            [
+              131,
+              17
+            ],
+            [
+              4,
+              10
+            ]
+          ]
+        }
+      }
+    },
+    "acral": {
+      "support": 3,
+      "positive_support": 0,
+      "negative_support": 3,
+      "eligible_for_fairness_gaps": false,
+      "binary_metric_validity": {
+        "auroc": false,
+        "sensitivity": false,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.6666666666666666,
+          "balanced_accuracy": 0.6666666666666666,
+          "macro_f1": 0.4,
+          "weighted_f1": 0.8000000000000002,
+          "macro_precision": 0.5,
+          "macro_recall": 0.3333333333333333,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.14285714285714285,
+          "ece": 0.4623827536900838,
+          "brier": 0.5649148557827002,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              0,
+              0,
+              2,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bkl": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "nv": {
+              "support": 3,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "f1": 0.8,
+              "auroc_ovr": null,
+              "auprc_ovr": 1.0
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 1.0,
+          "balanced_accuracy": 1.0,
+          "sensitivity": 0.0,
+          "specificity": 1.0,
+          "precision": 0.0,
+          "f1": 0.0,
+          "mcc": 0.0,
+          "auroc": null,
+          "auprc": 0.0,
+          "ece": 0.17329318821430206,
+          "brier": 0.03132930854821736,
+          "confusion_matrix": [
+            [
+              3,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "back": {
+      "support": 289,
+      "positive_support": 73,
+      "negative_support": 216,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.5363321799307958,
+          "balanced_accuracy": 0.7225197488128523,
+          "macro_f1": 0.3626709498662469,
+          "weighted_f1": 0.5787824294050735,
+          "macro_precision": 0.3346648279634558,
+          "macro_recall": 0.6193026418395877,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.4600462682627572,
+          "ece": 0.11134607187604406,
+          "brier": 0.6206507082070643,
+          "confusion_matrix": [
+            [
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              3,
+              9,
+              1,
+              1,
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              5,
+              20,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              4,
+              6,
+              10,
+              1,
+              31,
+              2,
+              2
+            ],
+            [
+              2,
+              12,
+              36,
+              0,
+              38,
+              91,
+              6
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              2
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 2,
+              "precision": 0.15384615384615385,
+              "recall": 1.0,
+              "f1": 0.26666666666666666,
+              "auroc_ovr": 0.9860627177700348,
+              "auprc_ovr": 0.3611111111111111
+            },
+            "bcc": {
+              "support": 15,
+              "precision": 0.28125,
+              "recall": 0.6,
+              "f1": 0.3829787234042553,
+              "auroc_ovr": 0.9360097323600973,
+              "auprc_ovr": 0.5029005282070831
+            },
+            "bkl": {
+              "support": 29,
+              "precision": 0.29850746268656714,
+              "recall": 0.6896551724137931,
+              "f1": 0.4166666666666667,
+              "auroc_ovr": 0.7913793103448277,
+              "auprc_ovr": 0.49787028887440055
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 56,
+              "precision": 0.4305555555555556,
+              "recall": 0.5535714285714286,
+              "f1": 0.484375,
+              "auroc_ovr": 0.7578172900061312,
+              "auprc_ovr": 0.43429868404502714
+            },
+            "nv": {
+              "support": 185,
+              "precision": 0.978494623655914,
+              "recall": 0.4918918918918919,
+              "f1": 0.6546762589928058,
+              "auroc_ovr": 0.8613305613305614,
+              "auprc_ovr": 0.9241432656016784
+            },
+            "vasc": {
+              "support": 2,
+              "precision": 0.2,
+              "recall": 1.0,
+              "f1": 0.3333333333333333,
+              "auroc_ovr": 0.994773519163763,
+              "auprc_ovr": 0.5
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.6851211072664359,
+          "balanced_accuracy": 0.7485413495687467,
+          "sensitivity": 0.8767123287671232,
+          "specificity": 0.6203703703703703,
+          "precision": 0.4383561643835616,
+          "f1": 0.5844748858447488,
+          "mcc": 0.4319888195946721,
+          "auroc": 0.8163368848300355,
+          "auprc": 0.5681528655713622,
+          "ece": 0.13824490679808246,
+          "brier": 0.22082675951364308,
+          "confusion_matrix": [
+            [
+              134,
+              82
+            ],
+            [
+              9,
+              64
+            ]
+          ]
+        }
+      }
+    },
+    "chest": {
+      "support": 100,
+      "positive_support": 32,
+      "negative_support": 68,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.38,
+          "balanced_accuracy": 0.3881118881118881,
+          "macro_f1": 0.2710099424385139,
+          "weighted_f1": 0.4108665620094192,
+          "macro_precision": 0.30929727381340283,
+          "macro_recall": 0.32342657342657344,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.36619372721176735,
+          "ece": 0.08758630543947223,
+          "brier": 0.7030711280545401,
+          "confusion_matrix": [
+            [
+              1,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              6,
+              4,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              3,
+              4,
+              4,
+              0,
+              5,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              3,
+              0,
+              12,
+              1,
+              0
+            ],
+            [
+              0,
+              6,
+              14,
+              1,
+              14,
+              17,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 3,
+              "precision": 0.09090909090909091,
+              "recall": 0.3333333333333333,
+              "f1": 0.14285714285714285,
+              "auroc_ovr": 0.8865979381443299,
+              "auprc_ovr": 0.4201680672268907
+            },
+            "bcc": {
+              "support": 11,
+              "precision": 0.26666666666666666,
+              "recall": 0.36363636363636365,
+              "f1": 0.3076923076923077,
+              "auroc_ovr": 0.9152196118488254,
+              "auprc_ovr": 0.4715956169583845
+            },
+            "bkl": {
+              "support": 16,
+              "precision": 0.16666666666666666,
+              "recall": 0.25,
+              "f1": 0.2,
+              "auroc_ovr": 0.6525297619047619,
+              "auprc_ovr": 0.32614356969525465
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 18,
+              "precision": 0.3870967741935484,
+              "recall": 0.6666666666666666,
+              "f1": 0.4897959183673469,
+              "auroc_ovr": 0.763550135501355,
+              "auprc_ovr": 0.48934063506908665
+            },
+            "nv": {
+              "support": 52,
+              "precision": 0.9444444444444444,
+              "recall": 0.3269230769230769,
+              "f1": 0.4857142857142857,
+              "auroc_ovr": 0.8321314102564102,
+              "auprc_ovr": 0.8561082015327555
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.6,
+          "balanced_accuracy": 0.6810661764705882,
+          "sensitivity": 0.90625,
+          "specificity": 0.45588235294117646,
+          "precision": 0.4393939393939394,
+          "f1": 0.5918367346938775,
+          "mcc": 0.3566032900430669,
+          "auroc": 0.7697610294117647,
+          "auprc": 0.5780541654607803,
+          "ece": 0.1887866836413741,
+          "brier": 0.2667513171710156,
+          "confusion_matrix": [
+            [
+              31,
+              37
+            ],
+            [
+              3,
+              29
+            ]
+          ]
+        }
+      }
+    },
+    "ear": {
+      "support": 6,
+      "positive_support": 3,
+      "negative_support": 3,
+      "eligible_for_fairness_gaps": false,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.16666666666666666,
+          "balanced_accuracy": 0.16666666666666666,
+          "macro_f1": 0.08333333333333333,
+          "weighted_f1": 0.16666666666666666,
+          "macro_precision": 0.08333333333333333,
+          "macro_recall": 0.08333333333333333,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.23333333333333334,
+          "ece": 0.13172582785288492,
+          "brier": 0.8086227932209015,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              1,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              0,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bkl": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 3,
+              "precision": 0.3333333333333333,
+              "recall": 0.3333333333333333,
+              "f1": 0.3333333333333333,
+              "auroc_ovr": 0.3333333333333333,
+              "auprc_ovr": 0.6333333333333333
+            },
+            "nv": {
+              "support": 3,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": 1.0,
+              "auprc_ovr": 1.0
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.3333333333333333,
+          "balanced_accuracy": 0.3333333333333333,
+          "sensitivity": 0.6666666666666666,
+          "specificity": 0.0,
+          "precision": 0.4,
+          "f1": 0.5,
+          "mcc": -0.4472135954999579,
+          "auroc": 0.6666666666666666,
+          "auprc": 0.8333333333333333,
+          "ece": 0.4036069015661875,
+          "brier": 0.2821177823537256,
+          "confusion_matrix": [
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ]
+          ]
+        }
+      }
+    },
+    "face": {
+      "support": 131,
+      "positive_support": 56,
+      "negative_support": 75,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.5343511450381679,
+          "balanced_accuracy": 0.5472414098799435,
+          "macro_f1": 0.43520098948670377,
+          "weighted_f1": 0.5383732637167753,
+          "macro_precision": 0.4999361404640908,
+          "macro_recall": 0.4690640656113802,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.514305665280215,
+          "ece": 0.10093586158206443,
+          "brier": 0.6393510565603503,
+          "confusion_matrix": [
+            [
+              14,
+              2,
+              5,
+              0,
+              2,
+              0,
+              0
+            ],
+            [
+              1,
+              8,
+              2,
+              1,
+              1,
+              0,
+              0
+            ],
+            [
+              12,
+              6,
+              31,
+              1,
+              2,
+              0,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              4,
+              3,
+              3,
+              0,
+              10,
+              0,
+              0
+            ],
+            [
+              2,
+              3,
+              5,
+              0,
+              1,
+              4,
+              2
+            ],
+            [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 23,
+              "precision": 0.42424242424242425,
+              "recall": 0.6086956521739131,
+              "f1": 0.5,
+              "auroc_ovr": 0.8099838969404186,
+              "auprc_ovr": 0.5078248130988989
+            },
+            "bcc": {
+              "support": 13,
+              "precision": 0.34782608695652173,
+              "recall": 0.6153846153846154,
+              "f1": 0.4444444444444444,
+              "auroc_ovr": 0.8376792698826597,
+              "auprc_ovr": 0.4410793031934485
+            },
+            "bkl": {
+              "support": 54,
+              "precision": 0.6739130434782609,
+              "recall": 0.5740740740740741,
+              "f1": 0.62,
+              "auroc_ovr": 0.732082732082732,
+              "auprc_ovr": 0.7145477368338422
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 20,
+              "precision": 0.625,
+              "recall": 0.5,
+              "f1": 0.5555555555555556,
+              "auroc_ovr": 0.7725225225225225,
+              "auprc_ovr": 0.4974587514555431
+            },
+            "nv": {
+              "support": 17,
+              "precision": 1.0,
+              "recall": 0.23529411764705882,
+              "f1": 0.38095238095238093,
+              "auroc_ovr": 0.7812177502579979,
+              "auprc_ovr": 0.5642290523797726
+            },
+            "vasc": {
+              "support": 4,
+              "precision": 0.42857142857142855,
+              "recall": 0.75,
+              "f1": 0.5454545454545454,
+              "auroc_ovr": 0.9921259842519685,
+              "auprc_ovr": 0.875
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.6183206106870229,
+          "balanced_accuracy": 0.6576190476190477,
+          "sensitivity": 0.9285714285714286,
+          "specificity": 0.38666666666666666,
+          "precision": 0.5306122448979592,
+          "f1": 0.6753246753246753,
+          "mcc": 0.3592471505537158,
+          "auroc": 0.77,
+          "auprc": 0.6993247414858188,
+          "ece": 0.197430360863227,
+          "brier": 0.2602964007204105,
+          "confusion_matrix": [
+            [
+              29,
+              46
+            ],
+            [
+              4,
+              52
+            ]
+          ]
+        }
+      }
+    },
+    "foot": {
+      "support": 46,
+      "positive_support": 7,
+      "negative_support": 39,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.5869565217391305,
+          "balanced_accuracy": 0.4829059829059829,
+          "macro_f1": 0.2751322751322751,
+          "weighted_f1": 0.7184265010351966,
+          "macro_precision": 0.36111111111111116,
+          "macro_recall": 0.24145299145299146,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.3718730993625547,
+          "ece": 0.12356821026491081,
+          "brier": 0.4951986175071988,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              2,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              5,
+              0,
+              5,
+              24,
+              5
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 4,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666,
+              "auroc_ovr": 1.0,
+              "auprc_ovr": 1.0
+            },
+            "bkl": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 3,
+              "precision": 0.16666666666666666,
+              "recall": 0.3333333333333333,
+              "f1": 0.2222222222222222,
+              "auroc_ovr": 0.8682170542635659,
+              "auprc_ovr": 0.6081871345029239
+            },
+            "nv": {
+              "support": 39,
+              "precision": 1.0,
+              "recall": 0.6153846153846154,
+              "f1": 0.7619047619047619,
+              "auroc_ovr": 0.9706959706959706,
+              "auprc_ovr": 0.9949245610349591
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.8695652173913043,
+          "balanced_accuracy": 0.7472527472527473,
+          "sensitivity": 0.5714285714285714,
+          "specificity": 0.9230769230769231,
+          "precision": 0.5714285714285714,
+          "f1": 0.5714285714285714,
+          "mcc": 0.4945054945054945,
+          "auroc": 0.956043956043956,
+          "auprc": 0.8297619047619047,
+          "ece": 0.1474776207671865,
+          "brier": 0.07935317264614812,
+          "confusion_matrix": [
+            [
+              36,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        }
+      }
+    },
+    "genital": {
+      "support": 8,
+      "positive_support": 0,
+      "negative_support": 8,
+      "eligible_for_fairness_gaps": false,
+      "binary_metric_validity": {
+        "auroc": false,
+        "sensitivity": false,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.5,
+          "balanced_accuracy": 0.3333333333333333,
+          "macro_f1": 0.26666666666666666,
+          "weighted_f1": 0.6000000000000001,
+          "macro_precision": 0.3333333333333333,
+          "macro_recall": 0.2222222222222222,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.18928571428571428,
+          "ece": 0.25458988174796104,
+          "brier": 0.5963104600893052,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              0,
+              0,
+              4,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bkl": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": 0.5,
+              "auprc_ovr": 0.325
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "nv": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 0.6666666666666666,
+              "f1": 0.8,
+              "auroc_ovr": 1.0,
+              "auprc_ovr": 1.0
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.625,
+          "balanced_accuracy": 0.625,
+          "sensitivity": 0.0,
+          "specificity": 0.625,
+          "precision": 0.0,
+          "f1": 0.0,
+          "mcc": 0.0,
+          "auroc": null,
+          "auprc": 0.0,
+          "ece": 0.3647742713801563,
+          "brier": 0.28291000152584156,
+          "confusion_matrix": [
+            [
+              5,
+              3
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "hand": {
+      "support": 16,
+      "positive_support": 2,
+      "negative_support": 14,
+      "eligible_for_fairness_gaps": false,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.75,
+          "balanced_accuracy": 0.8787878787878788,
+          "macro_f1": 0.6587301587301587,
+          "weighted_f1": 0.8204365079365079,
+          "macro_precision": 0.6875,
+          "macro_recall": 0.6590909090909091,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.4235668372032008,
+          "ece": 0.3875123830512166,
+          "brier": 0.563483192367594,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              0,
+              0,
+              7,
+              3
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "auroc_ovr": 1.0,
+              "auprc_ovr": 1.0
+            },
+            "bkl": {
+              "support": 3,
+              "precision": 0.75,
+              "recall": 1.0,
+              "f1": 0.8571428571428571,
+              "auroc_ovr": 1.0,
+              "auprc_ovr": 1.0
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "nv": {
+              "support": 11,
+              "precision": 1.0,
+              "recall": 0.6363636363636364,
+              "f1": 0.7777777777777778,
+              "auroc_ovr": 0.9272727272727274,
+              "auprc_ovr": 0.9649678604224059
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.875,
+          "balanced_accuracy": 0.9285714285714286,
+          "sensitivity": 1.0,
+          "specificity": 0.8571428571428571,
+          "precision": 0.5,
+          "f1": 0.6666666666666666,
+          "mcc": 0.6546536707079772,
+          "auroc": 1.0,
+          "auprc": 1.0,
+          "ece": 0.18958611972630024,
+          "brier": 0.12499554556970843,
+          "confusion_matrix": [
+            [
+              12,
+              2
+            ],
+            [
+              0,
+              2
+            ]
+          ]
+        }
+      }
+    },
+    "lower extremity": {
+      "support": 325,
+      "positive_support": 47,
+      "negative_support": 278,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.6246153846153846,
+          "balanced_accuracy": 0.5716596638655462,
+          "macro_f1": 0.428792594206128,
+          "weighted_f1": 0.6778299073845633,
+          "macro_precision": 0.40468229869623334,
+          "macro_recall": 0.5716596638655462,
+          "auroc_macro_ovr": 0.9195319020400129,
+          "auprc_macro_ovr": 0.5559664041154423,
+          "ece": 0.13173856386771568,
+          "brier": 0.5022212358362951,
+          "confusion_matrix": [
+            [
+              1,
+              3,
+              3,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              3,
+              1,
+              1,
+              0,
+              0,
+              1
+            ],
+            [
+              1,
+              3,
+              13,
+              0,
+              7,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              5,
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              2,
+              7,
+              0,
+              18,
+              2,
+              1
+            ],
+            [
+              1,
+              3,
+              26,
+              2,
+              17,
+              155,
+              34
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              8
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 8,
+              "precision": 0.16666666666666666,
+              "recall": 0.125,
+              "f1": 0.14285714285714285,
+              "auroc_ovr": 0.8797318611987383,
+              "auprc_ovr": 0.2436396988021819
+            },
+            "bcc": {
+              "support": 7,
+              "precision": 0.21428571428571427,
+              "recall": 0.42857142857142855,
+              "f1": 0.2857142857142857,
+              "auroc_ovr": 0.9721473495058401,
+              "auprc_ovr": 0.3811413454270597
+            },
+            "bkl": {
+              "support": 25,
+              "precision": 0.2549019607843137,
+              "recall": 0.52,
+              "f1": 0.34210526315789475,
+              "auroc_ovr": 0.8664,
+              "auprc_ovr": 0.5195167143145369
+            },
+            "df": {
+              "support": 7,
+              "precision": 0.625,
+              "recall": 0.7142857142857143,
+              "f1": 0.6666666666666666,
+              "auroc_ovr": 0.9645103324348607,
+              "auprc_ovr": 0.6438346599636922
+            },
+            "mel": {
+              "support": 32,
+              "precision": 0.4090909090909091,
+              "recall": 0.5625,
+              "f1": 0.47368421052631576,
+              "auroc_ovr": 0.8434300341296928,
+              "auprc_ovr": 0.36030941396713034
+            },
+            "nv": {
+              "support": 238,
+              "precision": 0.9810126582278481,
+              "recall": 0.6512605042016807,
+              "f1": 0.7828282828282829,
+              "auroc_ovr": 0.922727711774365,
+              "auprc_ovr": 0.970012973023471
+            },
+            "vasc": {
+              "support": 8,
+              "precision": 0.18181818181818182,
+              "recall": 1.0,
+              "f1": 0.3076923076923077,
+              "auroc_ovr": 0.987776025236593,
+              "auprc_ovr": 0.7733100233100233
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.7876923076923077,
+          "balanced_accuracy": 0.7521429664778816,
+          "sensitivity": 0.7021276595744681,
+          "specificity": 0.802158273381295,
+          "precision": 0.375,
+          "f1": 0.4888888888888889,
+          "mcc": 0.399146818107483,
+          "auroc": 0.8519822439920404,
+          "auprc": 0.4537604894392485,
+          "ece": 0.05805316423710724,
+          "brier": 0.1388925356614314,
+          "confusion_matrix": [
+            [
+              223,
+              55
+            ],
+            [
+              14,
+              33
+            ]
+          ]
+        }
+      }
+    },
+    "neck": {
+      "support": 32,
+      "positive_support": 10,
+      "negative_support": 22,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.40625,
+          "balanced_accuracy": 0.5291666666666666,
+          "macro_f1": 0.3548711755233494,
+          "weighted_f1": 0.4100996376811594,
+          "macro_precision": 0.3968253968253968,
+          "macro_recall": 0.44097222222222215,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.3513449745221752,
+          "ece": 0.18624352104961872,
+          "brier": 0.7480418387345307,
+          "confusion_matrix": [
+            [
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              4,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3,
+              0,
+              1,
+              2,
+              0
+            ],
+            [
+              2,
+              1,
+              5,
+              0,
+              0,
+              5,
+              3
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 2,
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1": 0.5,
+              "auroc_ovr": 0.8166666666666667,
+              "auprc_ovr": 0.2111111111111111
+            },
+            "bcc": {
+              "support": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "auroc_ovr": 0.9666666666666667,
+              "auprc_ovr": 0.5833333333333333
+            },
+            "bkl": {
+              "support": 6,
+              "precision": 0.3333333333333333,
+              "recall": 0.6666666666666666,
+              "f1": 0.4444444444444444,
+              "auroc_ovr": 0.7051282051282051,
+              "auprc_ovr": 0.29228734228734227
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 6,
+              "precision": 0.5,
+              "recall": 0.16666666666666666,
+              "f1": 0.25,
+              "auroc_ovr": 0.8076923076923077,
+              "auprc_ovr": 0.6371223196881092
+            },
+            "nv": {
+              "support": 16,
+              "precision": 0.7142857142857143,
+              "recall": 0.3125,
+              "f1": 0.43478260869565216,
+              "auroc_ovr": 0.6953125,
+              "auprc_ovr": 0.735560715235331
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.5625,
+          "balanced_accuracy": 0.6,
+          "sensitivity": 0.7,
+          "specificity": 0.5,
+          "precision": 0.3888888888888889,
+          "f1": 0.5,
+          "mcc": 0.1868706368604627,
+          "auroc": 0.65,
+          "auprc": 0.4895297839415486,
+          "ece": 0.2887411451083608,
+          "brier": 0.297509782195459,
+          "confusion_matrix": [
+            [
+              11,
+              11
+            ],
+            [
+              3,
+              7
+            ]
+          ]
+        }
+      }
+    },
+    "scalp": {
+      "support": 28,
+      "positive_support": 8,
+      "negative_support": 20,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.42857142857142855,
+          "balanced_accuracy": 0.37727272727272726,
+          "macro_f1": 0.3290909090909091,
+          "weighted_f1": 0.410064935064935,
+          "macro_precision": 0.3079365079365079,
+          "macro_recall": 0.37727272727272726,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.3690777068403119,
+          "ece": 0.19720161706209183,
+          "brier": 0.7364380365964915,
+          "confusion_matrix": [
+            [
+              3,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              3,
+              0,
+              7,
+              0,
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              2,
+              0,
+              0,
+              0,
+              0,
+              5
+            ],
+            [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 4,
+              "precision": 0.42857142857142855,
+              "recall": 0.75,
+              "f1": 0.5454545454545454,
+              "auroc_ovr": 0.90625,
+              "auprc_ovr": 0.6527777777777778
+            },
+            "bcc": {
+              "support": 4,
+              "precision": 0.3333333333333333,
+              "recall": 0.5,
+              "f1": 0.4,
+              "auroc_ovr": 0.7812499999999999,
+              "auprc_ovr": 0.32067099567099566
+            },
+            "bkl": {
+              "support": 11,
+              "precision": 0.7777777777777778,
+              "recall": 0.6363636363636364,
+              "f1": 0.7,
+              "auroc_ovr": 0.9037433155080213,
+              "auprc_ovr": 0.8836792292674647
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "nv": {
+              "support": 8,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": 0.79375,
+              "auprc_ovr": 0.5597492784992785
+            },
+            "vasc": {
+              "support": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": 0.8148148148148149,
+              "auprc_ovr": 0.16666666666666666
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.6428571428571429,
+          "balanced_accuracy": 0.7125,
+          "sensitivity": 0.875,
+          "specificity": 0.55,
+          "precision": 0.4375,
+          "f1": 0.5833333333333334,
+          "mcc": 0.38797014489949266,
+          "auroc": 0.7999999999999999,
+          "auprc": 0.7150297619047619,
+          "ece": 0.24213378916361503,
+          "brier": 0.2644846476963501,
+          "confusion_matrix": [
+            [
+              11,
+              9
+            ],
+            [
+              1,
+              7
+            ]
+          ]
+        }
+      }
+    },
+    "trunk": {
+      "support": 198,
+      "positive_support": 0,
+      "negative_support": 198,
+      "eligible_for_fairness_gaps": false,
+      "binary_metric_validity": {
+        "auroc": false,
+        "sensitivity": false,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.803030303030303,
+          "balanced_accuracy": 0.7720720720720721,
+          "macro_f1": 0.2300225415610031,
+          "weighted_f1": 0.860416791186022,
+          "macro_precision": 0.21722022142190212,
+          "macro_recall": 0.3308880308880309,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.2938682888713771,
+          "ece": 0.23465817278683787,
+          "brier": 0.3505908823213556,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              5,
+              0,
+              0,
+              2,
+              2
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1,
+              9,
+              1,
+              11,
+              151,
+              12
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bkl": {
+              "support": 10,
+              "precision": 0.35714285714285715,
+              "recall": 0.5,
+              "f1": 0.4166666666666667,
+              "auroc_ovr": 0.8702127659574468,
+              "auprc_ovr": 0.33955263315919054
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "nv": {
+              "support": 185,
+              "precision": 0.9869281045751634,
+              "recall": 0.8162162162162162,
+              "f1": 0.893491124260355,
+              "auroc_ovr": 0.935966735966736,
+              "auprc_ovr": 0.9953031667182268
+            },
+            "vasc": {
+              "support": 3,
+              "precision": 0.17647058823529413,
+              "recall": 1.0,
+              "f1": 0.3,
+              "auroc_ovr": 0.9931623931623932,
+              "auprc_ovr": 0.7222222222222222
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.9141414141414141,
+          "balanced_accuracy": 0.9141414141414141,
+          "sensitivity": 0.0,
+          "specificity": 0.9141414141414141,
+          "precision": 0.0,
+          "f1": 0.0,
+          "mcc": 0.0,
+          "auroc": null,
+          "auprc": 0.0,
+          "ece": 0.07237416506754328,
+          "brier": 0.06796877699911229,
+          "confusion_matrix": [
+            [
+              181,
+              17
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "unknown": {
+      "support": 30,
+      "positive_support": 0,
+      "negative_support": 30,
+      "eligible_for_fairness_gaps": false,
+      "binary_metric_validity": {
+        "auroc": false,
+        "sensitivity": false,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.4666666666666667,
+          "balanced_accuracy": 0.4807692307692308,
+          "macro_f1": 0.18859649122807018,
+          "weighted_f1": 0.6140350877192982,
+          "macro_precision": 0.25,
+          "macro_recall": 0.16025641025641027,
+          "auroc_macro_ovr": null,
+          "auprc_macro_ovr": 0.1862554112554112,
+          "ece": 0.2481781805555026,
+          "brier": 0.6922994949903476,
+          "confusion_matrix": [
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2,
+              2,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2,
+              1,
+              7,
+              12,
+              4
+            ],
+            [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bcc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "bkl": {
+              "support": 4,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "auroc_ovr": 0.673076923076923,
+              "auprc_ovr": 0.3037878787878788
+            },
+            "df": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "mel": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            },
+            "nv": {
+              "support": 26,
+              "precision": 1.0,
+              "recall": 0.46153846153846156,
+              "f1": 0.631578947368421,
+              "auroc_ovr": 1.0,
+              "auprc_ovr": 0.9999999999999998
+            },
+            "vasc": {
+              "support": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "auroc_ovr": null,
+              "auprc_ovr": 0.0
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.7,
+          "balanced_accuracy": 0.7,
+          "sensitivity": 0.0,
+          "specificity": 0.7,
+          "precision": 0.0,
+          "f1": 0.0,
+          "mcc": 0.0,
+          "auroc": null,
+          "auprc": 0.0,
+          "ece": 0.1679260668034355,
+          "brier": 0.19162951864290986,
+          "confusion_matrix": [
+            [
+              21,
+              9
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    "upper extremity": {
+      "support": 153,
+      "positive_support": 48,
+      "negative_support": 105,
+      "eligible_for_fairness_gaps": true,
+      "binary_metric_validity": {
+        "auroc": true,
+        "sensitivity": true,
+        "specificity": true
+      },
+      "metrics": {
+        "multiclass": {
+          "accuracy": 0.48366013071895425,
+          "balanced_accuracy": 0.4480641258318209,
+          "macro_f1": 0.35739305120544457,
+          "weighted_f1": 0.548515097473458,
+          "macro_precision": 0.3646613590491142,
+          "macro_recall": 0.4480641258318209,
+          "auroc_macro_ovr": 0.8739890043723763,
+          "auprc_macro_ovr": 0.4747998608191161,
+          "ece": 0.14899616167436236,
+          "brier": 0.5930283165613079,
+          "confusion_matrix": [
+            [
+              3,
+              0,
+              2,
+              0,
+              1,
+              0,
+              0
+            ],
+            [
+              2,
+              1,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            [
+              1,
+              2,
+              5,
+              2,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            [
+              1,
+              4,
+              9,
+              1,
+              17,
+              4,
+              2
+            ],
+            [
+              0,
+              3,
+              22,
+              1,
+              8,
+              44,
+              9
+            ],
+            [
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              3
+            ]
+          ],
+          "per_class": {
+            "akiec": {
+              "support": 6,
+              "precision": 0.375,
+              "recall": 0.5,
+              "f1": 0.42857142857142855,
+              "auroc_ovr": 0.945578231292517,
+              "auprc_ovr": 0.44175084175084167
+            },
+            "bcc": {
+              "support": 4,
+              "precision": 0.08333333333333333,
+              "recall": 0.25,
+              "f1": 0.125,
+              "auroc_ovr": 0.8506711409395973,
+              "auprc_ovr": 0.12068928448572411
+            },
+            "bkl": {
+              "support": 10,
+              "precision": 0.1282051282051282,
+              "recall": 0.5,
+              "f1": 0.20408163265306123,
+              "auroc_ovr": 0.6594405594405595,
+              "auprc_ovr": 0.2688294712376098
+            },
+            "df": {
+              "support": 3,
+              "precision": 0.2,
+              "recall": 0.3333333333333333,
+              "f1": 0.25,
+              "auroc_ovr": 0.9577777777777777,
+              "auprc_ovr": 0.3032679738562092
+            },
+            "mel": {
+              "support": 38,
+              "precision": 0.6538461538461539,
+              "recall": 0.4473684210526316,
+              "f1": 0.53125,
+              "auroc_ovr": 0.8590389016018307,
+              "auprc_ovr": 0.702777542805044
+            },
+            "nv": {
+              "support": 87,
+              "precision": 0.8979591836734694,
+              "recall": 0.5057471264367817,
+              "f1": 0.6470588235294118,
+              "auroc_ovr": 0.8981191222570534,
+              "auprc_ovr": 0.9248553401698127
+            },
+            "vasc": {
+              "support": 5,
+              "precision": 0.21428571428571427,
+              "recall": 0.6,
+              "f1": 0.3157894736842105,
+              "auroc_ovr": 0.9472972972972974,
+              "auprc_ovr": 0.5614285714285714
+            }
+          }
+        },
+        "binary": {
+          "accuracy": 0.6993464052287581,
+          "balanced_accuracy": 0.71875,
+          "sensitivity": 0.7708333333333334,
+          "specificity": 0.6666666666666666,
+          "precision": 0.5138888888888888,
+          "f1": 0.6166666666666667,
+          "mcc": 0.40670973512073116,
+          "auroc": 0.8251984126984127,
+          "auprc": 0.666568501791112,
+          "ece": 0.11431660312623562,
+          "brier": 0.1874433531808068,
+          "confusion_matrix": [
+            [
+              70,
+              35
+            ],
+            [
+              11,
+              37
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "fairness_gaps": {
+    "binary_auroc": {
+      "minimum": 0.65,
+      "maximum": 0.956043956043956,
+      "absolute_gap": 0.30604395604395596,
+      "eligible_group_count": 9
+    },
+    "binary_sensitivity": {
+      "minimum": 0.5714285714285714,
+      "maximum": 0.9285714285714286,
+      "absolute_gap": 0.3571428571428572,
+      "eligible_group_count": 9
+    },
+    "binary_specificity": {
+      "minimum": 0.38666666666666666,
+      "maximum": 0.9230769230769231,
+      "absolute_gap": 0.5364102564102564,
+      "eligible_group_count": 9
+    },
+    "multiclass_macro_f1": {
+      "minimum": 0.2710099424385139,
+      "maximum": 0.43520098948670377,
+      "absolute_gap": 0.16419104704818988,
+      "eligible_group_count": 9
+    }
+  },
+  "fairness_gap_groups": {
+    "eligible": [
+      "abdomen",
+      "back",
+      "chest",
+      "face",
+      "foot",
+      "lower extremity",
+      "neck",
+      "scalp",
+      "upper extremity"
+    ],
+    "excluded": [
+      "acral",
+      "ear",
+      "genital",
+      "hand",
+      "trunk",
+      "unknown"
+    ]
+  }
+}
