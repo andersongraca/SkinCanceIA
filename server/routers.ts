@@ -5,7 +5,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
-import type { DermatologicalImage } from "../drizzle/schema";
+import type { DermatologicalImage, Diagnosis, ModelMetric } from "../drizzle/schema";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { ENV } from "./_core/env";
 import { systemRouter } from "./_core/systemRouter";
@@ -41,9 +41,68 @@ const maxConcurrentInference = Math.max(Number.parseInt(process.env.ML_MAX_CONCU
 let activeInferences = 0;
 const localImages = new Map<number, DermatologicalImage>();
 let nextLocalImageId = 1;
+type LocalDiagnosisRecord = Diagnosis & { imageFileName: string; imagePath: string };
+const localDiagnoses = new Map<number, LocalDiagnosisRecord>();
+let nextLocalDiagnosisId = 1;
 
 function isLocalInferenceMode(): boolean {
   return ENV.isLocalDemoMode && !ENV.isProduction;
+}
+
+async function getLocalModelMetrics(): Promise<ModelMetric[]> {
+  const root = path.resolve(process.env.ML_PROJECT_ROOT || process.cwd());
+  const metricsPath = path.join(root, "ml_artifacts", "ham10000", "ensemble", "test_metrics.json");
+  try {
+    const report = JSON.parse(await fs.readFile(metricsPath, "utf8")) as {
+      test_sample_count?: number;
+      component_test_metrics?: Record<string, { binary: Record<string, number> }>;
+      ensemble_test_metrics?: { binary: Record<string, number> };
+    };
+    const modelNames: Record<string, string> = {
+      cnn: "CNN (ResNet-50)",
+      vit: "Vision Transformer (ViT)",
+      hybrid: "Hybrid CNN-ViT",
+      ensemble: "Ensemble Learning",
+    };
+    const rows: ModelMetric[] = [];
+    for (const name of ["cnn", "vit", "hybrid"]) {
+      const metrics = report.component_test_metrics?.[name];
+      if (!metrics) continue;
+      rows.push({
+        id: 0,
+        modelName: modelNames[name],
+        modelVersion: "HAM10000 test set",
+        accuracy: Math.round((metrics.binary.accuracy ?? 0) * 10000) / 100,
+        sensitivity: Math.round((metrics.binary.sensitivity ?? 0) * 10000) / 100,
+        specificity: Math.round((metrics.binary.specificity ?? 0) * 10000) / 100,
+        f1Score: Math.round((metrics.binary.f1 ?? 0) * 10000) / 100,
+        auc: Math.round((metrics.binary.auroc ?? 0) * 10000) / 100,
+        precision: Math.round((metrics.binary.precision ?? 0) * 10000) / 100,
+        sampleCount: report.test_sample_count ?? 0,
+        updatedAt: new Date(0),
+      });
+    }
+    const ensemble = report.ensemble_test_metrics;
+    if (ensemble) {
+      rows.push({
+        id: 0,
+        modelName: modelNames.ensemble,
+        modelVersion: "HAM10000 test set",
+        accuracy: Math.round((ensemble.binary.accuracy ?? 0) * 10000) / 100,
+        sensitivity: Math.round((ensemble.binary.sensitivity ?? 0) * 10000) / 100,
+        specificity: Math.round((ensemble.binary.specificity ?? 0) * 10000) / 100,
+        f1Score: Math.round((ensemble.binary.f1 ?? 0) * 10000) / 100,
+        auc: Math.round((ensemble.binary.auroc ?? 0) * 10000) / 100,
+        precision: Math.round((ensemble.binary.precision ?? 0) * 10000) / 100,
+        sampleCount: report.test_sample_count ?? 0,
+        updatedAt: new Date(0),
+      });
+    }
+    return rows;
+  } catch (error) {
+    console.warn("[Local inference] Métricas do HAM10000 não disponíveis:", error);
+    return [];
+  }
 }
 
 function requesterKey(req: { ip?: string; headers?: Record<string, unknown>; socket?: { remoteAddress?: string } }, userId: number, action: string): string {
@@ -336,7 +395,7 @@ export const appRouter = router({
           }
 
           const resultWithHeatmaps = { ...result, heatmaps };
-          const diagnosis = await insertDiagnosis({
+          const diagnosisInput = {
             imageId: image.id,
             userId: ctx.user.id,
             classification: result.finalClassification,
@@ -349,7 +408,27 @@ export const appRouter = router({
             hybridConfidence: Math.round(result.hybridResult.confidence),
             heatmapPath: heatmaps ? JSON.stringify(heatmaps) : null,
             modelVersion: result.ensembleResult.modelVersion || process.env.ML_MODEL_VERSION || "untrained",
-          });
+          };
+          let diagnosis: Diagnosis | null = null;
+          try {
+            diagnosis = await insertDiagnosis(diagnosisInput);
+          } catch (error) {
+            if (!isLocalInferenceMode()) throw error;
+            console.warn("[Local inference] Diagnóstico mantido temporariamente sem banco.");
+          }
+          if (!diagnosis && isLocalInferenceMode()) {
+            const localDiagnosis: LocalDiagnosisRecord = {
+              id: nextLocalDiagnosisId++,
+              ...diagnosisInput,
+              heatmapPath: diagnosisInput.heatmapPath,
+              diagnosedAt: new Date(),
+              updatedAt: new Date(),
+              imageFileName: image.fileName,
+              imagePath: image.imagePath,
+            };
+            localDiagnoses.set(localDiagnosis.id, localDiagnosis);
+            diagnosis = localDiagnosis;
+          }
           try {
             await insertAnalysisRun({
               imageId: image.id,
@@ -396,6 +475,11 @@ export const appRouter = router({
 
     getHistory: protectedProcedure.query(async ({ ctx }) => {
       try {
+        if (isLocalInferenceMode()) {
+          return Array.from(localDiagnoses.values())
+            .filter(record => record.userId === ctx.user.id)
+            .sort((left, right) => right.diagnosedAt.getTime() - left.diagnosedAt.getTime());
+        }
         return await getUserDiagnosisHistory(ctx.user.id);
       } catch (error) {
         console.error("Erro ao obter histórico de diagnósticos:", error);
@@ -406,7 +490,7 @@ export const appRouter = router({
     getById: protectedProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .query(async ({ ctx, input }) => {
-        const diagnosis = await getDiagnosisById(input.id);
+        const diagnosis = localDiagnoses.get(input.id) ?? await getDiagnosisById(input.id);
         if (!diagnosis || diagnosis.userId !== ctx.user.id) {
           throw new TRPCError({ code: "NOT_FOUND", message: "Diagnóstico não encontrado ou acesso negado." });
         }
@@ -425,10 +509,18 @@ export const appRouter = router({
   }),
 
   metrics: router({
-    getAllMetrics: publicProcedure.query(async () => getAllModelMetrics()),
+    getAllMetrics: publicProcedure.query(async () => (
+      isLocalInferenceMode() ? getLocalModelMetrics() : getAllModelMetrics()
+    )),
     getMetricsByModel: publicProcedure
       .input(z.object({ modelName: z.string().min(1).max(100) }))
       .query(async ({ input }) => {
+        if (isLocalInferenceMode()) {
+          const metrics = await getLocalModelMetrics();
+          const metric = metrics.find(row => row.modelName === input.modelName);
+          if (!metric) throw new TRPCError({ code: "NOT_FOUND", message: "Métricas não encontradas." });
+          return metric;
+        }
         const metric = await getModelMetrics(input.modelName);
         if (!metric) throw new TRPCError({ code: "NOT_FOUND", message: "Métricas não encontradas." });
         return metric;
