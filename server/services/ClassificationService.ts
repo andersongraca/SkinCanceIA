@@ -96,14 +96,22 @@ export class ClassificationService {
         vitHeatmapPath: vit.paths.token_gradient,
         hybridHeatmapPath: hybrid.paths.hybrid,
       };
+      const componentSaliencyPaths = {
+        cnn: cnn.paths.gradcam_saliency,
+        vit: vit.paths.token_gradient_saliency,
+        hybrid: hybrid.paths.hybrid_saliency,
+      };
+      if (!componentSaliencyPaths.cnn || !componentSaliencyPaths.vit || !componentSaliencyPaths.hybrid) {
+        throw new Error("Uma ou mais saliências brutas não foram geradas.");
+      }
       if (!componentPaths.cnnHeatmapPath || !componentPaths.vitHeatmapPath || !componentPaths.hybridHeatmapPath) {
         throw new Error("Um ou mais heatmaps componentes não foram gerados.");
       }
       const ensemble = await pythonInferenceService.generateEnsembleHeatmap(
         imagePath,
-        componentPaths.cnnHeatmapPath,
-        componentPaths.vitHeatmapPath,
-        componentPaths.hybridHeatmapPath,
+        componentSaliencyPaths.cnn,
+        componentSaliencyPaths.vit,
+        componentSaliencyPaths.hybrid,
         `${outputDir}/ensemble.png`,
       );
       const paths = {

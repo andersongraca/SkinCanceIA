@@ -25,9 +25,9 @@ def normalize(array: np.ndarray) -> np.ndarray:
 
 
 def load_saliency(path: Path, size: tuple[int, int]) -> np.ndarray:
-    image = Image.open(path).convert("RGB").resize(size, Image.Resampling.BILINEAR)
-    rgb = np.asarray(image, dtype=np.float32) / 255.0
-    return normalize(rgb.mean(axis=2))
+    image = Image.open(path).convert("L").resize(size, Image.Resampling.BILINEAR)
+    saliency = np.asarray(image, dtype=np.float32) / 255.0
+    return normalize(saliency)
 
 
 def main() -> None:

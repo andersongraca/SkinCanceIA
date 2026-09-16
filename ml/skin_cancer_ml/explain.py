@@ -48,6 +48,23 @@ def _token_attribution(tokens: torch.Tensor, image_size: int) -> np.ndarray:
     return _resize_map(attribution.reshape(grid, grid).cpu().numpy(), image_size, image_size)
 
 
+def _input_gradient(tensor: torch.Tensor, image_size: int) -> np.ndarray:
+    if tensor.grad is None:
+        raise RuntimeError("Gradiente da entrada não disponível")
+    gradients = tensor.grad.detach().abs().mean(dim=1)[0].cpu().numpy()
+    return _resize_map(gradients, image_size, image_size)
+
+
+def _non_uniform_or_input_gradient(
+    token_map: np.ndarray,
+    tensor: torch.Tensor,
+    image_size: int,
+) -> np.ndarray:
+    if float(token_map.std()) < 1e-4:
+        return _input_gradient(tensor, image_size)
+    return token_map
+
+
 def _attention_rollout(attentions: list[torch.Tensor], image_size: int) -> np.ndarray:
     if not attentions:
         return np.zeros((image_size, image_size), dtype=np.float32)
@@ -78,10 +95,16 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
         source = source.convert("RGB")
         original = np.asarray(source.resize((config.image_size, config.image_size)), dtype=np.float32)
         tensor = build_transforms(config.image_size, train=False)(source).unsqueeze(0).to(device)
+        tensor.requires_grad_(True)
     output = model(tensor)
+    binary_logit = output.binary_logits.reshape(-1)[:1]
     if target is None:
         target = int(output.class_logits.argmax(dim=1).item())
-    score = output.class_logits[:, target].sum()
+    # Explain the same binary decision shown by infer.py, rather than the
+    # auxiliary seven-class head.  Flip the score for benign predictions so
+    # positive attribution always means evidence for the displayed decision.
+    binary_target = "malignant" if float(binary_logit.item()) >= 0.0 else "benign"
+    score = binary_logit if binary_target == "malignant" else -binary_logit
     model.zero_grad(set_to_none=True)
     if isinstance(model, CNNModel):
         assert model.last_feature_map is not None
@@ -99,10 +122,14 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
     if isinstance(model, CNNModel):
         maps["gradcam"] = _resize_map(_gradcam(model.last_feature_map), config.image_size, config.image_size)
     elif isinstance(model, ViTModel):
-        maps["token_gradient"] = _token_attribution(model.last_tokens, config.image_size)
+        maps["token_gradient"] = _non_uniform_or_input_gradient(
+            _token_attribution(model.last_tokens, config.image_size), tensor, config.image_size
+        )
     elif isinstance(model, HybridModel):
         cnn_map = _resize_map(_gradcam(model.last_feature_map), config.image_size, config.image_size)
-        token_map = _token_attribution(model.last_tokens, config.image_size)
+        token_map = _non_uniform_or_input_gradient(
+            _token_attribution(model.last_tokens, config.image_size), tensor, config.image_size
+        )
         attention_map = _attention_rollout(model.last_attentions, config.image_size)
         gate = float(output.aux["gate"].detach().mean().cpu())
         maps["cnn_gradcam"] = cnn_map
@@ -116,10 +143,13 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     written: dict[str, str] = {}
     for name, heatmap in maps.items():
-        path = output_path.with_name(f"{output_path.stem}_{name}.png")
-        Image.fromarray(_overlay(original, heatmap)).save(path)
-        written[name] = str(path)
-    return {"targetClass": config.classes[target], "method": list(maps), "paths": written}
+        saliency_path = output_path.with_name(f"{output_path.stem}_{name}_saliency.png")
+        overlay_path = output_path.with_name(f"{output_path.stem}_{name}.png")
+        Image.fromarray(np.uint8(np.clip(heatmap, 0.0, 1.0) * 255)).save(saliency_path)
+        Image.fromarray(_overlay(original, heatmap)).save(overlay_path)
+        written[name] = str(overlay_path)
+        written[f"{name}_saliency"] = str(saliency_path)
+    return {"targetClass": binary_target, "fineGrainedTargetClass": config.classes[target], "method": list(maps), "paths": written}
 
 
 def main() -> None:
