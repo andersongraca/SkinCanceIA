@@ -12,7 +12,7 @@ from PIL import Image
 
 from .data import build_transforms
 from .infer import load_model
-from .lesion_segmentation import predict_lesion_mask
+from .lesion_segmentation import predict_lesion_mask, segmentation_sensitivity_config
 from .models import CNNModel, HybridModel, ViTModel
 
 
@@ -97,19 +97,21 @@ def _load_lesion_gate(image: Image.Image, image_size: int, device: torch.device)
     if not checkpoint.exists():
         return None, {"available": False, "reason": "lesion_segmenter_checkpoint_missing"}
     try:
-        mask, metadata = predict_lesion_mask(image, checkpoint, device)
+        sensitivity = segmentation_sensitivity_config()
+        mask, metadata = predict_lesion_mask(image, checkpoint, device, float(sensitivity["threshold"]))
         mask = cv2.resize(mask, (image_size, image_size), interpolation=cv2.INTER_NEAREST)
         components, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), connectivity=8)
         if components > 1:
             largest_label = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
             mask = (labels == largest_label).astype(np.float32)
         mask_uint8 = (mask * 255).astype(np.uint8)
-        mask_uint8 = cv2.morphologyEx(mask_uint8, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8))
+        kernel = int(sensitivity["kernel"])
+        mask_uint8 = cv2.morphologyEx(mask_uint8, cv2.MORPH_CLOSE, np.ones((kernel, kernel), dtype=np.uint8))
         mask = (mask_uint8 > 127).astype(np.float32)
         area = float(mask.mean())
-        if area < 0.01 or area > 0.90:
-            return None, {"available": False, "reason": "lesion_mask_area_invalid", **metadata}
-        return mask, {"available": True, **metadata}
+        if area < float(sensitivity["minArea"]) or area > float(sensitivity["maxArea"]):
+            return None, {"available": False, "reason": "lesion_mask_area_invalid", **metadata, "sensitivity": sensitivity}
+        return mask, {"available": True, **metadata, "sensitivity": sensitivity, "postprocessedAreaFraction": area}
     except Exception as error:
         return None, {"available": False, "reason": f"lesion_segmenter_failed:{type(error).__name__}"}
 

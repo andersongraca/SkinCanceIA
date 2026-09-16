@@ -30,6 +30,30 @@ ml_artifacts/isic2016_segmentation/lesion_segmentation.pt
 ML_LESION_SEGMENTER_CHECKPOINT=/caminho/lesion_segmentation.pt
 ```
 
+## Sensibilidade para pelos e iluminação
+
+O gate possui três presets controlados por `ML_LESION_GATE_MODE`:
+
+| Modo | Limiar da máscara | Kernel morfológico | Uso recomendado |
+|---|---:|---:|---|
+| `strict` | 0,65 | 3×3 | Imagem limpa, fundo uniforme; reduz falsos positivos do fundo |
+| `balanced` | 0,50 | 5×5 | Padrão geral |
+| `permissive` | 0,35 | 7×7 | Muitos pelos, sombra ou iluminação irregular; pode incluir mais fundo |
+
+Para uma imagem com muitos pelos, use `permissive` antes de iniciar o servidor:
+
+```powershell
+$env:ML_LESION_GATE_MODE = "permissive"
+```
+
+Para voltar ao comportamento padrão:
+
+```powershell
+$env:ML_LESION_GATE_MODE = "balanced"
+```
+
+Também existem ajustes avançados (`ML_LESION_MASK_THRESHOLD`, `ML_LESION_MORPH_KERNEL`, `ML_LESION_MASK_MIN_AREA` e `ML_LESION_MASK_MAX_AREA`), mas eles só devem ser alterados durante uma calibração documentada. Tornar o gate permissivo não melhora o classificador; apenas reduz o risco de cortar a lesão na visualização.
+
 O gate é aplicado no script `ml/skin_cancer_ml/explain.py`. A interface deve descrever esses arquivos como explicações aproximadas e não como segmentação clínica ou prova de causalidade.
 
 ## Fonte

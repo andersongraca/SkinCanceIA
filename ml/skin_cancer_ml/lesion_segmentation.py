@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
+import os
 
 import numpy as np
 import torch
@@ -65,13 +66,15 @@ def predict_lesion_mask(
     image: Image.Image,
     checkpoint_path: str | Path,
     device: torch.device,
+    threshold: float = 0.5,
 ) -> tuple[np.ndarray, dict[str, Any]]:
     model, image_size = load_segmenter(checkpoint_path, device)
     image_rgb = image.convert("RGB")
     tensor = TF.to_tensor(TF.resize(image_rgb, [image_size, image_size], antialias=True)).unsqueeze(0).to(device)
     with torch.inference_mode():
         probability = torch.sigmoid(model(tensor))[0, 0].cpu().numpy()
-    mask = (probability >= 0.5).astype(np.float32)
+    threshold = float(min(max(threshold, 0.05), 0.95))
+    mask = (probability >= threshold).astype(np.float32)
     area = float(mask.mean())
     confidence = float(max(probability.mean(), 1.0 - probability.mean()))
     return mask, {
@@ -79,4 +82,32 @@ def predict_lesion_mask(
         "meanProbability": float(probability.mean()),
         "confidence": confidence,
         "imageSize": image_size,
+        "threshold": threshold,
+    }
+
+
+def segmentation_sensitivity_config() -> dict[str, float | str]:
+    mode = os.environ.get("ML_LESION_GATE_MODE", "balanced").strip().lower()
+    presets: dict[str, tuple[float, int, float, float]] = {
+        "strict": (0.65, 3, 0.02, 0.80),
+        "balanced": (0.50, 5, 0.01, 0.90),
+        "permissive": (0.35, 7, 0.005, 0.95),
+    }
+    threshold, kernel, min_area, max_area = presets.get(mode, presets["balanced"])
+    try:
+        threshold = float(os.environ.get("ML_LESION_MASK_THRESHOLD", threshold))
+        kernel = int(os.environ.get("ML_LESION_MORPH_KERNEL", kernel))
+        min_area = float(os.environ.get("ML_LESION_MASK_MIN_AREA", min_area))
+        max_area = float(os.environ.get("ML_LESION_MASK_MAX_AREA", max_area))
+    except ValueError:
+        pass
+    kernel = max(1, min(kernel, 15))
+    if kernel % 2 == 0:
+        kernel += 1
+    return {
+        "mode": mode if mode in presets else "balanced",
+        "threshold": min(max(threshold, 0.05), 0.95),
+        "kernel": kernel,
+        "minArea": min_area,
+        "maxArea": max_area,
     }
