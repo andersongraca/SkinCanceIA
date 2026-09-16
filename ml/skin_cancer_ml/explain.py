@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 import argparse
+import os
 
 import cv2
 import numpy as np
@@ -11,6 +12,7 @@ from PIL import Image
 
 from .data import build_transforms
 from .infer import load_model
+from .lesion_segmentation import predict_lesion_mask
 from .models import CNNModel, HybridModel, ViTModel
 
 
@@ -88,6 +90,37 @@ def _overlay(image: np.ndarray, heatmap: np.ndarray) -> np.ndarray:
     return np.uint8(np.clip(0.55 * image + 0.45 * colored, 0, 255))
 
 
+def _load_lesion_gate(image: Image.Image, image_size: int, device: torch.device) -> tuple[np.ndarray | None, dict[str, Any]]:
+    configured = os.environ.get("ML_LESION_SEGMENTER_CHECKPOINT")
+    root = Path(os.environ.get("ML_PROJECT_ROOT", "."))
+    checkpoint = Path(configured) if configured else root / "ml_artifacts" / "isic2016_segmentation" / "lesion_segmentation.pt"
+    if not checkpoint.exists():
+        return None, {"available": False, "reason": "lesion_segmenter_checkpoint_missing"}
+    try:
+        mask, metadata = predict_lesion_mask(image, checkpoint, device)
+        mask = cv2.resize(mask, (image_size, image_size), interpolation=cv2.INTER_NEAREST)
+        components, labels, stats, _ = cv2.connectedComponentsWithStats(mask.astype(np.uint8), connectivity=8)
+        if components > 1:
+            largest_label = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+            mask = (labels == largest_label).astype(np.float32)
+        mask_uint8 = (mask * 255).astype(np.uint8)
+        mask_uint8 = cv2.morphologyEx(mask_uint8, cv2.MORPH_CLOSE, np.ones((5, 5), dtype=np.uint8))
+        mask = (mask_uint8 > 127).astype(np.float32)
+        area = float(mask.mean())
+        if area < 0.01 or area > 0.90:
+            return None, {"available": False, "reason": "lesion_mask_area_invalid", **metadata}
+        return mask, {"available": True, **metadata}
+    except Exception as error:
+        return None, {"available": False, "reason": f"lesion_segmenter_failed:{type(error).__name__}"}
+
+
+def _restrict_to_lesion(values: np.ndarray, lesion_mask: np.ndarray | None) -> np.ndarray:
+    if lesion_mask is None:
+        return values
+    restricted = values * np.where(lesion_mask > 0.5, 1.0, 0.03)
+    return _normalize(restricted)
+
+
 def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output_path: str | Path, target: int | None = None) -> dict[str, Any]:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model, config, _ = load_model(checkpoint_path, device)
@@ -118,12 +151,16 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
         model.last_tokens.retain_grad()
     score.backward()
 
+    lesion_mask, segmentation = _load_lesion_gate(source, config.image_size, device)
     maps: dict[str, np.ndarray] = {}
     if isinstance(model, CNNModel):
-        maps["gradcam"] = _resize_map(_gradcam(model.last_feature_map), config.image_size, config.image_size)
+        maps["gradcam"] = _restrict_to_lesion(
+            _resize_map(_gradcam(model.last_feature_map), config.image_size, config.image_size), lesion_mask
+        )
     elif isinstance(model, ViTModel):
-        maps["token_gradient"] = _non_uniform_or_input_gradient(
-            _token_attribution(model.last_tokens, config.image_size), tensor, config.image_size
+        maps["token_gradient"] = _restrict_to_lesion(
+            _non_uniform_or_input_gradient(_token_attribution(model.last_tokens, config.image_size), tensor, config.image_size),
+            lesion_mask,
         )
     elif isinstance(model, HybridModel):
         cnn_map = _resize_map(_gradcam(model.last_feature_map), config.image_size, config.image_size)
@@ -132,10 +169,12 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
         )
         attention_map = _attention_rollout(model.last_attentions, config.image_size)
         gate = float(output.aux["gate"].detach().mean().cpu())
-        maps["cnn_gradcam"] = cnn_map
-        maps["vit_token_gradient"] = token_map
-        maps["attention_rollout"] = attention_map
-        maps["hybrid"] = _normalize(gate * cnn_map + (1.0 - gate) * 0.5 * (token_map + attention_map))
+        maps["cnn_gradcam"] = _restrict_to_lesion(cnn_map, lesion_mask)
+        maps["vit_token_gradient"] = _restrict_to_lesion(token_map, lesion_mask)
+        maps["attention_rollout"] = _restrict_to_lesion(attention_map, lesion_mask)
+        maps["hybrid"] = _restrict_to_lesion(
+            _normalize(gate * cnn_map + (1.0 - gate) * 0.5 * (token_map + attention_map)), lesion_mask
+        )
     else:
         raise TypeError(f"Modelo sem suporte a XAI: {type(model).__name__}")
 
@@ -149,7 +188,13 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
         Image.fromarray(_overlay(original, heatmap)).save(overlay_path)
         written[name] = str(overlay_path)
         written[f"{name}_saliency"] = str(saliency_path)
-    return {"targetClass": binary_target, "fineGrainedTargetClass": config.classes[target], "method": list(maps), "paths": written}
+    return {
+        "targetClass": binary_target,
+        "fineGrainedTargetClass": config.classes[target],
+        "method": list(maps),
+        "paths": written,
+        "segmentation": segmentation,
+    }
 
 
 def main() -> None:

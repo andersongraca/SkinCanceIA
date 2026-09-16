@@ -48,6 +48,13 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# O checkpoint auxiliar ISIC 2016 é pequeno, CC0 e necessário para os mapas XAI.
+!ml_artifacts/
+ml_artifacts/*
+!ml_artifacts/isic2016_segmentation/
+!ml_artifacts/isic2016_segmentation/lesion_segmentation.pt
+!ml_artifacts/isic2016_segmentation/lesion_segmentation.json
+
 # Local datasets and experiment logs
 data/raw/
 data/metadata/
