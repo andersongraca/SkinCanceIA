@@ -34,10 +34,10 @@ export default function HistoryTab() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader><CardTitle>Histórico de diagnósticos</CardTitle><CardDescription>Registros persistidos para o usuário autenticado, ordenados do mais recente ao mais antigo.</CardDescription></CardHeader>
+        <CardHeader><CardTitle>Histórico de diagnósticos</CardTitle><CardDescription>Registros da sessão local ou do banco persistente, ordenados do mais recente ao mais antigo.</CardDescription></CardHeader>
         <CardContent>
           {!history.length ? (
-            <Alert><AlertCircle className="h-4 w-4" /><AlertDescription>Nenhum diagnóstico persistido. Faça upload de uma imagem elegível para iniciar uma análise.</AlertDescription></Alert>
+            <Alert><AlertCircle className="h-4 w-4" /><AlertDescription>Nenhum diagnóstico nesta sessão. Faça upload de uma imagem elegível para iniciar uma análise.</AlertDescription></Alert>
           ) : (
             <div className="space-y-4">
               {history.map((record) => (

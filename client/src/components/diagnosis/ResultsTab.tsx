@@ -60,7 +60,7 @@ export default function ResultsTab({ imagePreview, selectedImage, isProcessing, 
   }
 
   if (!imagePreview || !classificationResult) {
-    return <Alert><AlertCircle className="h-4 w-4" /><AlertDescription>Nenhum resultado disponível. Faça upload de uma imagem e classifique-a primeiro.</AlertDescription></Alert>;
+    return <Alert><AlertCircle className="h-4 w-4" /><AlertDescription>Nenhuma análise nesta sessão. Faça upload de uma imagem elegível e inicie a classificação para visualizar scores e mapas de explicabilidade.</AlertDescription></Alert>;
   }
 
   const eligibility = classificationResult.eligibility || classificationResult.result?.eligibility;

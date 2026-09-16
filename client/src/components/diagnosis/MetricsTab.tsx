@@ -66,7 +66,7 @@ export default function MetricsTab() {
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          As métricas reais ainda não foram registradas no banco de dados. Execute o script de carga do experimento.
+          As métricas do HAM10000 não estão disponíveis neste ambiente local. Verifique se ML_PROJECT_ROOT aponta para ml_artifacts/ham10000.
         </AlertDescription>
       </Alert>
     );
@@ -78,7 +78,7 @@ export default function MetricsTab() {
         <CardHeader>
           <CardTitle>Métricas de desempenho dos modelos</CardTitle>
           <CardDescription>
-            Valores derivados do conjunto de teste congelado do HAM10000; percentuais são arredondados no armazenamento.
+            Valores binários derivados do conjunto de teste congelado do HAM10000 (1.527 imagens); percentuais são arredondados para exibição.
           </CardDescription>
         </CardHeader>
         <CardContent>
