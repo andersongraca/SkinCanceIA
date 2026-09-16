@@ -89,8 +89,8 @@ export default function DiagnosisPage() {
   const handleClassificationStart = () => {
     setClassificationState({
       isProcessing: true,
-      statusMessage: 'Enviando imagem e executando triagem e classificação...',
-      progress: 15,
+      statusMessage: 'Preparando a imagem para envio...',
+      progress: 5,
     });
   };
 

@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any
 import argparse
 import os
+import sys
 
 import cv2
 import numpy as np
@@ -154,6 +155,17 @@ def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output
     score.backward()
 
     lesion_mask, segmentation = _load_lesion_gate(source, config.image_size, device)
+    sensitivity = segmentation.get("sensitivity", {})
+    print(
+        "[XAI:segmentation] "
+        f"available={segmentation.get('available', False)} "
+        f"mode={sensitivity.get('mode', 'n/a')} "
+        f"threshold={sensitivity.get('threshold', 'n/a')} "
+        f"kernel={sensitivity.get('kernel', 'n/a')}x{sensitivity.get('kernel', 'n/a')} "
+        f"area={segmentation.get('postprocessedAreaFraction', segmentation.get('areaFraction', 'n/a'))}",
+        file=sys.stderr,
+        flush=True,
+    )
     maps: dict[str, np.ndarray] = {}
     if isinstance(model, CNNModel):
         maps["gradcam"] = _restrict_to_lesion(
