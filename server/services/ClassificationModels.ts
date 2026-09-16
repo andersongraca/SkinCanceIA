@@ -201,8 +201,8 @@ export class EnsembleModel extends BaseClassificationModel {
       results.length,
       envInteger("ML_ENSEMBLE_ABSTAIN_VOTES", 2),
     );
-    const entropyThreshold = envNumber("ML_ENSEMBLE_ENTROPY_THRESHOLD", 0.65);
-    const ttaVarianceThreshold = envNumber("ML_ENSEMBLE_TTA_VARIANCE_THRESHOLD", 0.02);
+    const entropyThreshold = envNumber("ML_ENSEMBLE_ENTROPY_THRESHOLD", 0.75);
+    const ttaVarianceThreshold = envNumber("ML_ENSEMBLE_TTA_VARIANCE_THRESHOLD", 0.03);
 
     return {
       classification,

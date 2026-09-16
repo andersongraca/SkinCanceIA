@@ -64,8 +64,8 @@ def predict_image(checkpoint_path: str | Path, image_path: str | Path, tta: bool
     binary_probability = float(binary_probability_samples.mean())
     predictive_entropy = float(-(class_probabilities * np.log(np.clip(class_probabilities, 1e-8, 1.0))).sum() / np.log(len(config.classes)))
     tta_variance = float(binary_probability_samples.var())
-    entropy_threshold = _env_float("ML_ENTROPY_THRESHOLD", 0.65)
-    tta_variance_threshold = _env_float("ML_TTA_VARIANCE_THRESHOLD", 0.02)
+    entropy_threshold = _env_float("ML_ENTROPY_THRESHOLD", 0.75)
+    tta_variance_threshold = _env_float("ML_TTA_VARIANCE_THRESHOLD", 0.03)
     fine_index = int(class_probabilities.argmax())
     fine_class = config.classes[fine_index]
     classification = "malignant" if binary_probability >= 0.5 else "benign"
