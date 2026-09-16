@@ -94,6 +94,15 @@ export default function DiagnosisPage() {
     });
   };
 
+  const handleClassificationProgress = (progress: number, statusMessage: string) => {
+    setClassificationState((current) => ({
+      ...current,
+      isProcessing: true,
+      progress: Math.max(current.progress, Math.min(progress, 95)),
+      statusMessage,
+    }));
+  };
+
   /**
    * Manipulador para quando a classificação é concluída com sucesso
    * Atualiza o estado e navega para a aba de resultados
@@ -186,6 +195,7 @@ export default function DiagnosisPage() {
             <UploadTab
               onImageSelected={handleImageSelected}
               onClassificationStart={handleClassificationStart}
+              onClassificationProgress={handleClassificationProgress}
               onClassificationComplete={handleClassificationComplete}
               onClassificationError={handleClassificationError}
               isProcessing={classificationState.isProcessing}

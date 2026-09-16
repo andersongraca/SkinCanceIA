@@ -10,6 +10,7 @@ import type { ClassificationResponse } from './types';
 interface UploadTabProps {
   onImageSelected: (file: File) => void;
   onClassificationStart: () => void;
+  onClassificationProgress: (progress: number, message: string) => void;
   onClassificationComplete: (response: ClassificationResponse) => void;
   onClassificationError: (error: string) => void;
   isProcessing: boolean;
@@ -32,7 +33,7 @@ function fileToDataUrl(file: File): Promise<string> {
 function formatClassificationError(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
   if (/failed to fetch|fetch failed|networkerror/i.test(message)) {
-    return 'Não foi possível conectar ao backend local. Inicie o MariaDB e o servidor em http://localhost:3000 e tente novamente.';
+    return 'Não foi possível conectar ao backend local. Inicie o servidor em http://localhost:3010 e tente novamente. O MariaDB não é necessário no modo local.';
   }
   return message || 'Erro ao classificar imagem.';
 }
@@ -40,6 +41,7 @@ function formatClassificationError(error: unknown): string {
 export default function UploadTab({
   onImageSelected,
   onClassificationStart,
+  onClassificationProgress,
   onClassificationComplete,
   onClassificationError,
   isProcessing,
@@ -94,17 +96,37 @@ export default function UploadTab({
     }
 
     onClassificationStart();
+    let progressTimer: number | undefined;
+    const stopProgressTimer = () => {
+      if (progressTimer !== undefined) window.clearInterval(progressTimer);
+    };
 
     try {
+      onClassificationProgress(5, 'Preparando a imagem para envio...');
       const dataUrl = await fileToDataUrl(selectedImage);
+      onClassificationProgress(12, 'Enviando imagem para o backend local...');
       const uploaded = await uploadMutation.mutateAsync({
         fileName: selectedImage.name,
         mimeType: selectedImage.type as 'image/jpeg' | 'image/png',
         dataUrl,
       });
+      onClassificationProgress(28, 'Imagem recebida. Executando triagem de qualidade e domínio...');
+      let simulatedProgress = 35;
+      progressTimer = window.setInterval(() => {
+        simulatedProgress = Math.min(simulatedProgress + 1, 92);
+        const message = simulatedProgress < 56
+          ? 'Executando triagem de qualidade e domínio...'
+          : simulatedProgress < 76
+            ? 'Executando CNN, ViT e modelo híbrido...'
+            : 'Calculando ensemble, incerteza e mapas de explicabilidade...';
+        onClassificationProgress(simulatedProgress, message);
+      }, 1800);
+      onClassificationProgress(35, 'Executando triagem, CNN, ViT e modelo híbrido...');
       const response = await classifyMutation.mutateAsync({ imageId: uploaded.imageId });
+      stopProgressTimer();
       onClassificationComplete(response as ClassificationResponse);
     } catch (error) {
+      stopProgressTimer();
       onClassificationError(formatClassificationError(error));
     }
   };
