@@ -386,15 +386,19 @@ export const appRouter = router({
           }
 
           let heatmaps: HeatmapPaths | undefined;
+          let heatmapError: string | undefined;
           try {
             const outputDirectory = path.join(uploadRoot, "heatmaps", String(ctx.user.id), String(image.id), randomUUID());
             const generated = await classificationService.generateAllHeatmaps(materialized.localPath, outputDirectory);
             heatmaps = await persistHeatmaps(generated, ctx.user.id, image.id);
           } catch (error) {
             console.warn("Heatmaps não persistidos para o diagnóstico:", error);
+            if (isLocalInferenceMode()) {
+              heatmapError = error instanceof Error ? error.message : "Falha desconhecida ao gerar heatmaps.";
+            }
           }
 
-          const resultWithHeatmaps = { ...result, heatmaps };
+          const resultWithHeatmaps = { ...result, heatmaps, heatmapError };
           const diagnosisInput = {
             imageId: image.id,
             userId: ctx.user.id,

@@ -40,6 +40,7 @@ export interface ClassificationResponse {
       hybridHeatmapPath: string;
       ensembleHeatmapPath?: string;
     };
+    heatmapError?: string;
   };
   diagnosis?: { id: number } | null;
 }

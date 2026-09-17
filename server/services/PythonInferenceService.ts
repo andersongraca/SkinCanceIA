@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { execFile } from "node:child_process";
+import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import { promisify } from "node:util";
@@ -47,7 +48,14 @@ function configuredRoot(): string {
 }
 
 function configuredPython(): string {
-  return process.env.ML_PYTHON_PATH || "python3";
+  const configured = process.env.ML_PYTHON_PATH?.trim();
+  const fallback = process.platform === "win32" ? "python" : "python3";
+  if (!configured) return fallback;
+  if ((configured.includes("/") || configured.includes("\\")) && !existsSync(configured)) {
+    console.warn(`[ML] Python configurado não existe: ${configured}. Tentando ${fallback} disponível no PATH.`);
+    return fallback;
+  }
+  return configured;
 }
 
 function ensureCheckpoint(checkpointPath: string | undefined, modelName: string): string {
