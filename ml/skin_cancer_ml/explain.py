@@ -86,9 +86,15 @@ def _attention_rollout(attentions: list[torch.Tensor], image_size: int) -> np.nd
 
 def _overlay(image: np.ndarray, heatmap: np.ndarray) -> np.ndarray:
     heatmap_uint8 = np.uint8(np.clip(heatmap, 0.0, 1.0) * 255)
+    # Use the exact quantized saliency that is written to PNG. This prevents
+    # values invisible in the saliency file from subtly recoloring the source.
+    normalized = heatmap_uint8.astype(np.float32) / 255.0
     colored = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
     colored = cv2.cvtColor(colored, cv2.COLOR_BGR2RGB)
-    return np.uint8(np.clip(0.55 * image + 0.45 * colored, 0, 255))
+    # Zero saliency must leave the source pixel untouched. A fixed alpha tints
+    # the whole photograph and visually invents evidence outside the lesion.
+    alpha = (0.70 * np.power(normalized, 0.75))[..., np.newaxis]
+    return np.uint8(np.clip((1.0 - alpha) * image + alpha * colored, 0, 255))
 
 
 def _load_lesion_gate(image: Image.Image, image_size: int, device: torch.device) -> tuple[np.ndarray | None, dict[str, Any]]:
@@ -119,9 +125,11 @@ def _load_lesion_gate(image: Image.Image, image_size: int, device: torch.device)
 
 def _restrict_to_lesion(values: np.ndarray, lesion_mask: np.ndarray | None) -> np.ndarray:
     if lesion_mask is None:
-        return values
-    restricted = values * np.where(lesion_mask > 0.5, 1.0, 0.03)
-    return _normalize(restricted)
+        return _normalize(values)
+    # The gate is intentionally strict for visualization: XAI attribution
+    # outside the predicted lesion must be transparent, not merely attenuated.
+    restricted = _normalize(values) * (lesion_mask > 0.5).astype(np.float32)
+    return restricted.astype(np.float32)
 
 
 def generate_heatmap(checkpoint_path: str | Path, image_path: str | Path, output_path: str | Path, target: int | None = None) -> dict[str, Any]:

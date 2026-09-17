@@ -68,8 +68,10 @@ def main() -> None:
     )
     saliency = normalize(saliency)
     heatmap_rgb = (cm.turbo(saliency)[..., :3] * 255.0).astype(np.uint8)
-    heatmap = Image.fromarray(heatmap_rgb, mode="RGB")
-    overlay = Image.blend(original, heatmap, alpha=0.56)
+    original_array = np.asarray(original, dtype=np.float32)
+    alpha = (0.70 * np.power(saliency, 0.75))[..., np.newaxis]
+    overlay_array = np.uint8(np.clip((1.0 - alpha) * original_array + alpha * heatmap_rgb, 0, 255))
+    overlay = Image.fromarray(overlay_array, mode="RGB")
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     overlay.save(args.output, format="PNG", optimize=True)
