@@ -1,0 +1,34 @@
+flowchart TD
+    A[Imagem dermatoscópica] --> B[Upload e validação do arquivo]
+    B --> C[Triagem de qualidade e domínio]
+    C -->|Elegível| D[Pré-processamento e normalização]
+    C -->|Não elegível| R[Rejeição com motivo e escore]
+    D --> E1[CNN ResNet-50]
+    D --> E2[Vision Transformer]
+    D --> E3[Modelo híbrido CNN-ViT]
+    E1 --> F[Saídas individuais: classe, probabilidade e incerteza]
+    E2 --> F
+    E3 --> F
+    F --> G[Saída agregada da análise]
+    G --> H[Resultado, confiança e recomendação de abstenção]
+    D --> X[Localizador auxiliar ISIC 2016]
+    X --> M[Máscara de localização para o gate visual]
+    E1 --> X1[Grad-CAM]
+    E2 --> X2[Atribuição de tokens]
+    E3 --> X3[Mapa híbrido]
+    X1 --> Y[Mapas de explicabilidade restringidos]
+    X2 --> Y
+    X3 --> Y
+    M --> Y
+    H --> I[Interface React]
+    Y --> I
+    I --> J[Histórico e métricas]
+
+    classDef input fill:#f5d0fe,stroke:#7e22ce,color:#111827;
+    classDef model fill:#dbeafe,stroke:#2563eb,color:#111827;
+    classDef safety fill:#dcfce7,stroke:#16a34a,color:#111827;
+    classDef output fill:#fef3c7,stroke:#d97706,color:#111827;
+    class A,B,D input;
+    class E1,E2,E3,F,G model;
+    class C,R,X,M,X1,X2,X3,Y safety;
+    class H,I,J output;

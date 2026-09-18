@@ -1,0 +1,15 @@
+Evidências da execução local usadas no Capítulo 5:
+- Aplicação capturada em http://127.0.0.1:3011/ com os estados de upload, pré-visualização, processamento, resultado, cartões dos modelos, mapas XAI, histórico, métricas e rejeição OOD.
+- Imagem dermatoscópica auditada: ISIC_0027419.jpg, 600 x 450 pixels.
+- Resultado auditado da execução: imagem aceita; classificação binária malignant; confiança do Ensemble 85,82%; entropia 0,7329; variância TTA 0,001667.
+- Gate de localização: checkpoint ISIC 2016, modo balanced, limiar 0,50, kernel 5 x 5, área aproximada 22,0%.
+- Quatro mapas produzidos em 600 x 450 pixels: CNN Grad-CAM, ViT token-gradient, Hybrid e Ensemble.
+- Auditoria XAI: diferença máxima de pixel fora da saliência igual a 0 nos mapas auditados.
+- Histórico local: 1 diagnóstico recuperado na sessão.
+- Métricas: quatro modelos, 1.527 amostras por modelo.
+- OOD: imagem não dermatológica rejeitada com motivo outside_dermoscopy_domain; o teste demonstra o funcionamento da barreira, não rejeição universal.
+- Dados: HAM10000 com 10.015 imagens, 7.470 grupos de lesão, seed 42 e teste congelado de 1.527 imagens. Classes malignas para a tarefa binária: akiec, bcc e mel.
+- Modelo principal: CNN ResNet-50, ViT small patch16 224 e Hybrid com backbone ResNet-50, projeção de tokens e dois blocos de atenção; todos usam cabeça multitarefa com sete classes e saída binária.
+- Pesos registrados do agregador: CNN 0,10; ViT 0,55; Hybrid 0,35. Esses pesos foram selecionados na validação e usados apenas como implementação agregadora; não será criado um capítulo teórico separado sobre Ensemble Learning.
+- Citações do artigo original preservadas no estilo autor-data: DAHMANI; TARHOUNI; ZIDI (2024), HOSSAIN et al. (2024), MUMTAZ et al. (2023), HASAN et al. (2025), LI et al. (2025), ALI et al. (2025), SHAJIMON; UFUMAKA; RAZA (2023) e AHMED et al. (2025).
+- A versão enviada usa referências autor-data, não numeração [1], [2]. O capítulo deve manter esse padrão para não criar numeração incompatível. As fontes de software serão listadas separadamente como referências técnicas a incorporar na bibliografia, se ainda não estiverem presentes.

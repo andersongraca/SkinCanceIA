@@ -1,0 +1,31 @@
+sequenceDiagram
+    actor U as Usuário
+    participant UI as Interface React
+    participant API as Backend Express/tRPC
+    participant Q as Triagem Python
+    participant ML as CNN, ViT e Hybrid
+    participant XAI as Módulos XAI
+    participant S as Armazenamento local ou MariaDB
+
+    U->>UI: Seleciona imagem JPEG/PNG
+    UI->>UI: Valida extensão e tamanho
+    UI->>API: Envia imagem codificada
+    API->>S: Registra arquivo e metadados
+    API->>Q: Solicita qualidade e domínio
+    Q-->>API: Elegibilidade, qualidade e escore OOD
+    alt Imagem não elegível
+        API-->>UI: Rejeição e motivos
+        UI-->>U: Exibe controle de qualidade
+    else Imagem elegível
+        par Inferência dos modelos
+            API->>ML: Executa CNN
+            API->>ML: Executa ViT
+            API->>ML: Executa Hybrid
+        end
+        ML-->>API: Classes, probabilidades e incerteza
+        API->>XAI: Solicita mapas e gate de localização
+        XAI-->>API: Quatro artefatos PNG e metadados
+        API->>S: Registra diagnóstico e caminhos dos artefatos
+        API-->>UI: Resultado, scores, incerteza e mapas
+        UI-->>U: Exibe classificação e explicações aproximadas
+    end

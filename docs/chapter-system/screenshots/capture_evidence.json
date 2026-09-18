@@ -1,0 +1,14 @@
+{
+  "app_url": "http://127.0.0.1:3011/",
+  "screenshots": [
+    "01_upload_initial.png",
+    "02_upload_preview_ham10000.png",
+    "03_processing_pipeline.png",
+    "04_result_full.png",
+    "05_model_cards.png",
+    "06_xai_heatmaps_grid.png",
+    "07_history.png",
+    "08_metrics_dashboard.png",
+    "09_ood_rejection.png"
+  ]
+}
