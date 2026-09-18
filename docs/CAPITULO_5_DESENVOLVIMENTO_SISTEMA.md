@@ -14,7 +14,7 @@ O objetivo do sistema é oferecer um ambiente integrado para a análise experime
 
 A ferramenta foi organizada em quatro etapas principais. A primeira corresponde ao recebimento e à validação da imagem. A segunda realiza a triagem de qualidade e de compatibilidade com o domínio de referência. A terceira executa os modelos CNN, Vision Transformer e Hybrid. A quarta organiza os resultados e apresenta a classificação, os escores, o histórico da sessão, as métricas e os mapas de explicabilidade.
 
-Esse desenho segue uma preocupação metodológica presente na literatura de sistemas CAD: a predição deve ser acompanhada por mecanismos que permitam observar a qualidade da entrada, o comportamento do modelo e os limites de generalização. Estudos que comparam CNNs, Transformers e modelos híbridos em imagens de pele ressaltam que o desempenho isolado não é suficiente para caracterizar a utilidade de um sistema, especialmente quando há desequilíbrio entre classes e diferenças entre bases de imagens (DAHMANI; TARHOUNI; ZIDI, 2024; LI et al., 2025; RANI; SANTHIYA, 2025).
+Esse desenho segue uma preocupação metodológica presente na literatura de sistemas CAD: a predição deve ser acompanhada por mecanismos que permitam observar a qualidade da entrada, o comportamento do modelo e os limites de generalização. Estudos que comparam CNNs, Transformers e modelos híbridos em imagens de pele ressaltam que o desempenho isolado não é suficiente para caracterizar a utilidade de um sistema, especialmente quando há desequilíbrio entre classes e diferenças entre bases de imagens \cite{ref_8, ref_18, ref_22}.
 
 ## 5.3 Organização dos dados e definição do problema
 
@@ -69,7 +69,7 @@ O fluxo completo de comunicação entre os componentes é apresentado na Figura 
 
 ### 5.5.1 CNN ResNet-50
 
-O primeiro componente é uma rede convolucional baseada na ResNet-50. As convoluções são utilizadas para extrair padrões locais, como bordas, textura, contraste e estruturas de pequena escala. O backbone é carregado por meio da biblioteca `timm`, com pesos pré-treinados quando disponíveis, e recebe uma cabeça multitarefa desenvolvida no próprio projeto.
+O primeiro componente é uma rede convolucional baseada na ResNet-50 \cite{ref_31}. As convoluções são utilizadas para extrair padrões locais, como bordas, textura, contraste e estruturas de pequena escala. O backbone é carregado por meio da biblioteca `timm`, com pesos pré-treinados quando disponíveis, e recebe uma cabeça multitarefa desenvolvida no próprio projeto.
 
 A cabeça multitarefa possui uma normalização de camada, dropout e duas saídas. A primeira saída contém os logits das sete classes do HAM10000. A segunda saída contém um logit para a tarefa binária benigno–maligno. A representação visual também é preservada para permitir a geração do Grad-CAM. O uso de uma saída auxiliar multiclasses permite que o treinamento não descarte completamente a informação fina das categorias originais.
 
@@ -77,9 +77,9 @@ A escolha da ResNet-50 é coerente com trabalhos que utilizam redes convoluciona
 
 ### 5.5.2 Vision Transformer
 
-O segundo componente é um Vision Transformer pequeno com patches de tamanho 16 por 16, identificado no código como `vit_small_patch16_224`. A imagem é convertida em uma sequência de tokens. O token de classificação é utilizado como representação global para alimentar a cabeça multitarefa.
+O segundo componente é um Vision Transformer pequeno \cite{ref_32} com patches de tamanho 16 por 16, identificado no código como `vit_small_patch16_224`. A imagem é convertida em uma sequência de tokens. O token de classificação é utilizado como representação global para alimentar a cabeça multitarefa.
 
-Ao contrário da convolução, que constrói a representação por meio de campos receptivos locais, o mecanismo de autoatenção permite relacionar diferentes regiões da imagem. Essa característica é relevante para lesões cuja interpretação depende da distribuição global de cores, assimetria ou organização morfológica. A literatura recente apresenta os ViTs como uma alternativa para modelar contexto global, mas também destaca sua sensibilidade ao volume e à diversidade dos dados de treinamento (DAHMANI; TARHOUNI; ZIDI, 2024; SHAJIMON; UFUMAKA; RAZA, 2023).
+Ao contrário da convolução, que constrói a representação por meio de campos receptivos locais, o mecanismo de autoatenção permite relacionar diferentes regiões da imagem. Essa característica é relevante para lesões cuja interpretação depende da distribuição global de cores, assimetria ou organização morfológica. A literatura recente apresenta os ViTs como uma alternativa para modelar contexto global, mas também destaca sua sensibilidade ao volume e à diversidade dos dados de treinamento \cite{ref_8, ref_25}.
 
 No sistema desenvolvido, os tokens são preservados durante a inferência para possibilitar a atribuição visual. Assim, o ViT não é utilizado somente para retornar uma classe. A interface pode apresentar sua confiança, sua entropia, sua variância de Test-Time Augmentation e seu mapa de atribuição.
 
@@ -89,7 +89,7 @@ O terceiro componente combina um backbone convolucional com uma sequência de to
 
 A representação híbrida utiliza duas projeções. A primeira representa o conteúdo extraído pela CNN. A segunda representa o token global produzido pelo ramo de atenção. Um gate aprendido calcula a contribuição relativa dessas duas representações e forma a representação utilizada pela cabeça multitarefa. Essa implementação não corresponde a uma simples concatenação: há uma combinação adaptativa entre informação convolucional e informação baseada em atenção.
 
-O desenho híbrido foi motivado pela discussão apresentada no Capítulo 4. Trabalhos recentes exploram a combinação de CNNs e Transformers para equilibrar a extração de padrões locais com a modelagem de contexto global (ALI et al., 2024; ALI et al., 2025; HASAN et al., 2025). No entanto, a existência de uma arquitetura híbrida no sistema não implica, por si só, que ela seja superior. A comparação deve considerar métricas, calibração, custo computacional e comportamento fora do domínio.
+O desenho híbrido foi motivado pela discussão apresentada no Capítulo 4. Trabalhos recentes exploram a combinação de CNNs e Transformers para equilibrar a extração de padrões locais com a modelagem de contexto global \cite{ref_4, ref_5, ref_12}. No entanto, a existência de uma arquitetura híbrida no sistema não implica, por si só, que ela seja superior. A comparação deve considerar métricas, calibração, custo computacional e comportamento fora do domínio.
 
 ### 5.5.4 Saídas dos modelos
 
@@ -111,7 +111,7 @@ A operação de agregação utilizada pelo backend pode ser descrita por:
 
 A probabilidade agregada é convertida em uma decisão binária com limiar de 0,5. O sistema também combina as distribuições multiclasses e calcula a média das medidas de incerteza. O resultado da aplicação, portanto, não oculta os modelos individuais: a decisão final é apresentada junto com as decisões da CNN, do ViT e do Hybrid.
 
-Esta seção descreve somente a implementação do agregador. A fundamentação conceitual sobre Ensemble Learning permanece no Capítulo 3 e nas referências já utilizadas na dissertação, incluindo Hossain et al. (2024), Mumtaz et al. (2023) e Shahin, Kamal e Elattar (2018). Não foi criado neste capítulo um novo desenvolvimento teórico sobre o tema.
+Esta seção descreve somente a implementação do agregador. A fundamentação conceitual sobre Ensemble Learning permanece no Capítulo 3 e nas referências já utilizadas na dissertação \cite{ref_13, ref_19, ref_24}. Não foi criado neste capítulo um novo desenvolvimento teórico sobre o tema.
 
 ![Cartões com as saídas individuais e a saída agregada](chapter-system/screenshots/05_model_cards.png)
 
@@ -126,7 +126,7 @@ A Figura 5.4 mostra a função de inspeção criada para a ferramenta. O usuári
 
 O mapa da CNN é gerado a partir do último mapa convolucional. O gradiente da saída binária é utilizado para estimar quais canais contribuíram para a decisão. A combinação ponderada dos mapas de características produz uma saliência espacial que é redimensionada para o tamanho da imagem original.
 
-O Grad-CAM é uma explicação aproximada da sensibilidade do modelo. Ele não é uma segmentação da lesão, não mostra causalidade e não prova que a região destacada seja suficiente para justificar a decisão. Essa limitação deve permanecer explícita no texto e na interface, uma vez que a interpretação visual de um mapa pode ser mais forte do que a evidência fornecida pelo método (HASAN et al., 2025; LI et al., 2025).
+O Grad-CAM \cite{ref_33} é uma explicação aproximada da sensibilidade do modelo. Ele não é uma segmentação da lesão, não mostra causalidade e não prova que a região destacada seja suficiente para justificar a decisão. Essa limitação deve permanecer explícita no texto e na interface, uma vez que a interpretação visual de um mapa pode ser mais forte do que a evidência fornecida pelo método \cite{ref_12, ref_18}.
 
 ### 5.7.2 Atribuição de tokens no ViT
 
@@ -138,11 +138,11 @@ O mapa do Hybrid combina três sinais disponíveis na arquitetura: o Grad-CAM do
 
 ### 5.7.4 Localizador auxiliar e gate visual
 
-Para reduzir a coloração de regiões do fundo, foi treinado um localizador auxiliar com o ISIC 2016 Part 1. O conjunto possui imagens dermatoscópicas e máscaras binárias de lesão. O experimento registrado utilizou seed 42, divisão 720/90/90 e resolução de 160 × 160. No teste do próprio ISIC 2016, o localizador obteve Dice de 0,8245 e IoU de 0,7667.
+Para reduzir a coloração de regiões do fundo, foi treinado um localizador auxiliar com o ISIC 2016 Part 1 \cite{ref_37}. O conjunto possui imagens dermatoscópicas e máscaras binárias de lesão. O experimento registrado utilizou seed 42, divisão 720/90/90 e resolução de 160 × 160. No teste do próprio ISIC 2016, o localizador obteve Dice de 0,8245 e IoU de 0,7667.
 
 A máscara é binarizada, submetida à seleção do maior componente conectado e processada por fechamento morfológico. Na configuração padrão, o gate utiliza o modo `balanced`, limiar 0,50 e kernel 5 × 5. O modo `strict` usa limiar 0,65 e kernel 3 × 3. O modo `permissive` utiliza limiar 0,35 e kernel 7 × 7, sendo indicado para situações com pelos ou iluminação irregular. Esses modos alteram a máscara de visualização, não a classificação.
 
-O uso de uma base de segmentação separada é uma decisão de engenharia e também uma limitação metodológica. O desempenho do localizador no ISIC 2016 não garante o mesmo comportamento no HAM10000, porque os datasets podem diferir em equipamento, iluminação, composição e distribuição de lesões. Trabalhos de segmentação de lesões mostram a importância de avaliar a máscara em dados representativos do domínio de aplicação (AGHDAM et al., 2023; AHMED et al., 2025).
+O uso de uma base de segmentação separada é uma decisão de engenharia e também uma limitação metodológica. O desempenho do localizador no ISIC 2016 não garante o mesmo comportamento no HAM10000, porque os datasets podem diferir em equipamento, iluminação, composição e distribuição de lesões. Trabalhos de segmentação de lesões mostram a importância de avaliar a máscara em dados representativos do domínio de aplicação \cite{ref_1, ref_2}.
 
 A aplicação do gate pode ser representada por:
 
@@ -279,15 +279,15 @@ As bibliotecas não são resultados científicos do trabalho. Elas são ferramen
 
 ### 5.10.1 Referências técnicas que devem ser incorporadas à bibliografia
 
-As referências abaixo são sugestões para completar a bibliografia técnica caso ainda não estejam presentes na versão final. A numeração ou a ordenação deve seguir o padrão bibliográfico adotado na dissertação:
+As referências abaixo complementam a bibliografia original da qualificação. Como o artigo original contém 30 referências, as entradas técnicas adicionais foram numeradas de 31 a 37 e devem ser cadastradas no arquivo BibTeX com as chaves correspondentes:
 
-- He et al. (2016), trabalho que apresenta as redes residuais utilizadas como base da ResNet-50.
-- Dosovitskiy et al. (2021), trabalho que apresenta o Vision Transformer.
-- Selvaraju et al. (2017), trabalho que apresenta o Grad-CAM.
-- Paszke et al. (2019), trabalho que descreve o framework PyTorch.
-- Harris et al. (2020), referência da biblioteca NumPy.
-- Pedregosa et al. (2011), referência da biblioteca scikit-learn.
-- A documentação oficial do ISIC Challenge 2016, para registrar a origem do conjunto de máscaras utilizado no localizador auxiliar.
+- Referência das redes residuais utilizadas como base da ResNet-50 \cite{ref_31}.
+- Referência do Vision Transformer \cite{ref_32}.
+- Referência do Grad-CAM \cite{ref_33}.
+- Referência do framework PyTorch \cite{ref_34}.
+- Referência da biblioteca NumPy \cite{ref_35}.
+- Referência da biblioteca scikit-learn \cite{ref_36}.
+- A documentação oficial do ISIC Challenge 2016, para registrar a origem do conjunto de máscaras utilizado no localizador auxiliar \cite{ref_37}.
 
 Na versão final, não se deve citar uma biblioteca como se ela fosse um artigo que comprovou o desempenho do sistema. A biblioteca deve ser associada ao procedimento de implementação. O resultado experimental deve ser associado ao dataset, ao protocolo e aos checkpoints descritos neste capítulo.
 
@@ -327,19 +327,19 @@ A versão atual atende à demonstração funcional prevista para o trabalho, mas
 
 As entradas seguintes não substituem as referências já existentes no trabalho. Elas devem ser conferidas e incorporadas à bibliografia final conforme o padrão adotado no documento:
 
-DOSOVITSKIY, A. et al. An image is worth 16x16 words: Transformers for image recognition at scale. In: International Conference on Learning Representations, 2021.
+[31] HE, K. et al. Deep residual learning for image recognition. In: IEEE Conference on Computer Vision and Pattern Recognition, 2016. p. 770–778.
 
-HARRIS, C. R. et al. Array programming with NumPy. Nature, v. 585, p. 357–362, 2020.
+[32] DOSOVITSKIY, A. et al. An image is worth 16x16 words: Transformers for image recognition at scale. In: International Conference on Learning Representations, 2021.
 
-HE, K. et al. Deep residual learning for image recognition. In: IEEE Conference on Computer Vision and Pattern Recognition, 2016. p. 770–778.
+[33] SELVARAJU, R. R. et al. Grad-CAM: Visual explanations from deep networks via gradient-based localization. In: IEEE International Conference on Computer Vision, 2017. p. 618–626.
 
-PASZKE, A. et al. PyTorch: An imperative style, high-performance deep learning library. In: Advances in Neural Information Processing Systems, v. 32, 2019.
+[34] PASZKE, A. et al. PyTorch: An imperative style, high-performance deep learning library. In: Advances in Neural Information Processing Systems, v. 32, 2019.
 
-PEDREGOSA, F. et al. Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, v. 12, p. 2825–2830, 2011.
+[35] HARRIS, C. R. et al. Array programming with NumPy. Nature, v. 585, p. 357–362, 2020.
 
-SELVARAJU, R. R. et al. Grad-CAM: Visual explanations from deep networks via gradient-based localization. In: IEEE International Conference on Computer Vision, 2017. p. 618–626.
+[36] PEDREGOSA, F. et al. Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, v. 12, p. 2825–2830, 2011.
 
-ISIC CHALLENGE. ISIC 2016: Skin lesion analysis toward melanoma detection. Disponível em: https://challenge.isic-archive.com/data/. Acesso em: 18 set. 2026.
+[37] ISIC CHALLENGE. ISIC 2016: Skin lesion analysis toward melanoma detection. Disponível em: https://challenge.isic-archive.com/data/. Acesso em: 18 set. 2026.
 
 ## Arquivos de apoio às figuras
 
