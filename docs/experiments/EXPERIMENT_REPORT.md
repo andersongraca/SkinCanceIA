@@ -37,16 +37,16 @@ A literatura mostra que sistemas dermatológicos podem sofrer queda de desempenh
 
 ## Pesos e desempenho no teste congelado
 
-Os pesos foram selecionados na validação por uma função que combina macro-F1 multiclasses e AUROC binária. O resultado desta rodada foi **CNN 10%, ViT 50% e híbrido 40%**. O peso mínimo de 10% garante participação dos três modelos, mas não deve ser confundido com uma estimativa de importância clínica.
+Os pesos foram selecionados na validação por uma função que combina macro-F1 multiclasses e AUROC binária. O resultado desta rodada foi **CNN 10%, ViT 55% e híbrido 35%**. O peso mínimo de 10% garante participação dos três modelos, mas não deve ser confundido com uma estimativa de importância clínica.
 
 | Modelo | Macro-F1 multiclasses | AUROC multiclasses | AUROC binária | Sensibilidade | Especificidade | MCC binário | ECE binário |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| CNN ResNet-50 | 0,3725 | 0,8748 | 0,8167 | 0,7667 | 0,6903 | 0,3707 | 0,2693 |
-| ViT | 0,4311 | 0,8922 | 0,8487 | 0,7167 | 0,7938 | 0,4399 | 0,1985 |
-| Híbrido CNN–ViT | 0,3957 | 0,8853 | 0,8465 | 0,6533 | 0,8289 | 0,4336 | 0,0370 |
-| Ensemble | **0,4748** | **0,9096** | **0,8607** | **0,7167** | **0,8052** | **0,4537** | **0,0795** |
+| CNN ResNet-50 | 0,3287 | 0,8778 | 0,8293 | 0,7333 | 0,7294 | 0,3827 | 0,0544 |
+| ViT | 0,3642 | 0,8837 | 0,8500 | 0,8533 | 0,6944 | 0,4419 | 0,0456 |
+| Híbrido CNN–ViT | 0,4024 | 0,8902 | 0,8370 | 0,7967 | 0,7311 | 0,4337 | 0,2269 |
+| Ensemble | **0,4314** | **0,9068** | **0,8600** | **0,8233** | **0,7319** | **0,4551** | **0,0706** |
 
-No conjunto de teste com 1.527 imagens, o ensemble apresentou acurácia multiclasses de 0,6398, balanced accuracy de 0,6009, AUPRC multiclasses de 0,5543 e Brier score de 0,4865. Na tarefa binária, apresentou acurácia de 0,7878, balanced accuracy de 0,7609, precisão de 0,4736, F1 de 0,5703 e AUPRC de 0,5946. As métricas completas, matrizes de confusão, métricas por classe e previsões estão em `ml_artifacts/ham10000/ensemble/test_metrics.json` e `ml_artifacts/ham10000/ensemble/test_predictions.npz`.
+No conjunto de teste com 1.527 imagens, o ensemble apresentou acurácia multiclasses de 0,5940, balanced accuracy de 0,5943, AUPRC multiclasses de 0,5021 e Brier score de 0,5418. Na tarefa binária, apresentou acurácia de 0,7498, balanced accuracy de 0,7776, precisão de 0,4288, F1 de 0,5639 e AUPRC de 0,5709. As métricas completas, matrizes de confusão, métricas por classe e previsões estão em `ml_artifacts/ham10000/ensemble/test_metrics.json` e `ml_artifacts/ham10000/ensemble/test_predictions.npz`.
 
 ![Comparação das métricas no teste](model_comparison_test_metrics.png)
 
@@ -56,12 +56,12 @@ Os intervalos de confiança percentílicos de 95%, calculados por 1.000 reamostr
 
 | Métrica | Estimativa média bootstrap | IC 95% |
 |---|---:|---:|
-| Macro-F1 multiclasses | 0,4727 | 0,4282–0,5186 |
-| AUROC multiclasses | 0,9095 | 0,8923–0,9242 |
-| AUROC binária | 0,8607 | 0,8398–0,8814 |
-| Sensibilidade binária | 0,7160 | 0,6610–0,7693 |
-| Especificidade binária | 0,8056 | 0,7831–0,8273 |
-| F1 binário | 0,5695 | 0,5261–0,6131 |
+| Macro-F1 multiclasses | 0,4293 | 0,3874–0,4696 |
+| AUROC multiclasses | 0,9068 | 0,8955–0,9174 |
+| AUROC binária | 0,8603 | 0,8399–0,8806 |
+| Sensibilidade binária | 0,8231 | 0,7774–0,8662 |
+| Especificidade binária | 0,7324 | 0,7064–0,7567 |
+| F1 binário | 0,5635 | 0,5236–0,6009 |
 
 Os intervalos quantificam a variabilidade amostral sob o teste congelado; não substituem validação externa, análise por paciente ou avaliação clínica prospectiva.
 
