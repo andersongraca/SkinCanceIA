@@ -38,7 +38,7 @@ A interface permite o envio de arquivos JPEG ou PNG com tamanho máximo de 10 MB
 
 A triagem não é um classificador semântico universal. Ela funciona como uma barreira estatística para identificar entradas que se afastam do domínio dermatoscópico utilizado no desenvolvimento. Quando uma imagem é rejeitada, o sistema não executa os modelos de classificação e exibe os motivos da rejeição. A rejeição de uma imagem não dermatológica confirma o funcionamento do mecanismo de controle, mas não permite afirmar que todo carro, régua, rosto ou objeto externo será rejeitado.
 
-![Tela inicial para envio de uma imagem dermatoscópica](chapter-system/screenshots/01_upload_initial.png)
+![Tela inicial para envio de uma imagem dermatoscópica](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDFfdXBsb2FkX2luaXRpYWw.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURGZmRYQnNiMkZrWDJsdWFYUnBZV3cucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCIHQL5nJ5hhkV5jccLXA~wXMY8-zbr4DuMOlqxrA7cd~HAiAvlO0gHERB3xxYgtAd5JBWvdUx~PjQB7Jwt46ISo6y2Q__)
 
 **Figura 5.1 – Tela inicial do sistema para seleção da imagem.**
 *Fonte: autoria própria, a partir da implementação do SkinCancerCADDermoIA.*
@@ -49,7 +49,7 @@ A Figura 5.1 apresenta a tela inicial. O usuário é informado sobre os formatos
 
 A arquitetura do sistema foi organizada em duas trilhas que se complementam. A primeira é responsável pela classificação. A segunda é responsável pela explicabilidade visual. A trilha de classificação recebe a imagem elegível e executa os três checkpoints. A trilha de explicabilidade utiliza os mapas produzidos por cada modelo e um localizador auxiliar de lesão. O localizador não altera a classe, a probabilidade ou a confiança da classificação; ele é utilizado somente para restringir a área visualizada nos mapas.
 
-![Diagrama de blocos da arquitetura implementada](chapter-system/figura_5_1_arquitetura.png)
+![Diagrama de blocos da arquitetura implementada](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vZmlndXJhXzVfMV9hcnF1aXRldHVyYQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZabWxuZFhKaFh6VmZNVjloY25GMWFYUmxkSFZ5WVEucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIDgtG6Lc0x~tzMwwTluuXRjwjyuvVaqRmOHwOfJhmphBAiEAno67IBmEHV-DZwKEHBf2UZBKORa3YzwtR7izY7aZ1WI_)
 
 **Figura 5.2 – Diagrama de blocos do sistema implementado.**
 *Fonte: autoria própria.*
@@ -60,7 +60,7 @@ Em paralelo, o sistema solicita os mapas de explicabilidade. O CNN produz Grad-C
 
 O fluxo completo de comunicação entre os componentes é apresentado na Figura 5.3.
 
-![Diagrama de sequência da análise](chapter-system/figura_5_2_sequencia.png)
+![Diagrama de sequência da análise](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vZmlndXJhXzVfMl9zZXF1ZW5jaWE.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZabWxuZFhKaFh6VmZNbDl6WlhGMVpXNWphV0UucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIBK5MF-rWt8VM2o0GdGBL-j51FgQ4E6SylHgV5OEbkA~AiEAv7-rA2EgG9a4n89tyFsoL0x3MXLoF6P1D-KbdjSY4hU_)
 
 **Figura 5.3 – Sequência de comunicação entre usuário, interface, backend e módulos de aprendizado.**
 *Fonte: autoria própria.*
@@ -77,7 +77,7 @@ A escolha da ResNet-50 é coerente com trabalhos que utilizam redes convoluciona
 
 ### 5.5.2 Vision Transformer
 
-O segundo componente é um Vision Transformer pequeno \cite{ref_32} com patches de tamanho 16 por 16, identificado no código como `vit_small_patch16_224`. A imagem é convertida em uma sequência de tokens. O token de classificação é utilizado como representação global para alimentar a cabeça multitarefa.
+O segundo componente é um Vision Transformer pequeno \cite{ref_32} com patches de tamanho 16 por 16, identificado no código como `vit_small_patch16_224`.
 
 Ao contrário da convolução, que constrói a representação por meio de campos receptivos locais, o mecanismo de autoatenção permite relacionar diferentes regiões da imagem. Essa característica é relevante para lesões cuja interpretação depende da distribuição global de cores, assimetria ou organização morfológica. A literatura recente apresenta os ViTs como uma alternativa para modelar contexto global, mas também destaca sua sensibilidade ao volume e à diversidade dos dados de treinamento \cite{ref_8, ref_25}.
 
@@ -105,15 +105,15 @@ O sistema preserva os resultados individuais e também produz uma saída agregad
 
 A operação de agregação utilizada pelo backend pode ser descrita por:
 
-\[
+$$
  p_{agregado} = 0{,}10p_{CNN} + 0{,}55p_{ViT} + 0{,}35p_{Hybrid}.
-\]
+$$
 
 A probabilidade agregada é convertida em uma decisão binária com limiar de 0,5. O sistema também combina as distribuições multiclasses e calcula a média das medidas de incerteza. O resultado da aplicação, portanto, não oculta os modelos individuais: a decisão final é apresentada junto com as decisões da CNN, do ViT e do Hybrid.
 
 Esta seção descreve somente a implementação do agregador. A fundamentação conceitual sobre Ensemble Learning permanece no Capítulo 3 e nas referências já utilizadas na dissertação \cite{ref_13, ref_19, ref_24}. Não foi criado neste capítulo um novo desenvolvimento teórico sobre o tema.
 
-![Cartões com as saídas individuais e a saída agregada](chapter-system/screenshots/05_model_cards.png)
+![Cartões com as saídas individuais e a saída agregada](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDVfbW9kZWxfY2FyZHM.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURWZmJXOWtaV3hmWTJGeVpITS5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTIwMjI0MDB9fX1dfQ__&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIQD8xR918bwbiCpbmkcA0CslqsbRDPXsku1WaojGQWaKvAIgI9jvbTiq0THMij7SdDU~cH8QqxMSV-dMX9HSmBkw2ZU_)
 
 **Figura 5.4 – Visualização dos resultados individuais dos modelos e da saída agregada.**
 *Fonte: autoria própria, a partir da execução local.*
@@ -146,13 +146,13 @@ O uso de uma base de segmentação separada é uma decisão de engenharia e tamb
 
 A aplicação do gate pode ser representada por:
 
-\[
+$$
  S_{gate}(x,y) = S(x,y) \times M(x,y),
-\]
+$$
 
-em que \(S(x,y)\) é a saliência normalizada e \(M(x,y)\) é a máscara binária produzida pelo localizador. Fora da máscara, a saliência é zerada. A opacidade do overlay é proporcional à intensidade da saliência. Assim, regiões sem saliência permanecem visualmente próximas da imagem original, em vez de receberem uma coloração uniforme.
+em que $$S(x,y)$$ é a saliência normalizada e $$M(x,y)$$ é a máscara binária produzida pelo localizador. Fora da máscara, a saliência é zerada. A opacidade do overlay é proporcional à intensidade da saliência. Assim, regiões sem saliência permanecem visualmente próximas da imagem original, em vez de receberem uma coloração uniforme.
 
-![Grade com os quatro mapas de explicabilidade](chapter-system/screenshots/06_xai_heatmaps_grid.png)
+![Grade com os quatro mapas de explicabilidade](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDZfeGFpX2hlYXRtYXBzX2dyaWQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURaZmVHRnBYMmhsWVhSdFlYQnpYMmR5YVdRLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEYCIQDdxPdlsfdy~TdfxQpGiqycn1OLzVWriRey7B~0oCAJjgIhANhLkUr2GNuhuDQl6synSiPSdo4tvB4C0TKi5si7Ez7G)
 
 **Figura 5.5 – Mapas de explicabilidade produzidos para a imagem auditada.**
 *Fonte: autoria própria, a partir dos checkpoints treinados e do gate auxiliar.*
@@ -169,7 +169,7 @@ A utilização de TypeScript permite declarar os contratos das respostas, reduzi
 
 Depois que o arquivo é selecionado, a interface exibe uma prévia e os metadados básicos. Durante a análise, a barra de progresso comunica as etapas aproximadas do processamento: preparação, envio, triagem, execução dos modelos e geração dos mapas. A barra é uma indicação de estado da interface, não uma medição direta do tempo gasto em cada etapa do backend.
 
-![Pré-visualização da imagem selecionada](chapter-system/screenshots/02_upload_preview_ham10000.png)
+![Pré-visualização da imagem selecionada](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDJfdXBsb2FkX3ByZXZpZXdfaGFtMTAwMDA.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURKZmRYQnNiMkZrWDNCeVpYWnBaWGRmYUdGdE1UQXdNREEucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEYCIQCpm1xdV~iV~tCmnstyAHweOuGvKZyAdr30Cgj1dDxJTQIhAMJGd84LJEVviCo7lXnXJR4goQSVTSjPD1viFNUItOVx)
 
 **Figura 5.6 – Pré-visualização de uma imagem dermatoscópica antes da classificação.**
 *Fonte: autoria própria.*
@@ -190,7 +190,7 @@ A aba de histórico consulta os diagnósticos registrados para a sessão. Em amb
 
 A aba de métricas carrega os arquivos do experimento HAM10000 e apresenta os resultados dos quatro componentes: CNN, ViT, Hybrid e saída agregada. Cada modelo é associado ao conjunto de teste congelado com 1.527 imagens. A interface apresenta acurácia, sensibilidade, especificidade, F1-score, AUROC e precisão, além de um gráfico de barras para a comparação visual.
 
-![Painel de métricas do experimento](chapter-system/screenshots/08_metrics_dashboard.png)
+![Painel de métricas do experimento](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDhfbWV0cmljc19kYXNoYm9hcmQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURoZmJXVjBjbWxqYzE5a1lYTm9ZbTloY21RLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCIAgUsnQVr79s7Meyn9SsdrP3oPiNygsWJuWdcG7s-0yeAiBYCCbrSqV5JkGv5LpA6LLoSZYhBceZVo84cSzlLYdKzQ__)
 
 **Figura 5.7 – Tabela e gráfico de métricas carregados a partir dos artefatos do experimento.**
 *Fonte: autoria própria.*
@@ -201,7 +201,7 @@ A Figura 5.7 mostra que a ferramenta não depende de números digitados manualme
 
 A execução completa começa quando o usuário seleciona a imagem. A interface valida o tipo e o tamanho do arquivo. O backend grava o arquivo e inicia a triagem. Se a imagem for elegível, os três modelos são executados e as respostas são agregadas. Em seguida, são gerados os mapas individuais e o mapa agregado. O resultado é registrado na sessão e a interface muda para a aba de resultados.
 
-![Estado intermediário de processamento](chapter-system/screenshots/03_processing_pipeline.png)
+![Estado intermediário de processamento](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDNfcHJvY2Vzc2luZ19waXBlbGluZQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TUROZmNISnZZMlZ6YzJsdVoxOXdhWEJsYkdsdVpRLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIQDs3G0sNemXK-w0HFx2phCfv1cNLchYqVDnHm4dI2gLkwIgXovh-5WbrJOFZqX6VIpDiIE23kvYpe65iElYRYbbT6w_)
 
 **Figura 5.8 – Estado da interface durante a triagem, inferência e geração dos mapas.**
 *Fonte: autoria própria.*
@@ -216,7 +216,7 @@ A primeira execução foi realizada com a imagem `ISIC_0027419.jpg`, utilizada c
 
 O resultado não deve ser lido como confirmação de câncer. A classe retornada é a saída de um modelo treinado em um conjunto de imagens, e a confiança é uma probabilidade operacional do sistema. A confirmação diagnóstica depende de avaliação clínica e, quando indicada, de procedimentos complementares.
 
-![Resultado completo da classificação](chapter-system/screenshots/04_result_full.png)
+![Resultado completo da classificação](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDRfcmVzdWx0X2Z1bGw.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURSZmNtVnpkV3gwWDJaMWJHdy5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTIwMjI0MDB9fX1dfQ__&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCID2SdLexcpDWccKnb786n6rhNewpAq1fof30P1RAlNkJAiAGS529c-~oZVq~NCTB8islxjD2-nkOORpF6k6qWQoBTA__)
 
 **Figura 5.9 – Resultado completo com imagem, elegibilidade, decisão, confiança e incerteza.**
 *Fonte: autoria própria.*
@@ -231,7 +231,7 @@ No conjunto de teste, o Ensemble apresentou o maior AUROC entre as saídas avali
 
 Depois da classificação, o diagnóstico é inserido no histórico da sessão. A interface apresenta o nome do arquivo, a data, a classe final, a confiança e a versão do modelo. Ao selecionar os detalhes, o usuário pode consultar as saídas da CNN, do ViT e do Hybrid.
 
-![Histórico de diagnósticos da sessão](chapter-system/screenshots/07_history.png)
+![Histórico de diagnósticos da sessão](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDdfaGlzdG9yeQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURkZmFHbHpkRzl5ZVEucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEYCIQDFCL8t7i6B-EdvQYXiYliSoSzRLizpSoX7382MPuOR8AIhAJQUpuTX-O-aEHRSLvPQ3dzaAEdDdcMKws4TlV-rZd9C)
 
 **Figura 5.10 – Histórico local após a execução de uma classificação.**
 *Fonte: autoria própria.*
@@ -242,14 +242,14 @@ A Figura 5.10 demonstra que a ferramenta mantém uma trilha mínima da execuçã
 
 Como teste de controle, foi utilizada uma imagem não dermatológica. A triagem retornou o motivo `outside_dermoscopy_domain` e impediu que a imagem fosse encaminhada aos modelos. Esse caso verifica a integração entre a referência estatística e o fluxo da aplicação.
 
-![Rejeição de imagem fora do domínio](chapter-system/screenshots/09_ood_rejection.png)
+![Rejeição de imagem fora do domínio](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDlfb29kX3JlamVjdGlvbg.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURsZmIyOWtYM0psYW1WamRHbHZiZy5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTIwMjI0MDB9fX1dfQ__&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIQDQ2qtAQZJxYYFY2tevmu6OvoS9agS-ssEspnhkemHFjQIgPBRINzLl2-R4qHiHGcbwUNzOrvuIgdw5oP4kqkkIVKo_)
 
 **Figura 5.11 – Rejeição de uma entrada não dermatológica antes da classificação.**
 *Fonte: autoria própria.*
 
 A Figura 5.11 mostra que a rejeição não ocorre de forma silenciosa. A interface apresenta o status, o escore de qualidade, o escore OOD, a dimensão da imagem e os motivos identificados. O sistema, portanto, fornece uma justificativa operacional para não executar o classificador. O teste, porém, não mede a sensibilidade e a especificidade de um detector OOD universal. Para essa conclusão seria necessário um painel amplo, independente e rotulado com diferentes objetos, fotografias clínicas, imagens degradadas e imagens dermatoscópicas de outros equipamentos.
 
-![Painel quadruplicado dos testes da ferramenta](chapter-system/painel_testes_sistema.png)
+![Painel quadruplicado dos testes da ferramenta](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vcGFpbmVsX3Rlc3Rlc19zaXN0ZW1h.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjR0ZwYm1Wc1gzUmxjM1JsYzE5emFYTjBaVzFoLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCIDBjcoFpeTFf~PtkJYG4Dan-xRgeqPS~b6qrw3MpLzETAiAzNDpcDn-OQNdTnDw8Tt-g9Xpe4Fi11mYRbQM3IMqBiA__)
 
 **Figura 5.12 – Painel com quatro estados da aplicação: upload, resultado, métricas e rejeição fora do domínio.**
 *Fonte: autoria própria, a partir das execuções locais.*
@@ -261,7 +261,7 @@ O painel da Figura 5.12 reúne, em uma única composição, quatro momentos do u
 A implementação utilizou ferramentas de software com funções distintas. As ferramentas de aprendizado profundo foram utilizadas para construir, treinar, carregar e executar os modelos. As ferramentas de visão computacional foram utilizadas para ler imagens, processar máscaras e produzir overlays. As ferramentas web organizaram a interface e a comunicação com o backend. As ferramentas de engenharia foram utilizadas para testar, empacotar e versionar o sistema.
 
 | Camada | Ferramentas utilizadas | Função no projeto |
-|---|---|---|
+| --- | --- | --- |
 | Linguagem científica | Python 3.11 | Treinamento, inferência, métricas e explicabilidade |
 | Aprendizado profundo | PyTorch, torchvision e timm | Modelos, tensores, backbones e checkpoints |
 | Dados e métricas | NumPy, pandas e scikit-learn | Manipulação, partições e avaliação |
@@ -279,17 +279,52 @@ As bibliotecas não são resultados científicos do trabalho. Elas são ferramen
 
 ### 5.10.1 Referências técnicas que devem ser incorporadas à bibliografia
 
-As referências abaixo complementam a bibliografia original da qualificação. Como o artigo original contém 30 referências, as entradas técnicas adicionais foram numeradas de 31 a 37 e devem ser cadastradas no arquivo BibTeX com as chaves correspondentes:
+**As referências abaixo complementam a bibliografia original da qualificação. Como o artigo original contém 30 referências, as entradas técnicas adicionais foram numeradas de 31 a 38 e devem ser cadastradas no arquivo BibTeX com as chaves correspondentes:**
 
 - Referência das redes residuais utilizadas como base da ResNet-50 \cite{ref_31}.
+
 - Referência do Vision Transformer \cite{ref_32}.
+
 - Referência do Grad-CAM \cite{ref_33}.
+
 - Referência do framework PyTorch \cite{ref_34}.
+
 - Referência da biblioteca NumPy \cite{ref_35}.
+
 - Referência da biblioteca scikit-learn \cite{ref_36}.
+
 - A documentação oficial do ISIC Challenge 2016, para registrar a origem do conjunto de máscaras utilizado no localizador auxiliar \cite{ref_37}.
 
+- **Referência do repositório PyTorch Image Models (`timm`), utilizado para instanciar os backbones \cite{ref_38}.**
+
 Na versão final, não se deve citar uma biblioteca como se ela fosse um artigo que comprovou o desempenho do sistema. A biblioteca deve ser associada ao procedimento de implementação. O resultado experimental deve ser associado ao dataset, ao protocolo e aos checkpoints descritos neste capítulo.
+
+### 5.10.2 Proveniência do código e atribuição das ferramentas
+
+**A implementação foi construída como uma composição de componentes próprios e dependências de código aberto. A auditoria do repositório não identificou arquivos ou trechos explicitamente marcados como copiados de um projeto de terceiros. Essa constatação não elimina a obrigação de revisar as licenças das dependências antes de uma distribuição pública; ela apenas delimita o que foi desenvolvido no escopo deste trabalho e o que foi utilizado como infraestrutura.**
+
+**A principal reutilização de software ocorre na camada dos backbones. A biblioteca `timm` fornece implementações de modelos de visão, incluindo variantes da ResNet e do Vision Transformer, além de utilitários para carregamento de pesos. O sistema não reimplementa essas arquiteturas fundamentais a partir de operações elementares; ele instancia os backbones pela biblioteca e acrescenta módulos específicos para o problema estudado. O código da biblioteca é distribuído sob Apache 2.0, enquanto os pesos pré-treinados podem estar sujeitos às condições da base de pré-treinamento correspondente. Por essa razão, a atribuição da biblioteca e a verificação da licença dos pesos devem permanecer separadas da autoria dos módulos desenvolvidos neste projeto \cite{ref_38}.**
+
+**A fronteira de autoria pode ser resumida da seguinte maneira: a definição da cabeça multitarefa, com saídas multiclasses e binária, foi implementada no projeto; a arquitetura híbrida, com projeção convolucional em tokens, blocos de atenção e gate de fusão, também foi implementada no projeto; a seleção dos pesos do agregador, a calibração, a inferência com TTA, a triagem de qualidade, o controle fora do domínio e os critérios de abstenção pertencem ao pipeline desenvolvido; o localizador auxiliar, o pós-processamento morfológico e a aplicação do gate aos mapas foram igualmente integrados no escopo desta pesquisa. Em contraste, PyTorch, `torchvision`, `timm`, NumPy, scikit-learn, OpenCV, React, Vite, Express, tRPC, Drizzle, Vitest e pytest são ferramentas utilizadas para implementar, executar ou testar esses componentes.**
+
+**Essa distinção também evita uma atribuição inadequada de originalidade. A ResNet-50 e o Vision Transformer são arquiteturas consolidadas na literatura, e o Grad-CAM é um método de explicabilidade previamente publicado \cite{ref_31, ref_32, ref_33}. A contribuição de implementação deste capítulo está na adaptação dessas ideias a um pipeline integrado de análise dermatoscópica, na definição das interfaces entre os módulos, na preservação das saídas intermediárias e na criação dos mecanismos de auditoria; não está na reivindicação de autoria das arquiteturas ou do método de explicabilidade em si.**
+
+### 5.10.3 Comparação com modelos e sistemas relacionados
+
+**A comparação com trabalhos relacionados foi realizada pelo escopo metodológico, e não por uma ordenação direta de acurácias. Resultados numéricos só podem ser comparados de forma responsável quando coincidem o dataset, a definição das classes, o particionamento, o protocolo de pré-processamento, o critério de seleção do modelo e o conjunto de teste. Como essas condições não são necessariamente iguais entre os estudos, a tabela a seguir identifica convergências e diferenças de desenho, sem afirmar superioridade estatística do sistema desenvolvido.**
+
+| Abordagem ou trabalho | Característica central descrita na literatura | Como aparece no sistema desenvolvido | Diferença que deve ser preservada na interpretação |
+| --- | --- | --- | --- |
+| **ResNet-50 \cite{ref_31}** | **Rede residual utilizada como base para extração hierárquica de características visuais** | **Backbone convolucional do componente CNN, associado à cabeça multitarefa** | **A referência é arquitetural; não constitui, por si só, um resultado dermatológico comparável** |
+| **Vision Transformer \cite{ref_32, ref_8}** | **Representação baseada em patches e autoatenção para modelar relações globais** | **Componente ViT pequeno, com atribuição de tokens na explicabilidade** | **O uso do mesmo paradigma não implica equivalência de treinamento, dados ou desempenho** |
+| **Comparação CNN–ViT com XAI \cite{ref_18}** | **Estudo que confronta famílias convolucionais e Transformer e inclui explicabilidade** | **O sistema mantém as saídas dos três modelos e apresenta mapas individuais** | **A ferramenta acrescenta triagem de entrada, incerteza, histórico e integração web, mas não deve importar as métricas do estudo sem reproduzir seu protocolo** |
+| **Arquitetura híbrida CNN–ViT com XAI \cite{ref_12}** | **Combinação de características convolucionais e atenção em uma arquitetura híbrida** | **Modelo híbrido próprio, com projeção em tokens, dois blocos de atenção e gate aprendido** | **A semelhança conceitual não significa que as arquiteturas, perdas ou estratégias de treinamento sejam idênticas** |
+| **Ensemble com ViT e outros classificadores \cite{ref_13}** | **Agregação de modelos heterogêneos para classificação de lesões** | **Agregação das probabilidades calibradas da CNN, do ViT e do Hybrid, com pesos escolhidos na validação** | **A composição dos modelos e o protocolo de seleção dos pesos são diferentes; não há base para afirmar que um ensemble é superior ao outro** |
+| **Ensemble CNN–ViT e ensemble de lesões \cite{ref_19, ref_24}** | **Uso de múltiplos classificadores para reduzir a dependência de uma única representação** | **Saída agregada acompanhada das previsões individuais e dos indicadores de incerteza** | **O sistema desenvolvido enfatiza rastreabilidade operacional, mas ainda necessita de validação externa para sustentar qualquer conclusão clínica** |
+
+**Em relação às ferramentas de software, o projeto não propõe um novo framework de aprendizado profundo nem uma nova biblioteca de interface. PyTorch organiza tensores, treinamento e inferência; `timm` fornece os backbones reutilizados; NumPy, scikit-learn e OpenCV apoiam o processamento e a avaliação; e React, TypeScript, Express e tRPC estruturam a aplicação executável. A escolha por essa combinação, em vez de uma implementação integral em TensorFlow/Django, corresponde à arquitetura efetivamente construída e não deve ser apresentada como prova de que uma tecnologia é universalmente superior à outra.**
+
+**A comparação mais adequada, portanto, ocorre em dois níveis. No nível algorítmico, o sistema reúne em um mesmo experimento uma CNN, um ViT e um híbrido, preservando suas saídas e produzindo uma agregação calibrada. No nível de sistema, acrescenta controle de elegibilidade, rejeição fora do domínio, recomendação de abstenção, geração de explicações, histórico de sessão e painel de métricas. Esses elementos caracterizam a integração realizada neste trabalho, mas não autorizam afirmar que o protótipo esteja clinicamente validado ou que supere as ferramentas e os modelos dos estudos relacionados.**
 
 ## 5.11 Verificação de reprodutibilidade e auditoria
 
@@ -327,19 +362,21 @@ A versão atual atende à demonstração funcional prevista para o trabalho, mas
 
 As entradas seguintes não substituem as referências já existentes no trabalho. Elas devem ser conferidas e incorporadas à bibliografia final conforme o padrão adotado no documento:
 
-[31] HE, K. et al. Deep residual learning for image recognition. In: IEEE Conference on Computer Vision and Pattern Recognition, 2016. p. 770–778.
+[31]: # "HE, K. et al. Deep residual learning for image recognition. In: IEEE Conference on Computer Vision and Pattern Recognition, 2016. p. 770–778."
 
-[32] DOSOVITSKIY, A. et al. An image is worth 16x16 words: Transformers for image recognition at scale. In: International Conference on Learning Representations, 2021.
+[32]: # "DOSOVITSKIY, A. et al. An image is worth 16x16 words: Transformers for image recognition at scale. In: International Conference on Learning Representations, 2021."
 
-[33] SELVARAJU, R. R. et al. Grad-CAM: Visual explanations from deep networks via gradient-based localization. In: IEEE International Conference on Computer Vision, 2017. p. 618–626.
+[33]: # "SELVARAJU, R. R. et al. Grad-CAM: Visual explanations from deep networks via gradient-based localization. In: IEEE International Conference on Computer Vision, 2017. p. 618–626."
 
-[34] PASZKE, A. et al. PyTorch: An imperative style, high-performance deep learning library. In: Advances in Neural Information Processing Systems, v. 32, 2019.
+[34]: # "PASZKE, A. et al. PyTorch: An imperative style, high-performance deep learning library. In: Advances in Neural Information Processing Systems, v. 32, 2019."
 
-[35] HARRIS, C. R. et al. Array programming with NumPy. Nature, v. 585, p. 357–362, 2020.
+[35]: # "HARRIS, C. R. et al. Array programming with NumPy. Nature, v. 585, p. 357–362, 2020."
 
-[36] PEDREGOSA, F. et al. Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, v. 12, p. 2825–2830, 2011.
+[36]: # "PEDREGOSA, F. et al. Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, v. 12, p. 2825–2830, 2011."
 
-[37] ISIC CHALLENGE. ISIC 2016: Skin lesion analysis toward melanoma detection. Disponível em: https://challenge.isic-archive.com/data/. Acesso em: 18 set. 2026.
+[37]: # "ISIC CHALLENGE. ISIC 2016: Skin lesion analysis toward melanoma detection. Disponível em: https://challenge.isic-archive.com/data/. Acesso em: 18 set. 2026."
+
+[38]: # "WIGHTMAN, R. PyTorch Image Models (timm). GitHub repository, 2019. DOI: 10.5281/zenodo.4414861. Disponível em: https://github.com/huggingface/pytorch-image-models. Acesso em: 20 set. 2026."
 
 ## Arquivos de apoio às figuras
 
