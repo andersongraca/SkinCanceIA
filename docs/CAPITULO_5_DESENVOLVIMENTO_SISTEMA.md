@@ -18,6 +18,8 @@ Esse desenho segue uma preocupação metodológica presente na literatura de sis
 
 ## 5.3 Organização dos dados e definição do problema
 
+**A definição do problema experimental exigiu decisões sobre a unidade de análise, os rótulos, o particionamento e as condições de entrada. Essas decisões determinam o significado das métricas e reduzem fontes conhecidas de viés, como a presença de imagens da mesma lesão em mais de um subconjunto. Nesta seção são apresentados o dataset utilizado, a formulação das tarefas multiclasses e binária, o pré-processamento e o mecanismo empregado para impedir que entradas incompatíveis com o domínio dermatoscópico avancem para os classificadores.**
+
 ### 5.3.1 Dataset utilizado
 
 A classificação foi desenvolvida com o HAM10000, conjunto que reúne 10.015 imagens dermatoscópicas distribuídas em sete categorias diagnósticas. As classes utilizadas no experimento são `akiec`, `bcc`, `bkl`, `df`, `mel`, `nv` e `vasc`. O manifesto produzido pelo projeto registra 7.470 grupos de lesão. Essa informação é relevante porque uma mesma lesão pode aparecer em mais de uma imagem; portanto, a divisão dos dados não deve considerar somente o nome do arquivo, mas também a identidade da lesão.
@@ -66,6 +68,8 @@ O fluxo completo de comunicação entre os componentes é apresentado na Figura 
 *Fonte: autoria própria.*
 
 ## 5.5 Modelos de aprendizado profundo
+
+**O núcleo de classificação foi organizado em três componentes treináveis com formas distintas de representar a imagem. A CNN prioriza padrões espaciais locais; o Vision Transformer modela relações entre regiões por autoatenção; e o modelo híbrido combina características convolucionais e tokens em uma representação compartilhada. A análise conjunta permite observar se as arquiteturas produzem decisões convergentes, mas não pressupõe que a maior complexidade resulte automaticamente em melhor desempenho. As subseções seguintes descrevem a função de cada componente e as informações devolvidas ao restante do sistema.**
 
 ### 5.5.1 CNN ResNet-50
 
@@ -122,6 +126,8 @@ A Figura 5.4 mostra a função de inspeção criada para a ferramenta. O usuári
 
 ## 5.7 Implementação da explicabilidade
 
+**A explicabilidade foi incorporada para tornar visíveis as regiões associadas à saída de cada arquitetura. Como CNNs, Transformers e modelos híbridos armazenam representações internas diferentes, não foi aplicado um único procedimento indistintamente a todos os componentes. O sistema gera métodos compatíveis com cada modelo e converte as atribuições em sobreposições alinhadas à geometria original da imagem. Os mapas resultantes apoiam a inspeção técnica da inferência, mas permanecem aproximações matemáticas e não devem ser confundidos com justificativas clínicas ou relações causais.**
+
 ### 5.7.1 Grad-CAM para a CNN
 
 O mapa da CNN é gerado a partir do último mapa convolucional. O gradiente da saída binária é utilizado para estimar quais canais contribuíram para a decisão. A combinação ponderada dos mapas de características produz uma saliência espacial que é redimensionada para o tamanho da imagem original.
@@ -160,6 +166,8 @@ em que $$S(x,y)$$ é a saliência normalizada e $$M(x,y)$$ é a máscara binári
 A Figura 5.5 mostra os quatro mapas disponíveis na interface. A CNN utiliza Grad-CAM, o ViT utiliza atribuição de tokens, o Hybrid apresenta um mapa combinado e a saída agregada apresenta a composição das saliências. A auditoria quantitativa verificou que os quatro arquivos possuem 600 × 450 pixels e que a diferença máxima de pixels fora da saliência foi igual a zero na execução analisada. Esse resultado confirma a correção da transparência espacial implementada; não confirma, sozinho, a fidelidade clínica dos mapas.
 
 ## 5.8 Implementação da aplicação web
+
+**A aplicação web foi desenvolvida para transformar os módulos científicos em um fluxo de uso observável e reproduzível. A interface não executa diretamente os modelos; ela coleta a imagem, apresenta o estado da análise e organiza os resultados recebidos do backend. O servidor, por sua vez, valida as requisições, controla os arquivos, aciona os processos Python e converte as respostas em contratos tipados. Essa separação preserva a independência entre a camada de apresentação e o pipeline de aprendizado profundo, permitindo testar cada parte isoladamente.**
 
 ### 5.8.1 Interface do usuário
 
@@ -209,6 +217,8 @@ A execução completa começa quando o usuário seleciona a imagem. A interface 
 A Figura 5.8 registra a interface durante o processamento. Nessa etapa, o usuário recebe uma indicação de que a imagem está sendo enviada e analisada. A execução auditada da ferramenta levou aproximadamente 25 segundos no ambiente de teste, sendo cerca de 13 segundos para a classificação e 12 segundos para os mapas. O tempo depende do hardware, do interpretador Python e da carga dos três checkpoints.
 
 ## 5.9 Testes funcionais realizados na ferramenta
+
+**Os testes funcionais foram planejados para verificar a integração entre entrada, triagem, classificação, explicabilidade e apresentação dos resultados. Eles não substituem a avaliação estatística no conjunto de teste nem constituem validação clínica. Seu objetivo é demonstrar que os componentes conseguem percorrer o fluxo previsto e que falhas ou rejeições são comunicadas ao usuário. Para isso, foram examinados um caso dermatoscópico aceito, as saídas individuais dos modelos, o registro no histórico e uma imagem fora do domínio.**
 
 ### 5.9.1 Imagem dermatoscópica elegível
 
