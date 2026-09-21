@@ -72,7 +72,8 @@ def main() -> None:
 
         page.get_by_role("tab", name="Métricas").click()
         page.get_by_text("Métricas de desempenho dos modelos", exact=True).wait_for(timeout=20_000)
-        page.wait_for_timeout(1_000)
+        page.locator(".recharts-bar-rectangle").first.wait_for(timeout=20_000)
+        page.wait_for_timeout(500)
         page.screenshot(path=str(OUT / "08_metrics_dashboard.png"), full_page=True)
         evidence["screenshots"].append("08_metrics_dashboard.png")
 

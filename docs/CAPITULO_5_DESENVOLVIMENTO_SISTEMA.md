@@ -198,7 +198,7 @@ A aba de histórico consulta os diagnósticos registrados para a sessão. Em amb
 
 A aba de métricas carrega os arquivos do experimento HAM10000 e apresenta os resultados dos quatro componentes: CNN, ViT, Hybrid e saída agregada. Cada modelo é associado ao conjunto de teste congelado com 1.527 imagens. A interface apresenta acurácia, sensibilidade, especificidade, F1-score, AUROC e precisão, além de um gráfico de barras para a comparação visual.
 
-![Painel de métricas do experimento](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDhfbWV0cmljc19kYXNoYm9hcmQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURoZmJXVjBjbWxqYzE5a1lYTm9ZbTloY21RLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCIAgUsnQVr79s7Meyn9SsdrP3oPiNygsWJuWdcG7s-0yeAiBYCCbrSqV5JkGv5LpA6LLoSZYhBceZVo84cSzlLYdKzQ__)
+![Painel de métricas do experimento](chapter-system/screenshots/08_metrics_dashboard.png)
 
 **Figura 5.7 – Tabela e gráfico de métricas carregados a partir dos artefatos do experimento.**
 *Fonte: autoria própria.*

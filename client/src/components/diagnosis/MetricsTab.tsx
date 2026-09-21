@@ -126,11 +126,11 @@ export default function MetricsTab() {
               <YAxis domain={[0, 100]} />
               <Tooltip />
               <Legend />
-              <Bar dataKey="accuracy" fill="#3b82f6" name="Acurácia" />
-              <Bar dataKey="sensitivity" fill="#10b981" name="Sensibilidade" />
-              <Bar dataKey="specificity" fill="#f59e0b" name="Especificidade" />
-              <Bar dataKey="f1Score" fill="#8b5cf6" name="F1-score" />
-              <Bar dataKey="auc" fill="#0f766e" name="AUROC" />
+              <Bar dataKey="accuracy" fill="#3b82f6" name="Acurácia" isAnimationActive={false} />
+              <Bar dataKey="sensitivity" fill="#10b981" name="Sensibilidade" isAnimationActive={false} />
+              <Bar dataKey="specificity" fill="#f59e0b" name="Especificidade" isAnimationActive={false} />
+              <Bar dataKey="f1Score" fill="#8b5cf6" name="F1-score" isAnimationActive={false} />
+              <Bar dataKey="auc" fill="#0f766e" name="AUROC" isAnimationActive={false} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
