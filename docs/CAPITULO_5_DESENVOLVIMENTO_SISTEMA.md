@@ -287,31 +287,9 @@ A implementação utilizou ferramentas de software com funções distintas. As f
 | Testes | Vitest e pytest | Verificação do frontend, backend e módulos Python |
 | Engenharia | Git, GitHub, pnpm e VS Code | Versionamento, dependências e desenvolvimento |
 
-As bibliotecas não são resultados científicos do trabalho. Elas são ferramentas de implementação e, por isso, devem ser citadas na dissertação como software quando o padrão do programa exigir. Para o embasamento das técnicas, é recomendável acrescentar à bibliografia as referências originais da ResNet, do Vision Transformer, do Grad-CAM e do PyTorch. Essas referências são diferentes dos artigos que apresentam resultados de classificação de câncer de pele.
+As bibliotecas utilizadas são ferramentas de implementação e não constituem, por si só, resultados científicos do trabalho. Por essa razão, os métodos, arquiteturas e conjuntos de dados são citados no ponto em que são empregados, enquanto as dependências de software são registradas como parte do ambiente computacional. Essa distinção evita atribuir às bibliotecas resultados que pertencem ao protocolo experimental desenvolvido nesta pesquisa.
 
-### 5.10.1 Referências técnicas que devem ser incorporadas à bibliografia
-
-**As referências abaixo complementam a bibliografia original da qualificação. Como o artigo original contém 30 referências, as entradas técnicas adicionais foram numeradas de 31 a 38 e devem ser cadastradas no arquivo BibTeX com as chaves correspondentes:**
-
-- Referência das redes residuais utilizadas como base da ResNet-50 \cite{ref_31}.
-
-- Referência do Vision Transformer \cite{ref_32}.
-
-- Referência do Grad-CAM \cite{ref_33}.
-
-- Referência do framework PyTorch \cite{ref_34}.
-
-- Referência da biblioteca NumPy \cite{ref_35}.
-
-- Referência da biblioteca scikit-learn \cite{ref_36}.
-
-- A documentação oficial do ISIC Challenge 2016, para registrar a origem do conjunto de máscaras utilizado no localizador auxiliar \cite{ref_37}.
-
-- **Referência do repositório PyTorch Image Models (****`timm`****), utilizado para instanciar os backbones \cite{ref_38}.**
-
-Na versão final, não se deve citar uma biblioteca como se ela fosse um artigo que comprovou o desempenho do sistema. A biblioteca deve ser associada ao procedimento de implementação. O resultado experimental deve ser associado ao dataset, ao protocolo e aos checkpoints descritos neste capítulo.
-
-### 5.10.2 Proveniência do código e atribuição das ferramentas
+### 5.10.1 Proveniência do código e atribuição das ferramentas
 
 **A implementação foi construída como uma composição de componentes próprios e dependências de código aberto. A auditoria do repositório não identificou arquivos ou trechos explicitamente marcados como copiados de um projeto de terceiros. Essa constatação não elimina a obrigação de revisar as licenças das dependências antes de uma distribuição pública; ela apenas delimita o que foi desenvolvido no escopo deste trabalho e o que foi utilizado como infraestrutura.**
 
@@ -321,7 +299,7 @@ Na versão final, não se deve citar uma biblioteca como se ela fosse um artigo 
 
 **Essa distinção também evita uma atribuição inadequada de originalidade. A ResNet-50 e o Vision Transformer são arquiteturas consolidadas na literatura, e o Grad-CAM é um método de explicabilidade previamente publicado \cite{ref_31, ref_32, ref_33}. A contribuição de implementação deste capítulo está na adaptação dessas ideias a um pipeline integrado de análise dermatoscópica, na definição das interfaces entre os módulos, na preservação das saídas intermediárias e na criação dos mecanismos de auditoria; não está na reivindicação de autoria das arquiteturas ou do método de explicabilidade em si.**
 
-### 5.10.3 Comparação com modelos e sistemas relacionados
+### 5.10.2 Comparação com modelos e sistemas relacionados
 
 **A comparação com trabalhos relacionados foi realizada pelo escopo metodológico, e não por uma ordenação direta de acurácias. Resultados numéricos só podem ser comparados de forma responsável quando coincidem o dataset, a definição das classes, o particionamento, o protocolo de pré-processamento, o critério de seleção do modelo e o conjunto de teste. Como essas condições não são necessariamente iguais entre os estudos, a tabela a seguir identifica convergências e diferenças de desenho, sem afirmar superioridade estatística do sistema desenvolvido.**
 
@@ -383,34 +361,6 @@ O sistema desenvolvido integra uma cadeia de processamento que começa com a val
 A contribuição deste capítulo é registrar a passagem da proposta para a implementação. A ferramenta não é apresentada como um produto diagnóstico acabado. Ela é apresentada como um protótipo acadêmico capaz de executar um pipeline reprodutível, produzir artefatos auditáveis e expor ao usuário as limitações que precisam ser consideradas antes de qualquer aplicação clínica.
 
 A versão atual atende à demonstração funcional prevista para o trabalho, mas a validação externa, a análise de equidade, a avaliação de fidelidade dos mapas e a participação de especialistas continuam sendo requisitos para uma conclusão científica mais ampla. Esses pontos devem ser discutidos na seção de limitações e em trabalhos futuros, sem serem descritos como resultados já alcançados.
-
-## Referências técnicas para completar a bibliografia
-
-As entradas seguintes não substituem as referências já existentes no trabalho. Elas devem ser conferidas e incorporadas à bibliografia final conforme o padrão adotado no documento:
-
-[31]: # "HE, K. et al. Deep residual learning for image recognition. In: IEEE Conference on Computer Vision and Pattern Recognition, 2016. p. 770–778."
-
-[32]: # "DOSOVITSKIY, A. et al. An image is worth 16x16 words: Transformers for image recognition at scale. In: International Conference on Learning Representations, 2021."
-
-[33]: # "SELVARAJU, R. R. et al. Grad-CAM: Visual explanations from deep networks via gradient-based localization. In: IEEE International Conference on Computer Vision, 2017. p. 618–626."
-
-[34]: # "PASZKE, A. et al. PyTorch: An imperative style, high-performance deep learning library. In: Advances in Neural Information Processing Systems, v. 32, 2019."
-
-[35]: # "HARRIS, C. R. et al. Array programming with NumPy. Nature, v. 585, p. 357–362, 2020."
-
-[36]: # "PEDREGOSA, F. et al. Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, v. 12, p. 2825–2830, 2011."
-
-[37]: # "ISIC CHALLENGE. ISIC 2016: Skin lesion analysis toward melanoma detection. Disponível em: https://challenge.isic-archive.com/data/. Acesso em: 18 set. 2026."
-
-[38]: # "WIGHTMAN, R. PyTorch Image Models (timm ). GitHub repository, 2019. DOI: 10.5281/zenodo.4414861. Disponível em: https://github.com/huggingface/pytorch-image-models. Acesso em: 20 set. 2026."
-
-[39]: # "PACHECO, A. G. C. et al. PAD-UFES-20: A skin lesion dataset composed of patient data and clinical images collected from smartphones. Data in Brief, v. 32, 106221, 2020. DOI: 10.1016/j.dib.2020.106221. Disponível em: https://api.isic-archive.com/collections/406/. Acesso em: 23 set. 2026."
-
-[40]: # "DANESHJOU, R. et al. Disparities in dermatology AI performance on a diverse, curated clinical image set. Science Advances, v. 8, n. 32, eabq6147, 2022. DOI: 10.1126/sciadv.abq6147. Disponível em: https://doi.org/10.1126/sciadv.abq6147. Acesso em: 23 set. 2026."
-
-[41]: # "GROH, M. et al. Evaluating deep neural networks trained on clinical images in dermatology with the Fitzpatrick 17k dataset. In: IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops, 2021. p. 1820–1828. DOI: 10.1109/CVPRW53098.2021.00201. Disponível em: https://doi.org/10.1109/CVPRW53098.2021.00201. Acesso em: 23 set. 2026."
-
-[42]: # "ALIPOUR, N.; BURKE, T.; COURTNEY, J. Skin type diversity in skin lesion datasets: a review. Current Dermatology Reports, v. 13, n. 3, p. 198–210, 2024. DOI: 10.1007/s13671-024-00440-0. Disponível em: https://doi.org/10.1007/s13671-024-00440-0. Acesso em: 23 set. 2026."
 
 ## Arquivos de apoio às figuras
 
