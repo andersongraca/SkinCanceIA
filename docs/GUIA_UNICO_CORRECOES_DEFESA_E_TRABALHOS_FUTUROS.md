@@ -70,13 +70,13 @@ Inserir o texto abaixo no Capítulo 2, imediatamente após a apresentação do H
 
 ### Texto pronto
 
-**Apesar de sua relevância para o desenvolvimento de métodos de análise de imagens dermatoscópicas, HAM10000 e ISIC não devem ser tratados como representações completas da diversidade clínica e demográfica da população brasileira. O HAM10000 reúne 10.015 imagens dermatoscópicas provenientes de diferentes fontes e modalidades de aquisição, com mais de metade das lesões confirmadas por patologia, mas não foi construído como um estudo de prevalência populacional nem como uma base estratificada por fototipo de Fitzpatrick (TSCHANDL; ROSENDAHL; KITTLER, 2018). Consequentemente, uma métrica elevada nesse conjunto caracteriza o comportamento do modelo em uma distribuição específica de imagens e não garante desempenho equivalente em outros tons de pele, modalidades de aquisição ou localizações anatômicas.**
+**Apesar de sua relevância para o desenvolvimento de métodos de análise de imagens dermatoscópicas, HAM10000 e ISIC não devem ser tratados como representações completas da diversidade clínica e demográfica da população brasileira. O HAM10000 reúne 10.015 imagens dermatoscópicas provenientes de diferentes fontes e modalidades de aquisição, com mais de metade das lesões confirmadas por patologia, mas não foi construído como um estudo de prevalência populacional nem como uma base estratificada por fototipo de Fitzpatrick \cite{ref_44}. Consequentemente, uma métrica elevada nesse conjunto caracteriza o comportamento do modelo em uma distribuição específica de imagens e não garante desempenho equivalente em outros tons de pele, modalidades de aquisição ou localizações anatômicas.**
 
-**Essa limitação é relevante porque a ausência de metadados confiáveis de tipo de pele dificulta a avaliação de equidade. Revisões recentes mostram que muitos conjuntos de dados dermatológicos não informam de maneira verificável a distribuição dos tipos de pele e que a sub-representação de grupos pode produzir diferenças de desempenho entre fototipos. Além disso, etnia, nacionalidade e tipo de pele não são variáveis equivalentes; por isso, a avaliação deve utilizar os metadados efetivamente disponíveis e descrever como foram obtidos (ALIPOUR; BURKE; COURTNEY, 2024).**
+**Essa limitação é relevante porque a ausência de metadados confiáveis de tipo de pele dificulta a avaliação de equidade. Revisões recentes mostram que muitos conjuntos de dados dermatológicos não informam de maneira verificável a distribuição dos tipos de pele e que a sub-representação de grupos pode produzir diferenças de desempenho entre fototipos. Além disso, etnia, nacionalidade e tipo de pele não são variáveis equivalentes; por isso, a avaliação deve utilizar os metadados efetivamente disponíveis e descrever como foram obtidos \cite{ref_42}.**
 
-**Para aproximar a avaliação do contexto brasileiro, o PAD-UFES-20 é uma fonte externa pertinente por reunir imagens clínicas obtidas por smartphones no Espírito Santo, dados de pacientes e informações clínicas que incluem o tipo de pele de Fitzpatrick. O conjunto contém 2.298 imagens, 1.641 lesões e 1.373 pacientes, com confirmação por biópsia para os casos de câncer descritos na base. Entretanto, suas imagens clínicas não possuem a mesma distribuição das imagens dermatoscópicas do HAM10000. Assim, o PAD-UFES-20 deve ser utilizado inicialmente como conjunto externo de mudança de domínio, mantendo o teste interno do HAM10000 congelado e evitando a mistura direta das bases antes da avaliação independente (PACHECO et al., 2020).**
+**Para aproximar a avaliação do contexto brasileiro, o PAD-UFES-20 é uma fonte externa pertinente por reunir imagens clínicas obtidas por smartphones no Espírito Santo, dados de pacientes e informações clínicas que incluem o tipo de pele de Fitzpatrick. O conjunto contém 2.298 imagens, 1.641 lesões e 1.373 pacientes, com confirmação por biópsia para os casos de câncer descritos na base. Entretanto, suas imagens clínicas não possuem a mesma distribuição das imagens dermatoscópicas do HAM10000. Assim, o PAD-UFES-20 deve ser utilizado inicialmente como conjunto externo de mudança de domínio, mantendo o teste interno do HAM10000 congelado e evitando a mistura direta das bases antes da avaliação independente \cite{ref_39}.**
 
-**A avaliação deve ser complementada por bases com diversidade de tons de pele e, quando possível, confirmação patológica. O DDI foi construído para permitir a comparação de imagens de diferentes grupos de fototipo e evidenciou limitações de algoritmos de dermatologia em tons de pele mais escuros e em doenças incomuns. O Fitzpatrick17k, por sua vez, fornece anotações de fototipo em imagens clínicas e mostra a importância de verificar se os tipos de pele presentes no teste são semelhantes aos observados no treinamento (DANESHJOU et al., 2022; GROH et al., 2021). Esses estudos não fornecem uma métrica automaticamente transferível para o sistema desenvolvido, mas fundamentam a necessidade de uma avaliação externa estratificada.**
+**A avaliação deve ser complementada por bases com diversidade de tons de pele e, quando possível, confirmação patológica. O DDI foi construído para permitir a comparação de imagens de diferentes grupos de fototipo e evidenciou limitações de algoritmos de dermatologia em tons de pele mais escuros e em doenças incomuns. O Fitzpatrick17k, por sua vez, fornece anotações de fototipo em imagens clínicas e mostra a importância de verificar se os tipos de pele presentes no teste são semelhantes aos observados no treinamento \cite{ref_40, ref_41}. Esses estudos não fornecem uma métrica automaticamente transferível para o sistema desenvolvido, mas fundamentam a necessidade de uma avaliação externa estratificada.**
 
 ## 6. Correção da discussão sobre população brasileira e lesões acrais
 
@@ -86,11 +86,11 @@ Inserir na seção de limitações ou na seção de validade externa do Capítul
 
 ### Texto pronto
 
-**A observação da banca sobre a representatividade demográfica constitui uma limitação central do experimento, e não apenas uma possibilidade de melhoria de desempenho. O fato de HAM10000 e ISIC serem referências importantes para a computação em imagens dermatológicas não significa que seus resultados possam ser generalizados automaticamente para todas as populações, modalidades de aquisição ou apresentações clínicas. Em particular, a ausência de metadados validados de tom de pele no experimento principal impede uma auditoria direta por fototipo e impede concluir que a acurácia medida no teste HAM10000 seja equivalente entre diferentes grupos populacionais (TSCHANDL; ROSENDAHL; KITTLER, 2018; ALIPOUR; BURKE; COURTNEY, 2024).**
+**A observação da banca sobre a representatividade demográfica constitui uma limitação central do experimento, e não apenas uma possibilidade de melhoria de desempenho. O fato de HAM10000 e ISIC serem referências importantes para a computação em imagens dermatológicas não significa que seus resultados possam ser generalizados automaticamente para todas as populações, modalidades de aquisição ou apresentações clínicas. Em particular, a ausência de metadados validados de tom de pele no experimento principal impede uma auditoria direta por fototipo e impede concluir que a acurácia medida no teste HAM10000 seja equivalente entre diferentes grupos populacionais \cite{ref_44, ref_42}.**
 
 **A questão das lesões acrais também precisa ser formulada com cautela. O protocolo atual não foi desenhado para medir especificamente o desempenho em lesões de palmas, plantas ou unidade ungueal em uma população brasileira. Portanto, não se deve afirmar que o sistema reconhece adequadamente essas apresentações nem que a distribuição do HAM10000 seja suficiente para representá-las. A resposta experimental exige um subconjunto externo com localização anatômica registrada, diagnóstico confiável e quantidade suficiente de casos acrais, além da apresentação de métricas separadas para esse grupo.**
 
-**Essa lacuna possui relevância clínica no contexto nacional. Uma coorte brasileira de melanoma acral descreveu 48 casos e destacou a escassez de dados brasileiros sobre as características epidemiológicas, clínicas, dermoscópicas e histopatológicas dessa apresentação. O estudo não permite inferir o desempenho do sistema desenvolvido, mas justifica a inclusão de localização anatômica e diagnóstico confirmado no protocolo de validação externa (GARCIA; GONTIJO; BITTENCOURT, 2025).**
+**Essa lacuna possui relevância clínica no contexto nacional. Uma coorte brasileira de melanoma acral descreveu 48 casos e destacou a escassez de dados brasileiros sobre as características epidemiológicas, clínicas, dermoscópicas e histopatológicas dessa apresentação. O estudo não permite inferir o desempenho do sistema desenvolvido, mas justifica a inclusão de localização anatômica e diagnóstico confirmado no protocolo de validação externa \cite{ref_43}.**
 
 ## 7. Descrição correta da implementação externa
 
@@ -100,27 +100,37 @@ Inserir no Capítulo 5, na subseção de implementação, depois da descrição 
 
 ### Texto pronto
 
-**Para responder à limitação de representatividade identificada na qualificação, foi implementado um avaliador externo estratificado, separado do módulo de treinamento. O avaliador recebe um manifesto autorizado contendo o caminho da imagem, o diagnóstico, o identificador do paciente, o identificador da lesão, o fototipo ou outra anotação de tom de pele e a localização anatômica. A implementação não infere fototipo a partir dos pixels, pois uma estimativa automática de cor não equivale a um rótulo clínico validado. O protocolo preserva o teste interno do HAM10000 e registra a modalidade de aquisição e a disponibilidade dos metadados.**
+**Para responder à limitação de representatividade identificada na qualificação, foi implementado um avaliador externo estratificado, separado do módulo de treinamento. O avaliador recebe um manifesto autorizado contendo o caminho da imagem, o diagnóstico, o identificador do paciente, o identificador da lesão, o fototipo ou outra anotação de tom de pele e a localização anatômica. A implementação não infere fototipo a partir dos pixels, pois uma estimativa automática de cor não equivale a um rótulo clínico validado. O protocolo preserva o teste interno do HAM10000 e registra a modalidade de aquisição e a disponibilidade dos metadados \cite{ref_39, ref_40, ref_41, ref_42, ref_44}.**
 
 **A avaliação externa é executada antes de qualquer ajuste fino. Para cada base e subgrupo, o sistema registra suporte, acurácia, acurácia balanceada, precisão, sensibilidade, especificidade, F1-score, AUROC, AUPRC, erro esperado de calibração e taxa de abstenção. Também são preservados os resultados por imagem, a matriz de confusão e as verificações de duplicidade por paciente e por lesão. Quando um subgrupo possui poucos casos ou apenas uma classe, o resultado é marcado como exploratório e as métricas indefinidas não são substituídas por valores artificiais.**
 
-**A existência do avaliador no código-fonte não significa que a classificação já esteja validada para todos os fototipos ou para a população brasileira. Os resultados demográficos somente devem ser incorporados à dissertação depois da execução com os arquivos autorizados das bases externas, da conferência dos metadados e da análise do suporte de cada subgrupo. Para lesões acrais, a análise exige localização anatômica registrada, diagnóstico confiável e quantidade suficiente de casos para produzir métricas independentes.**
+**A existência do avaliador no código-fonte não significa que a classificação já esteja validada para todos os fototipos ou para a população brasileira. Os resultados demográficos somente devem ser incorporados à dissertação depois da execução com os arquivos autorizados das bases externas, da conferência dos metadados e da análise do suporte de cada subgrupo. Para lesões acrais, a análise exige localização anatômica registrada, diagnóstico confiável e quantidade suficiente de casos para produzir métricas independentes \cite{ref_43}.**
 
 ## 8. Substituições pontuais no texto atual
 
 Realizar as seguintes substituições:
 
 1. Trocar **“Este trabalho de qualificação”** por **“Esta dissertação”**.
-2. Trocar **“protótipo funcional, com interface em Python/Django”** por **“sistema funcional, com módulos científicos em Python/PyTorch e aplicação web em React, TypeScript, Vite, Express e tRPC”**.
-3. Trocar **“utilizando o dataset ISIC-2019”**, quando estiver descrevendo o sistema já executado, por **“utilizando o HAM10000 para o treinamento e teste interno, além do ISIC 2016 para o treinamento do localizador auxiliar”**.
-4. Corrigir `ISIC0 027419...` para: **“A primeira execução foi realizada com a imagem `ISIC_0027419.jpg`, utilizada como exemplo dermatoscópico.”**
-5. Corrigir o trecho corrompido do teste OOD para: **“Como teste de controle, foi utilizada uma imagem não dermatológica. A triagem retornou o motivo `outside_dermoscopy_domain` e impediu que a imagem fosse encaminhada aos modelos.”**
-6. Corrigir **“classificação.O uso”** para **“classificação. O uso”**.
-7. Corrigir **“Por fim a leitura completa dos artigos elecionados”** para **“Por fim, realizou-se a leitura completa dos artigos selecionados.”**
-8. Corrigir a apresentação do dataset para **“HAM10000 (Human Against Machine with 10,000 training images)”**.
-9. Remover qualquer linha exposta no PDF que contenha comandos de compilação, como `article [utf8]inputenc [brazil]babel...`.
-10. Conferir a Figura 5.7 após a recompilação. Ela deve mostrar a tabela e o gráfico comparativo.
-11. Corrigir referências internas que ainda apontam para a Figura 9, quando a numeração final do Capítulo 5 utilizar Figuras 5.7, 5.8, 5.9 e seguintes.
+
+1. Trocar **“protótipo funcional, com interface em Python/Django”** por **“sistema funcional, com módulos científicos em Python/PyTorch e aplicação web em React, TypeScript, Vite, Express e tRPC”**.
+
+1. Trocar **“utilizando o dataset ISIC-2019”**, quando estiver descrevendo o sistema já executado, por **“utilizando o HAM10000 para o treinamento e teste interno, além do ISIC 2016 para o treinamento do localizador auxiliar”**.
+
+1. Corrigir `ISIC0 027419...` para: **“A primeira execução foi realizada com a imagem `ISIC_0027419.jpg`, utilizada como exemplo dermatoscópico.”**
+
+1. Corrigir o trecho corrompido do teste OOD para: **“Como teste de controle, foi utilizada uma imagem não dermatológica. A triagem retornou o motivo `outside_dermoscopy_domain` e impediu que a imagem fosse encaminhada aos modelos.”**
+
+1. Corrigir **“classificação.O uso”** para **“classificação. O uso”**.
+
+1. Corrigir **“Por fim a leitura completa dos artigos elecionados”** para **“Por fim, realizou-se a leitura completa dos artigos selecionados.”**
+
+1. Corrigir a apresentação do dataset para **“HAM10000 (Human Against Machine with 10,000 training images)”**.
+
+1. Remover qualquer linha exposta no PDF que contenha comandos de compilação, como `article [utf8]inputenc [brazil]babel...`.
+
+1. Conferir a Figura 5.7 após a recompilação. Ela deve mostrar a tabela e o gráfico comparativo.
+
+1. Corrigir referências internas que ainda apontam para a Figura 9, quando a numeração final do Capítulo 5 utilizar Figuras 5.7, 5.8, 5.9 e seguintes.
 
 ## 9. Capítulo 6 pronto: Trabalhos futuros
 
@@ -134,19 +144,19 @@ Substituir integralmente o capítulo atual de plano de continuidade pelo texto a
 
 ## 6.1 Validação externa e mudança de domínio
 
-**A primeira frente de investigação consiste em executar o avaliador externo com bases autorizadas que apresentem características diferentes das imagens utilizadas no desenvolvimento. O PAD-UFES-20 deverá ser utilizado para avaliar a mudança entre imagens dermatoscópicas e imagens clínicas obtidas por smartphones. O DDI e o Fitzpatrick17k poderão complementar essa análise por apresentarem informações relacionadas à diversidade de tons de pele e às condições dermatológicas observadas. O conjunto de teste interno do HAM10000 deverá permanecer congelado, funcionando como referência para a comparação entre o desempenho interno e o desempenho externo.**
+**A primeira frente de investigação consiste em executar o avaliador externo com bases autorizadas que apresentem características diferentes das imagens utilizadas no desenvolvimento. O PAD-UFES-20 deverá ser utilizado para avaliar a mudança entre imagens dermatoscópicas e imagens clínicas obtidas por smartphones. O DDI e o Fitzpatrick17k poderão complementar essa análise por apresentarem informações relacionadas à diversidade de tons de pele e às condições dermatológicas observadas. O conjunto de teste interno do HAM10000 deverá permanecer congelado, funcionando como referência para a comparação entre o desempenho interno e o desempenho externo \cite{ref_39, ref_40, ref_41, ref_44}.**
 
 **A análise deverá registrar a modalidade de aquisição, a distribuição das classes, o número de pacientes, o número de lesões e a quantidade de imagens por grupo. A utilização de identificadores de paciente e de lesão será necessária para reduzir o risco de vazamento de informação entre treinamento, validação e teste.**
 
 ## 6.2 Avaliação por fototipo e diversidade demográfica
 
-**Uma segunda frente consiste em avaliar o desempenho segundo os metadados demográficos disponíveis. As métricas deverão ser calculadas separadamente para cada grupo de fototipo com suporte suficiente, incluindo acurácia, acurácia balanceada, sensibilidade, especificidade, F1-score, AUROC, AUPRC, calibração e taxa de abstenção. Os intervalos de confiança deverão ser apresentados sempre que o tamanho amostral permitir.**
+**Uma segunda frente consiste em avaliar o desempenho segundo os metadados demográficos disponíveis. As métricas deverão ser calculadas separadamente para cada grupo de fototipo com suporte suficiente, incluindo acurácia, acurácia balanceada, sensibilidade, especificidade, F1-score, AUROC, AUPRC, calibração e taxa de abstenção. Os intervalos de confiança deverão ser apresentados sempre que o tamanho amostral permitir \cite{ref_40, ref_41, ref_42}.**
 
 **A análise não deverá transformar diferenças observadas em conclusões causais. Um resultado discrepante pode estar relacionado à quantidade de casos, à distribuição dos diagnósticos, à modalidade de imagem, à qualidade da aquisição ou à própria anotação do fototipo. Por essa razão, a origem do metadado, o método de anotação e o suporte de cada grupo deverão acompanhar as métricas. Quando houver poucos casos, o resultado deverá ser descrito como exploratório.**
 
 ## 6.3 Avaliação específica de lesões acrais
 
-**Outra linha de investigação consiste em construir ou obter um subconjunto com localização anatômica registrada para palmas, plantas e unidade ungueal. Esse subconjunto deverá conter diagnóstico confiável e, sempre que possível, confirmação histopatológica. O desempenho em lesões acrais deverá ser apresentado separadamente do desempenho global, pois a distribuição visual, a ausência de pelos e os padrões dermoscópicos dessas regiões podem diferir daqueles observados em outras áreas do corpo.**
+**Outra linha de investigação consiste em construir ou obter um subconjunto com localização anatômica registrada para palmas, plantas e unidade ungueal. Esse subconjunto deverá conter diagnóstico confiável e, sempre que possível, confirmação histopatológica. O desempenho em lesões acrais deverá ser apresentado separadamente do desempenho global, pois a distribuição visual, a ausência de pelos e os padrões dermoscópicos dessas regiões podem diferir daqueles observados em outras áreas do corpo \cite{ref_43}.**
 
 **A análise deverá incluir o número de casos benignos e malignos, a distribuição dos fototipos, a modalidade de aquisição, os padrões clínicos ou dermoscópicos disponíveis e a proporção de casos rejeitados pela triagem de qualidade. Não se deverá concluir que o sistema é adequado para lesões acrais apenas com base nos resultados do HAM10000.**
 
@@ -158,7 +168,7 @@ Substituir integralmente o capítulo atual de plano de continuidade pelo texto a
 
 ## 6.5 Avaliação da explicabilidade
 
-**Os mapas de explicabilidade deverão ser avaliados além da inspeção visual. A análise futura deverá investigar estabilidade diante de pequenas transformações da imagem, fidelidade em relação à saída do modelo, sensibilidade à região da lesão e concordância com avaliações de especialistas. Grad-CAM, atribuição de tokens, gradiente da entrada e mapas agregados deverão ser comparados sob um protocolo comum.**
+**Os mapas de explicabilidade deverão ser avaliados além da inspeção visual. A análise futura deverá investigar estabilidade diante de pequenas transformações da imagem, fidelidade em relação à saída do modelo, sensibilidade à região da lesão e concordância com avaliações de especialistas. Grad-CAM, atribuição de tokens, gradiente da entrada e mapas agregados deverão ser comparados sob um protocolo comum, considerando que esses métodos são explicações aproximadas e não máscaras clínicas \cite{ref_33}.**
 
 **Os resultados deverão manter a distinção entre uma visualização de atribuição e uma máscara clínica. Um mapa colorido pode indicar regiões que influenciaram a saída numérica do modelo, mas não prova que a região seja biologicamente causal ou clinicamente suficiente para justificar a decisão.**
 
@@ -182,7 +192,7 @@ Substituir integralmente o capítulo atual de plano de continuidade pelo texto a
 
 ## 10. Referências que devem ser acrescentadas à bibliografia principal
 
-Adicionar as referências abaixo à bibliografia principal da dissertação. No texto final, manter o padrão de citação já adotado pelo documento.
+Adicionar as referências abaixo à bibliografia principal da dissertação. No texto final, **não utilizar citações autor-data** nos trechos deste guia. Utilizar exclusivamente o padrão do artigo: `\cite{ref_39}`, `\cite{ref_40}`, `\cite{ref_41}`, `\cite{ref_42}`, `\cite{ref_43}` e `\cite{ref_44}`. As chaves devem permanecer exatamente iguais às chaves do arquivo BibTeX.
 
 **PACHECO, Andre G. C. et al. PAD-UFES-20: A skin lesion dataset composed of patient data and clinical images collected from smartphones. Data in Brief, v. 32, art. 106221, 2020. DOI: 10.1016/j.dib.2020.106221.**
 
@@ -199,26 +209,45 @@ Adicionar as referências abaixo à bibliografia principal da dissertação. No 
 ## 11. Conferência final antes da entrega
 
 - [ ] O resumo foi substituído pelo texto atualizado.
+
 - [ ] O abstract não utiliza mais “qualification paper”.
+
 - [ ] O texto não descreve a interface final como Python/Django.
+
 - [ ] A estrutura informa seis capítulos.
+
 - [ ] O Capítulo 2 contém a discussão sobre HAM10000, ISIC, fototipos e população brasileira.
+
 - [ ] PAD-UFES-20, DDI, Fitzpatrick17k, Alipour et al., Garcia et al. e HAM10000 foram acrescentados à bibliografia.
+
 - [ ] O Capítulo 5 informa que o avaliador externo foi implementado, sem afirmar que os resultados externos já foram concluídos.
+
 - [ ] A discussão de lesões acrais está apresentada como limitação e proposta de avaliação específica.
+
 - [ ] O Capítulo 6 foi substituído pelo texto de trabalhos futuros acima.
+
 - [ ] As referências às figuras foram atualizadas automaticamente após a recompilação.
+
 - [ ] A Figura 5.7 mostra a comparação gráfica das métricas.
+
 - [ ] Os trechos corrompidos do PDF foram corrigidos no arquivo-fonte.
+
 - [ ] As linhas de comandos de compilação foram removidas do texto final.
+
 - [ ] A conclusão não apresenta o sistema como ferramenta clinicamente validada.
+
 - [ ] O PDF final foi lido integralmente depois da recompilação.
 
 ## Referências deste guia
 
 [1]: https://doi.org/10.1038/sdata.2018.161 "The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions"
+
 [2]: https://doi.org/10.1016/j.dib.2020.106221 "PAD-UFES-20: A skin lesion dataset composed of patient data and clinical images collected from smartphones"
+
 [3]: https://doi.org/10.1126/sciadv.abq6147 "Disparities in dermatology AI performance on a diverse, curated clinical image set"
+
 [4]: https://doi.org/10.1109/CVPRW53098.2021.00201 "Evaluating Deep Neural Networks Trained on Clinical Images in Dermatology with the Fitzpatrick 17k Dataset"
+
 [5]: https://doi.org/10.1007/s13671-024-00440-0 "Skin Type Diversity in Skin Lesion Datasets: A Review"
+
 [6]: https://doi.org/10.1016/j.abd.2024.03.006 "Plantar acral melanoma: epidemiological, clinical, dermoscopic and histopathological features. A Brazilian cohort"
