@@ -51,21 +51,21 @@ A tabela comparativa do Capítulo 2 deve informar, sempre que possível, a base 
 
 ### 4.1 Inserção sugerida na seção de datasets
 
-**Embora HAM10000 e ISIC sejam referências consolidadas para o desenvolvimento e a comparação de métodos computacionais em imagens dermatológicas, a sua utilização não autoriza presumir representatividade demográfica ou validade clínica universal. O HAM10000 reúne 10.015 imagens dermatoscópicas provenientes de diferentes fontes e modalidades de aquisição, mas o metadata utilizado neste trabalho não contém, de forma validada e completa, o fototipo de Fitzpatrick de cada imagem. Consequentemente, não é possível inferir a distribuição de tons de pele da amostra nem afirmar que as métricas obtidas no teste interno sejam equivalentes entre diferentes grupos populacionais. A base deve ser tratada como um benchmark de classificação dermatoscópica, e não como uma amostra representativa da população brasileira.**
+**Embora HAM10000 e ISIC sejam referências consolidadas para o desenvolvimento e a comparação de métodos computacionais em imagens dermatológicas, a sua utilização não autoriza presumir representatividade demográfica ou validade clínica universal. O HAM10000 reúne 10.015 imagens dermatoscópicas provenientes de diferentes fontes e modalidades de aquisição, mas o metadata utilizado neste trabalho não contém, de forma validada e completa, o fototipo de Fitzpatrick de cada imagem. Consequentemente, não é possível inferir a distribuição de tons de pele da amostra nem afirmar que as métricas obtidas no teste interno sejam equivalentes entre diferentes grupos populacionais. A base deve ser tratada como um benchmark de classificação dermatoscópica, e não como uma amostra representativa da população brasileira \cite{ref_44, ref_42}.**
 
-**Essa distinção é particularmente importante porque a performance de um modelo pode refletir a distribuição dos dados de treinamento, além das características da doença. O estudo que apresentou o conjunto DDI avaliou imagens clinicamente selecionadas e confirmadas por patologia em diferentes grupos de fototipo e observou limitações relevantes dos modelos previamente treinados, sobretudo em imagens de pele escura e em doenças menos frequentes. O mesmo estudo mostrou que o ajuste fino com dados mais diversificados pode reduzir a diferença de desempenho, mas não elimina a necessidade de uma avaliação independente. O Fitzpatrick17k também demonstrou a utilidade de registrar o fototipo e de avaliar se o desempenho é maior em tipos de pele semelhantes àqueles presentes no treinamento.**
+**Essa distinção é particularmente importante porque a performance de um modelo pode refletir a distribuição dos dados de treinamento, além das características da doença. O estudo que apresentou o conjunto DDI avaliou imagens clinicamente selecionadas e confirmadas por patologia em diferentes grupos de fototipo e observou limitações relevantes dos modelos previamente treinados, sobretudo em imagens de pele escura e em doenças menos frequentes. O mesmo estudo mostrou que o ajuste fino com dados mais diversificados pode reduzir a diferença de desempenho, mas não elimina a necessidade de uma avaliação independente. O Fitzpatrick17k também demonstrou a utilidade de registrar o fototipo e de avaliar se o desempenho é maior em tipos de pele semelhantes àqueles presentes no treinamento \cite{ref_40, ref_41, ref_42}.**
 
-**No contexto brasileiro, o PAD-UFES-20 oferece uma oportunidade de validação externa porque foi coletado no Espírito Santo com imagens clínicas de smartphones, metadados do paciente e informações de fototipo. A base reúne 2.298 imagens, 1.641 lesões e 1.373 pacientes, incluindo diagnósticos de câncer confirmados por biópsia. Entretanto, suas imagens clínicas não são equivalentes às imagens dermatoscópicas do HAM10000. Por essa razão, o PAD-UFES-20 deve ser utilizado inicialmente para medir mudança de domínio e validade externa, e não incorporado diretamente ao treinamento sem um protocolo específico de harmonização, particionamento por paciente e controle de possíveis duplicidades.**
+**No contexto brasileiro, o PAD-UFES-20 oferece uma oportunidade de validação externa porque foi coletado no Espírito Santo com imagens clínicas de smartphones, metadados do paciente e informações de fototipo. A base reúne 2.298 imagens, 1.641 lesões e 1.373 pacientes, incluindo diagnósticos de câncer confirmados por biópsia. Entretanto, suas imagens clínicas não são equivalentes às imagens dermatoscópicas do HAM10000. Por essa razão, o PAD-UFES-20 deve ser utilizado inicialmente para medir mudança de domínio e validade externa, e não incorporado diretamente ao treinamento sem um protocolo específico de harmonização, particionamento por paciente e controle de possíveis duplicidades \cite{ref_39, ref_44}.**
 
 ### 4.2 Inserção sugerida na seção de limitações
 
 **A principal limitação demográfica do experimento é a ausência de uma auditoria estratificada por fototipo no conjunto principal. A classificação de uma imagem como pertencente a uma determinada fonte ou dataset não equivale à identificação do tom de pele do paciente. Além disso, a escala de Fitzpatrick é útil para organizar a análise, mas não representa sozinha toda a diversidade fenotípica da população. Assim, os resultados apresentados neste trabalho devem ser interpretados como evidência de funcionamento e desempenho interno no domínio experimental escolhido, e não como prova de equidade ou de generalização para a população brasileira.**
 
-**Também não foi realizada uma avaliação específica de lesões acrais em palmas, plantas ou unidade ungueal. Essa lacuna é clinicamente relevante porque estudos brasileiros descrevem características epidemiológicas, dermoscópicas e histopatológicas particulares no melanoma acral, uma condição para a qual ainda há escassez de dados nacionais. Portanto, a dissertação não deve afirmar que o sistema reconhece adequadamente apresentações acrais; deve registrar essa avaliação como uma tarefa futura que exige um subconjunto externo com localização anatômica, diagnóstico confiável e número suficiente de casos.**
+**Também não foi realizada uma avaliação específica de lesões acrais em palmas, plantas ou unidade ungueal. Essa lacuna é clinicamente relevante porque estudos brasileiros descrevem características epidemiológicas, dermoscópicas e histopatológicas particulares no melanoma acral, uma condição para a qual ainda há escassez de dados nacionais. Portanto, a dissertação não deve afirmar que o sistema reconhece adequadamente apresentações acrais; deve registrar essa avaliação como uma tarefa futura que exige um subconjunto externo com localização anatômica, diagnóstico confiável e número suficiente de casos \cite{ref_43}.**
 
 ### 4.3 Inserção sugerida na seção de auditoria do sistema
 
-**A auditoria de representatividade deve ser realizada em duas etapas. Na primeira, o teste HAM10000 permanece congelado e é utilizado somente para a avaliação interna previamente definida. Na segunda, o sistema é avaliado em bases externas, preferencialmente PAD-UFES-20, DDI e Fitzpatrick17k, sem alterar os pesos antes do registro dos resultados de baseline. Para cada base, devem ser informados a modalidade da imagem, a origem, o número de pacientes e lesões, a distribuição diagnóstica, a disponibilidade de fototipo, a sensibilidade, a especificidade, a AUROC, a AUPRC, o F1-score, a calibração, a taxa de abstenção e os intervalos de confiança. Quando um subgrupo tiver poucos exemplos, o resultado deve ser apresentado como exploratório, sem afirmação de equivalência ou de ausência de viés.**
+**A auditoria de representatividade deve ser realizada em duas etapas. Na primeira, o teste HAM10000 permanece congelado e é utilizado somente para a avaliação interna previamente definida. Na segunda, o sistema é avaliado em bases externas, preferencialmente PAD-UFES-20, DDI e Fitzpatrick17k, sem alterar os pesos antes do registro dos resultados de baseline. Para cada base, devem ser informados a modalidade da imagem, a origem, o número de pacientes e lesões, a distribuição diagnóstica, a disponibilidade de fototipo, a sensibilidade, a especificidade, a AUROC, a AUPRC, o F1-score, a calibração, a taxa de abstenção e os intervalos de confiança. Quando um subgrupo tiver poucos exemplos, o resultado deve ser apresentado como exploratório, sem afirmação de equivalência ou de ausência de viés \cite{ref_39, ref_40, ref_41}.**
 
 ## 5. Correção conceitual do Capítulo 4
 
@@ -105,7 +105,7 @@ O plano de continuidade da versão da defesa está desatualizado porque descreve
 
 ## 8. Referências adicionais a incorporar
 
-As referências abaixo devem ser adicionadas à bibliografia da dissertação caso ainda não estejam presentes. No arquivo BibTeX do projeto, podem ser associadas às chaves `ref_39` a `ref_43`, preservando a numeração já utilizada no Capítulo 5.
+As referências abaixo devem ser adicionadas à bibliografia da dissertação caso ainda não estejam presentes. No arquivo BibTeX do projeto, podem ser associadas às chaves `ref_39` a `ref_44`, preservando a numeração já utilizada no Capítulo 5.
 
 **ref_39 — PAD-UFES-20**
 
@@ -127,9 +127,23 @@ ALIPOUR, N.; BURKE, T.; COURTNEY, J. Skin type diversity in skin lesion datasets
 
 GARCIA, L. C.; GONTIJO, J. R. V.; BITTENCOURT, F. V. Plantar acral melanoma: epidemiological, clinical, dermoscopic and histopathological features. A Brazilian cohort. *Anais Brasileiros de Dermatologia*, v. 100, n. 1, p. 45–53, 2025. DOI: 10.1016/j.abd.2024.03.006.
 
-No texto em formato autor-data, as chamadas correspondentes podem ser redigidas como `(PACHECO et al., 2020)`, `(DANESHJOU et al., 2022)`, `(GROH et al., 2021)`, `(ALIPOUR; BURKE; COURTNEY, 2024)` e `(GARCIA; GONTIJO; BITTENCOURT, 2025)`. No Capítulo 5 em formato LaTeX numerado, manter as chamadas `\cite{ref_39}`, `\cite{ref_40}`, `\cite{ref_41}`, `\cite{ref_42}` e `\cite{ref_43}` de acordo com o arquivo `.bib` efetivamente utilizado.
+**ref_44 — HAM10000**
 
-## 9. O que deverá ser implementado no software depois da correção textual
+TSCHANDL, P. et al. The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions. *Scientific Data*, v. 5, p. 180161, 2018. DOI: 10.1038/sdata.2018.161.
+
+No texto em formato autor-data, as chamadas correspondentes podem ser redigidas como `(PACHECO et al., 2020)`, `(DANESHJOU et al., 2022)`, `(GROH et al., 2021)`, `(ALIPOUR; BURKE; COURTNEY, 2024)`, `(GARCIA; GONTIJO; BITTENCOURT, 2025)` e `(TSCHANDL et al., 2018)`. No Capítulo 5 em formato LaTeX numerado, manter as chamadas `\cite{ref_39}`, `\cite{ref_40}`, `\cite{ref_41}`, `\cite{ref_42}`, `\cite{ref_43}` e `\cite{ref_44}` de acordo com o arquivo `.bib` efetivamente utilizado.
+
+## 9. Texto final sobre a implementação do avaliador externo
+
+**Para responder à limitação de representatividade identificada na qualificação, foi implementado no código-fonte um avaliador externo estratificado, separado do módulo de treinamento. O avaliador recebe um manifesto autorizado contendo o caminho da imagem, o diagnóstico, o identificador do paciente, o identificador da lesão, o fototipo ou outra anotação de tom de pele e a localização anatômica. A implementação não infere fototipo a partir dos pixels, pois uma estimativa automática de cor não equivale a um rótulo clínico validado. O protocolo foi estruturado para avaliar os checkpoints treinados no HAM10000 em dados externos, preservando o teste interno e registrando a modalidade de aquisição e a disponibilidade dos metadados \cite{ref_39, ref_40, ref_41, ref_42, ref_44}.**
+
+**O avaliador calcula métricas globais e estratificadas por fototipo, tom de pele, diagnóstico, localização anatômica e demais metadados disponíveis. São registradas acurácia, acurácia balanceada, precisão, sensibilidade, especificidade, F1-score, AUROC, AUPRC, erro esperado de calibração, taxa de abstenção, matriz de confusão e suporte de cada subgrupo. O módulo também verifica duplicidades por paciente e por lesão, preserva as previsões por imagem e marca como exploratórios os subgrupos com suporte reduzido ou apenas uma classe.**
+
+**A implementação do avaliador não deve ser confundida com a conclusão da validação demográfica. O código está preparado para receber os manifestos autorizados de PAD-UFES-20, DDI e Fitzpatrick17k, mas os resultados por fototipo somente devem ser apresentados após a execução com os arquivos originais e a conferência dos respectivos metadados. Para lesões acrais, a análise exige localização anatômica, diagnóstico confiável e suporte suficiente, em razão da escassez de coortes brasileiras específicas \cite{ref_39, ref_40, ref_41, ref_43}.**
+
+O arquivo `ml/evaluate_external.py` contém a implementação e o protocolo de execução está documentado em `docs/EXTERNAL_VALIDATION_PROTOCOL.md`. O bloco BibTeX correspondente está em `docs/REFERENCIAS_DEMOGRAFIA.bib`.
+
+## 10. O que deverá ser implementado no software depois da correção textual
 
 A correção documental deve preceder a alteração dos pesos e do treinamento. A implementação posterior deve seguir este protocolo:
 
@@ -144,7 +158,7 @@ A correção documental deve preceder a alteração dos pesos e do treinamento. 
 9. **Auditar os mapas de explicabilidade separadamente da classificação**, pois o gate auxiliar pode melhorar a visualização sem corrigir viés demográfico ou provar fidelidade clínica.
 10. **Submeter o fluxo e os resultados à revisão de um especialista**, deixando claro que a ferramenta é um protótipo de apoio à pesquisa e não um diagnóstico médico autônomo.
 
-## 10. Checklist de entrega para a defesa
+## 11. Checklist de entrega para a defesa
 
 - [ ] Remover duplicações e sobreposições desnecessárias do Capítulo 2.
 - [ ] Corrigir a numeração duplicada de `3.1.2` e `3.1.3`.

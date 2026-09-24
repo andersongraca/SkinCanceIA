@@ -69,6 +69,24 @@ O HAM10000 possui forte concentração em `nv` e classes raras como `df` e `vasc
 
 A avaliação final deve preservar o teste HAM10000 congelado e, quando houver acesso autorizado, incluir validação externa com imagens clínicas que tenham anotação confiável de diversidade tonal, como DDI ou Fitzpatrick17k. Os resultados devem ser separados por subgrupo tonal, diagnóstico comum/incomum e classe rara, sempre reportando suporte e intervalos de confiança. A ausência de um subgrupo não deve ser convertida em desempenho zero sem explicação metodológica.
 
+## Avaliação externa estratificada
+
+O módulo `ml/evaluate_external.py` implementa a avaliação externa por manifesto. Ele aceita colunas como `image_path`, `dx`, `patient_id`, `lesion_id`, `fitzpatrick`, `skin_tone`, `localization` e `split`. Os rótulos de fototipo devem vir dos metadados autorizados da base; o módulo não tenta inferi-los pela cor dos pixels.
+
+```bash
+PYTHONPATH=ml python3 ml/evaluate_external.py \
+  --manifest data/external/PAD_UFES20_manifest.csv \
+  --image-dir data/external/PAD_UFES20/images \
+  --label-column dx \
+  --checkpoint ml_artifacts/ham10000/cnn/best.pt \
+  --checkpoint ml_artifacts/ham10000/vit/best.pt \
+  --checkpoint ml_artifacts/ham10000/hybrid/best.pt \
+  --weights 0.10 0.55 0.35 \
+  --output ml_artifacts/external/pad_ufes20_baseline.json
+```
+
+O avaliador preserva o baseline, calcula métricas globais e por subgrupo, verifica duplicidades por paciente e lesão e registra casos com apenas uma classe sem inventar AUROC ou AUPRC. Ele não baixa datasets, não modifica checkpoints e não executa fine-tuning automaticamente. Consulte `docs/EXTERNAL_VALIDATION_PROTOCOL.md` antes de preparar manifestos de PAD-UFES-20, DDI ou Fitzpatrick17k.
+
 ## Reprodutibilidade e validade
 
 Os artefatos salvos incluem a configuração, o resumo das divisões, as tabelas de treino/validação/teste, o histórico e a temperatura de calibração. O conjunto de teste deve permanecer congelado e não pode ser usado para escolher hiperparâmetros. Resultados científicos devem ser reportados com AUROC, AUPRC, sensibilidade, especificidade, macro-F1, MCC, Brier score, ECE, matriz de confusão, métricas por classe e análise por subgrupo quando os metadados permitirem. Nenhuma saída do sistema deve ser descrita como diagnóstico clínico autônomo.
