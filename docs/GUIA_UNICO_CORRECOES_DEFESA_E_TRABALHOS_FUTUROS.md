@@ -64,9 +64,26 @@ A versão ajustada afirma que a dissertação possui cinco capítulos, embora o 
 
 ## 5. Correção da seção de datasets
 
-### Local
+### Local exato na versão atual da defesa
 
-Inserir o texto abaixo no Capítulo 2, imediatamente após a apresentação do HAM10000 e do ISIC, antes da discussão sobre pré-processamento ou arquiteturas.
+Inserir o texto na seção **2.2 – Datasets para Câncer de Pele**, depois do parágrafo que termina com:
+
+> “Além desses, outros datasets como o ‘Melanoma Skin Cancer dataset’ são empregados para o desenvolvimento de modelos de diagnóstico precoce (HASAN et al., 2025).”
+
+Esse parágrafo aparece na página 19 do PDF `Defesa_ajustada.pdf`, imediatamente antes do parágrafo que começa com:
+
+> “É importante notar que muitos desses datasets podem apresentar desafios, como o desequilíbrio de classes...”
+
+Portanto, o texto novo deve entrar **entre esses dois parágrafos**, antes da discussão sobre desequilíbrio de classes, pré-processamento, aumento de dados e modelos de difusão.
+
+### Atenção: não deixar o texto duplicado
+
+A versão atual da defesa já possui uma discussão demográfica posterior, iniciada pelo parágrafo **“Embora HAM10000 e ISIC sejam referências consolidadas...”**, nas páginas 20–22. Para evitar repetição, faça uma destas duas opções:
+
+1. **Opção recomendada:** substitua o bloco posterior, desde “Embora HAM10000 e ISIC sejam referências consolidadas...” até o parágrafo que termina com “modalidade de aquisição”, pelo texto novo abaixo, mantendo a discussão demográfica somente no ponto indicado acima; ou
+2. Mova o bloco posterior para o ponto indicado acima e ajuste suas citações para o padrão `\cite{ref_...}`.
+
+Não mantenha os dois blocos completos, porque a seção ficará repetitiva e a mesma limitação será discutida duas vezes.
 
 ### Texto pronto
 
