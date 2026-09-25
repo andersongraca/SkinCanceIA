@@ -81,7 +81,8 @@ Portanto, o texto novo deve entrar **entre esses dois parágrafos**, antes da di
 A versão atual da defesa já possui uma discussão demográfica posterior, iniciada pelo parágrafo **“Embora HAM10000 e ISIC sejam referências consolidadas...”**, nas páginas 20–22. Para evitar repetição, faça uma destas duas opções:
 
 1. **Opção recomendada:** substitua o bloco posterior, desde “Embora HAM10000 e ISIC sejam referências consolidadas...” até o parágrafo que termina com “modalidade de aquisição”, pelo texto novo abaixo, mantendo a discussão demográfica somente no ponto indicado acima; ou
-2. Mova o bloco posterior para o ponto indicado acima e ajuste suas citações para o padrão `\cite{ref_...}`.
+
+1. Mova o bloco posterior para o ponto indicado acima e ajuste suas citações para o padrão `\cite{ref_...}`.
 
 Não mantenha os dois blocos completos, porque a seção ficará repetitiva e a mesma limitação será discutida duas vezes.
 
@@ -207,9 +208,31 @@ Substituir integralmente o capítulo atual de plano de continuidade pelo texto a
 
 **A continuidade da pesquisa deverá priorizar a validação externa e a caracterização das limitações antes de qualquer tentativa de apresentar o sistema como ferramenta de uso clínico. O resultado mais importante das próximas etapas não será apenas aumentar uma métrica global, mas verificar se o comportamento do modelo permanece aceitável quando mudam o fototipo, a modalidade de aquisição, a localização anatômica, o diagnóstico e as condições de imagem. Essa agenda permitirá avaliar a generalização do sistema de forma mais rigorosa e produzir conclusões compatíveis com a diversidade da prática dermatológica.**
 
+## 6.9 Comparação com resultados da literatura
+
+### Local de inserção
+
+Inserir esta subseção ao final do Capítulo 6, depois da síntese dos trabalhos futuros e antes da bibliografia da dissertação.
+
+### Texto pronto
+
+**A comparação com trabalhos anteriores deve ser interpretada como uma análise de contexto, e não como um ranking de desempenho. Os estudos utilizam bases distintas, diferentes modalidades de aquisição, número de classes, prevalência, critérios de rotulagem, divisões de treino e teste e definições de métricas. O experimento desenvolvido neste trabalho foi avaliado no conjunto de teste congelado do HAM10000, com 1.527 imagens e sete classes, enquanto parte da literatura utiliza tarefas binárias e imagens clínicas ou conjuntos externos.**
+
+| Trabalho ou sistema | Dataset e tarefa | Amostra de avaliação | Modelo ou condição | Resultados reportados |
+|---|---|---:|---|---|
+| **Sistema desenvolvido** | HAM10000; classificação dermatoscópica em sete classes e tarefa binária auxiliar | **1.527 imagens** | Ensemble de CNN, ViT e modelo híbrido | Multiclasse: acurácia **0,5940**, macro-F1 **0,4314**, AUROC **0,9068**. Binária: AUROC **0,8600**, sensibilidade **0,8233** e especificidade **0,7319**. |
+| Esteva et al. (2017) \cite{ref_45} | Tarefas binárias em imagens clínicas e dermatoscópicas: melanoma/nevo e carcinoma/ceratose | 707, 225 e 1.010 imagens nos três testes principais | Inception v3/GoogleNet comparada com dermatologistas | AUC superior a **0,91** nas três tarefas. Sensibilidade, especificidade pontual, F1 e acurácia binária do modelo: não reportadas como valores pontuais no artigo. |
+| Tschandl et al. (2020) \cite{ref_46} | HAM10000/ISIC; classificação em sete classes e cenários binários de malignidade | **600 imagens** na comparação central; subestudos com 301–302 avaliações | ResNet-34, humano, IA e colaboração humano–IA | Acurácia: humano **64,8%**, CNN **76,9%** e humano–IA **81,0%**. Em uma análise binária, sensibilidade/especificidade foram **0,79/0,80** sem interação e **0,84/0,84** com interação. |
+| Daneshjou et al. (2022) \cite{ref_40} | DDI; classificação clínica binária benigno/maligno, com análise por fototipo | **656 imagens** de 570 pacientes | Baseline treinado com HAM10000 e outros modelos | Baseline HAM10000 no DDI: ROC-AUC **0,67**, sensibilidade **0,06** e especificidade **0,99**. Por fototipo I–II versus V–VI: AUC **0,72** versus **0,57**. |
+| Pacheco et al. (2020) \cite{ref_39} | PAD-UFES-20; dataset clínico brasileiro obtido por smartphones | 2.298 imagens, 1.641 lesões e 1.373 pacientes | Artigo de descrição de dataset | Não apresenta métricas de classificação; por isso, não há resultado de acurácia, F1 ou AUC para comparação direta. |
+
+**Os resultados indicam que o sistema apresenta capacidade discriminativa relevante, especialmente pelo AUROC de 0,9068 na tarefa multiclasse e de 0,8600 na tarefa binária. Entretanto, a acurácia multiclasse de 0,5940 e o macro-F1 de 0,4314 mostram que a eficiência agregada é mais limitada quando todas as classes são consideradas, sobretudo por causa do desequilíbrio da base e do baixo suporte de algumas categorias. Dessa forma, o resultado deve ser descrito como desempenho interno promissor, mas ainda insuficiente para afirmar superioridade em relação a outros trabalhos ou validade clínica geral.**
+
+**A comparação também reforça a necessidade de validação externa. O estudo de Daneshjou et al. mostrou que um modelo treinado com HAM10000 apresentou comportamento diferente quando avaliado em imagens clínicas do DDI e entre grupos de fototipo \cite{ref_40}. Portanto, a utilização de um único conjunto de teste dermatoscópico não permite concluir que o desempenho será mantido em imagens clínicas, em populações diferentes ou em lesões acrais.**
+
 ## 10. Referências que devem ser acrescentadas à bibliografia principal
 
-Adicionar as referências abaixo à bibliografia principal da dissertação. No texto final, **não utilizar citações autor-data** nos trechos deste guia. Utilizar exclusivamente o padrão do artigo: `\cite{ref_39}`, `\cite{ref_40}`, `\cite{ref_41}`, `\cite{ref_42}`, `\cite{ref_43}` e `\cite{ref_44}`. As chaves devem permanecer exatamente iguais às chaves do arquivo BibTeX.
+Adicionar as referências abaixo à bibliografia principal da dissertação. No texto final, **não utilizar citações autor-data** nos trechos deste guia. Utilizar exclusivamente o padrão do artigo: `\cite{ref_39}`, `\cite{ref_40}`, `\cite{ref_41}`, `\cite{ref_42}`, `\cite{ref_43}`, `\cite{ref_44}`, `\cite{ref_45}` e `\cite{ref_46}`. As chaves devem permanecer exatamente iguais às chaves do arquivo BibTeX.
 
 **PACHECO, Andre G. C. et al. PAD-UFES-20: A skin lesion dataset composed of patient data and clinical images collected from smartphones. Data in Brief, v. 32, art. 106221, 2020. DOI: 10.1016/j.dib.2020.106221.**
 
@@ -223,6 +246,10 @@ Adicionar as referências abaixo à bibliografia principal da dissertação. No 
 
 **TSCHANDL, Philipp; ROSENDAHL, Cliff; KITTLER, Harald. The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions. Scientific Data, v. 5, art. 180161, 2018. DOI: 10.1038/sdata.2018.161.**
 
+**ESTEVA, Andre; KUPREL, Brett; NOVOA, Roberto A. et al. Dermatologist-level classification of skin cancer with deep neural networks. Nature, v. 542, p. 115–118, 2017. DOI: 10.1038/nature21056.**
+
+**TSCHANDL, Philipp; RINNER, Christoph; APALLA, Zisis et al. Human–computer collaboration for skin cancer recognition. Nature Medicine, v. 26, p. 1229–1234, 2020. DOI: 10.1038/s41591-020-0942-0.**
+
 ## 11. Conferência final antes da entrega
 
 - [ ] O resumo foi substituído pelo texto atualizado.
@@ -235,13 +262,15 @@ Adicionar as referências abaixo à bibliografia principal da dissertação. No 
 
 - [ ] O Capítulo 2 contém a discussão sobre HAM10000, ISIC, fototipos e população brasileira.
 
-- [ ] PAD-UFES-20, DDI, Fitzpatrick17k, Alipour et al., Garcia et al. e HAM10000 foram acrescentados à bibliografia.
+- [ ] PAD-UFES-20, DDI, Fitzpatrick17k, Alipour et al., Garcia et al., HAM10000, Esteva et al. e Tschandl et al. foram acrescentados à bibliografia.
 
 - [ ] O Capítulo 5 informa que o avaliador externo foi implementado, sem afirmar que os resultados externos já foram concluídos.
 
 - [ ] A discussão de lesões acrais está apresentada como limitação e proposta de avaliação específica.
 
 - [ ] O Capítulo 6 foi substituído pelo texto de trabalhos futuros acima.
+
+- [ ] A subseção 6.9 contém a tabela comparativa com os resultados da literatura e deixa claro que não há ranking direto entre datasets diferentes.
 
 - [ ] As referências às figuras foram atualizadas automaticamente após a recompilação.
 
