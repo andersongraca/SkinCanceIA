@@ -1,8 +1,8 @@
 # SkinCancerCADDermoIA
 
-## Sistema CAD para análise de lesões cutâneas
+## Sistema CAD experimental para análise de lesões cutâneas
 
-O SkinCancerCADDermoIA é um sistema de auxílio à pesquisa para análise de imagens dermatoscópicas. O backend científico implementa classificação multiclasses das sete categorias do HAM10000, classificação binária benigno/maligno, calibração de probabilidade, estimativa de incerteza, abstensão, triagem de qualidade e rejeição de imagens fora do domínio dermatoscópico.
+O SkinCancerCADDermoIA é um protótipo de apoio à pesquisa para análise de imagens dermatoscópicas. O backend científico implementa classificação multiclasses das sete categorias do HAM10000, classificação binária benigno/maligno, calibração de probabilidades, estimativa operacional de incerteza, recomendação de abstensão, triagem de qualidade e rejeição de entradas incompatíveis com o domínio dermatoscópico.
 
 A arquitetura experimental reúne três componentes: uma CNN baseada em ResNet-50 para características locais, um Vision Transformer para relações globais e um modelo híbrido CNN–ViT com projeção em tokens, blocos de atenção e gate de fusão. Um ensemble combina as probabilidades calibradas dos três componentes com pesos selecionados exclusivamente na validação.
 
@@ -12,28 +12,28 @@ A arquitetura experimental reúne três componentes: uma CNN baseada em ResNet-5
 
 O pipeline Python contém preparação determinística do HAM10000, divisão agrupada por `lesion_id`, perdas focais, amostragem balanceada opcional, métricas multiclasses e binárias, calibração por temperatura, intervalos de confiança por bootstrap, avaliação por subgrupos externos e auditoria de classes raras.
 
-A entrada é submetida a uma barreira de elegibilidade antes da inferência. O backend verifica decodificação, resolução, proporção, exposição, uniformidade, detalhe visual e distância robusta em relação à referência de domínio calibrada com HAM10000. Imagens de carro, cabeça/cabelo, rosto ou outros objetos devem ser rejeitadas com `IMAGE_NOT_ELIGIBLE` quando estiverem fora da distribuição de referência.
+A entrada é submetida a uma barreira de elegibilidade antes da inferência. O backend verifica decodificação, resolução, proporção, exposição, uniformidade, detalhe visual e distância robusta em relação à referência de domínio calibrada com HAM10000. Nos casos de controle documentados, imagens de carro e de cabeça/cabelo foram rejeitadas com `IMAGE_NOT_ELIGIBLE`; esse resultado não constitui garantia de rejeição universal para todos os objetos, rostos ou condições de aquisição.
 
 A explicabilidade é produzida sem alterar o modelo: Grad-CAM para a CNN, atribuição de tokens para o ViT e Grad-CAM, atribuição de tokens, rollout de atenção e mapa combinado para o híbrido. Os mapas são explicações aproximadas e não devem ser interpretados como máscaras anatômicas ou prova de causalidade.
 
 ## Resultado da rodada executada
 
-Os três checkpoints desta rodada foram treinados em CPU com resolução 160×160, backbone congelado, amostragem balanceada no treino e duas épocas por modelo. O teste congelado contém 1.527 imagens.
+Os três checkpoints desta rodada foram treinados em CPU com resolução 160×160, backbone congelado, amostragem balanceada no treino e uma época por modelo. O teste congelado contém 1.527 imagens.
 
 | Modelo | Macro-F1 multiclasses | AUROC multiclasses | AUROC binária | Sensibilidade | Especificidade |
 |---|---:|---:|---:|---:|---:|
-| CNN ResNet-50 | 0,3725 | 0,8748 | 0,8167 | 0,7667 | 0,6903 |
-| ViT | 0,4311 | 0,8922 | 0,8487 | 0,7167 | 0,7938 |
-| Híbrido CNN–ViT | 0,3957 | 0,8853 | 0,8465 | 0,6533 | 0,8289 |
-| Ensemble | **0,4748** | **0,9096** | **0,8607** | **0,7167** | **0,8052** |
+| CNN ResNet-50 | 0,3287 | 0,8778 | 0,8293 | 0,7333 | 0,7294 |
+| ViT | 0,3642 | 0,8837 | 0,8500 | 0,8533 | 0,6944 |
+| Híbrido CNN–ViT | 0,4024 | 0,8902 | 0,8370 | 0,7967 | 0,7311 |
+| Ensemble | **0,4314** | **0,9068** | **0,8600** | **0,8233** | **0,7319** |
 
-O ensemble atual usa pesos de validação CNN 10%, ViT 50% e híbrido 40%. As métricas completas estão em [`docs/experiments/EXPERIMENT_REPORT.md`](docs/experiments/EXPERIMENT_REPORT.md), incluindo suporte das classes `df` e `vasc`, intervalos de confiança e limitações de representatividade.
+O ensemble atual usa pesos selecionados na validação: CNN 10%, ViT 55% e híbrido 35%. As métricas completas estão em [`docs/experiments/EXPERIMENT_REPORT.md`](docs/experiments/EXPERIMENT_REPORT.md), incluindo suporte das classes `df` e `vasc`, intervalos de confiança e limitações de representatividade.
 
 ## Dataset e limites de interpretação
 
 O HAM10000 foi obtido do [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T), versão 4.0, sob licença CC BY-NC 4.0 para uso acadêmico não comercial. As imagens brutas, os arquivos de download e os checkpoints são mantidos fora do controle de versão.
 
-O metadata utilizado não contém `patient_id` nem rótulo validado de tom de pele/Fitzpatrick. Portanto, o projeto não afirma equidade para peles negras com base apenas no HAM10000, não infere tonalidade pelos pixels e não apresenta desempenho clínico geral. A versão final da dissertação deve incluir validação externa autorizada com rótulos tonais confiáveis, análise por paciente quando possível, múltiplas sementes e suporte explícito para classes raras.
+Os metadados utilizados não contêm `patient_id` nem rótulo validado de tom de pele/Fitzpatrick. Portanto, o projeto não afirma equidade para peles negras com base apenas no HAM10000, não infere tonalidade pelos pixels e não apresenta desempenho clínico geral. A etapa seguinte de pesquisa deve incluir validação externa autorizada com rótulos tonais confiáveis, análise por paciente quando possível, múltiplas sementes e suporte explícito para classes raras.
 
 ## Instalação
 
@@ -44,7 +44,7 @@ pip install -r requirements-ml.txt
 pnpm install
 ```
 
-A aplicação web exige Node.js 18 ou superior, pnpm e um banco MySQL/TiDB quando o histórico e as métricas persistidas forem habilitados. O arquivo [`.env.example`](.env.example) lista as variáveis necessárias sem conter credenciais reais; copie-o para um arquivo local e preencha somente os valores do seu ambiente.
+A aplicação web exige Node.js 18 ou superior e pnpm. Um banco compatível com MySQL/MariaDB é necessário somente quando o histórico e as métricas persistidas forem habilitados; o modo local pode utilizar o fallback de sessão documentado no projeto. O arquivo [`.env.example`](.env.example) lista as variáveis necessárias sem conter credenciais reais; copie-o para um arquivo local e preencha somente os valores do seu ambiente.
 
 ## Preparação e treinamento
 
@@ -94,7 +94,7 @@ export ML_VIT_CHECKPOINT=$ML_PROJECT_ROOT/ml_artifacts/ham10000/vit/best.pt
 export ML_HYBRID_CHECKPOINT=$ML_PROJECT_ROOT/ml_artifacts/ham10000/hybrid/best.pt
 export ML_DOMAIN_REFERENCE=$ML_PROJECT_ROOT/ml_artifacts/ham10000/quality_reference.json
 export ML_ENSEMBLE_WEIGHTS_PATH=$ML_PROJECT_ROOT/ml_artifacts/ham10000/ensemble/weights.json
-export ML_MODEL_VERSION=ham10000-160px-epoch2
+export ML_MODEL_VERSION=ham10000-v4-ensemble
 export ML_INFERENCE_TIMEOUT_MS=600000
 ```
 
@@ -109,10 +109,10 @@ pnpm test
 pnpm build
 ```
 
-A suíte validada nesta rodada contém nove testes Python, quatro testes TypeScript em dois arquivos e build de produção aprovado. O teste do serviço TypeScript pode ser executado com os checkpoints configurados:
+A suíte validada nesta rodada contém 17 testes Python aprovados, um teste Python ignorado por depender de artefato opcional, quatro arquivos Vitest com nove testes aprovados e build de produção aprovado. O teste do serviço TypeScript pode ser executado com os checkpoints configurados:
 
 ```bash
-pnpm exec tsx scripts/test_ml_service.ts data/ood_examples/in_domain_ham10000.jpg
+pnpm exec tsx scripts/test_ml_service.ts docs/chapter-system/assets/ham10000_isic_0027419.jpg
 pnpm exec tsx scripts/test_ml_rejection.ts test_assets/ood/public_car_picryl.jpg
 pnpm exec tsx scripts/test_ml_rejection.ts test_assets/ood/public_head_picryl.jpg
 ```
