@@ -2,7 +2,7 @@
 
 **Projeto:** SkinCancerCADDermoIA
 **Natureza do documento:** diagnóstico acadêmico, plano de correção, matriz de resposta ao parecer, plano de continuidade do mestrado, auditoria e perspectivas posteriores de pesquisa
-**Autor do relatório:** Manus AI
+**Documento:** Relatório técnico de revisão do projeto
 **Data de consolidação:** 17 de setembro de 2026
 **Versão técnica auditada:** branch `feat/scientific-ml-backend`, commit `cb03a0e`
 

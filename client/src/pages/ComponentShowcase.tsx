@@ -171,7 +171,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast as sonnerToast } from "sonner";
-import { AIChatBox, type Message } from "@/components/AIChatBox";
+import { SupportChat, type Message } from "@/components/SupportChat";
 
 export default function ComponentsShowcase() {
   const { theme, toggleTheme } = useTheme();
@@ -187,7 +187,7 @@ export default function ComponentsShowcase() {
   const [dialogInput, setDialogInput] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // AI ChatBox demo state
+  // Support chat demo state
   const [chatMessages, setChatMessages] = useState<Message[]>([
     { role: "system", content: "You are a helpful assistant." },
   ]);
@@ -1406,7 +1406,7 @@ export default function ComponentsShowcase() {
                       This is a demo with simulated responses. In a real app, you'd connect it to a tRPC mutation.
                     </p>
                   </div>
-                  <AIChatBox
+                  <SupportChat
                     messages={chatMessages}
                     onSendMessage={handleChatSend}
                     isLoading={isChatLoading}

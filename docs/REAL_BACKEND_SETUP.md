@@ -48,7 +48,7 @@ A aplicação ficará disponível em `http://localhost:3000`. O script `pnpm dev
 
 O bypass de demonstração foi removido como comportamento padrão. O arquivo `.env` mantém `VITE_LOCAL_DEMO_MODE=false`, e a aplicação agora falha de forma explícita quando OAuth não está configurado. O callback OAuth também valida o state e o nonce em cookie antes de trocar o código, evitando aceitar um callback forjado.
 
-Para habilitar o login real, preencha somente no `.env` local os valores oficiais fornecidos pela configuração do projeto Manus:
+Para habilitar o login real, preencha somente no `.env` local os valores oficiais fornecidos pela configuração do provedor OAuth definido para o projeto:
 
 ```dotenv
 VITE_APP_ID=...

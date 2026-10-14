@@ -14,7 +14,7 @@ export type Message = {
   content: string;
 };
 
-export type AIChatBoxProps = {
+export type SupportChatProps = {
   /**
    * Messages array to display in the chat.
    * Should match the format used by invokeLLM on the server.
@@ -60,7 +60,7 @@ export type AIChatBoxProps = {
 };
 
 /**
- * A ready-to-use AI chat box component that integrates with the LLM system.
+ * A ready-to-use support chat component that integrates with the LLM system.
  *
  * Features:
  * - Matches server-side Message interface for seamless integration
@@ -78,7 +78,7 @@ export type AIChatBoxProps = {
  *
  *   const chatMutation = trpc.ai.chat.useMutation({
  *     onSuccess: (response) => {
- *       // Assuming your tRPC endpoint returns the AI response as a string
+ *       // Assuming your tRPC endpoint returns the model response as a string
  *       setMessages(prev => [...prev, {
  *         role: "assistant",
  *         content: response
@@ -97,7 +97,7 @@ export type AIChatBoxProps = {
  *   };
  *
  *   return (
- *     <AIChatBox
+ *     <SupportChat
  *       messages={messages}
  *       onSendMessage={handleSend}
  *       isLoading={chatMutation.isPending}
@@ -110,16 +110,16 @@ export type AIChatBoxProps = {
  * };
  * ```
  */
-export function AIChatBox({
+export function SupportChat({
   messages,
   onSendMessage,
   isLoading = false,
   placeholder = "Type your message...",
   className,
   height = "600px",
-  emptyStateMessage = "Start a conversation with AI",
+  emptyStateMessage = "Start a conversation",
   suggestedPrompts,
-}: AIChatBoxProps) {
+}: SupportChatProps) {
   const [input, setInput] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);

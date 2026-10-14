@@ -42,7 +42,7 @@ A interface permite o envio de arquivos JPEG ou PNG com tamanho máximo de 10 MB
 
 A triagem não é um classificador semântico universal. Ela funciona como uma barreira estatística para identificar entradas que se afastam do domínio dermatoscópico utilizado no desenvolvimento. Quando uma imagem é rejeitada, o sistema não executa os modelos de classificação e exibe os motivos da rejeição. A rejeição de uma imagem não dermatológica confirma o funcionamento do mecanismo de controle, mas não permite afirmar que todo carro, régua, rosto ou objeto externo será rejeitado.
 
-![Tela inicial para envio de uma imagem dermatoscópica](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDFfdXBsb2FkX2luaXRpYWw.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURGZmRYQnNiMkZrWDJsdWFYUnBZV3cucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCIHQL5nJ5hhkV5jccLXA~wXMY8-zbr4DuMOlqxrA7cd~HAiAvlO0gHERB3xxYgtAd5JBWvdUx~PjQB7Jwt46ISo6y2Q__)
+![Tela inicial para envio de uma imagem dermatoscópica](chapter-system/screenshots/01_upload_initial.png)
 
 **Figura 5.1 – Tela inicial do sistema para seleção da imagem.**
 *Fonte: autoria própria, a partir da implementação do SkinCancerCADDermoIA.*
@@ -53,7 +53,7 @@ A Figura 5.1 apresenta a tela inicial. O usuário é informado sobre os formatos
 
 A arquitetura do sistema foi organizada em duas trilhas que se complementam. A primeira é responsável pela classificação. A segunda é responsável pela explicabilidade visual. A trilha de classificação recebe a imagem elegível e executa os três checkpoints. A trilha de explicabilidade utiliza os mapas produzidos por cada modelo e um localizador auxiliar de lesão. O localizador não altera a classe, a probabilidade ou a confiança da classificação; ele é utilizado somente para restringir a área visualizada nos mapas.
 
-![Diagrama de blocos da arquitetura implementada](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vZmlndXJhXzVfMV9hcnF1aXRldHVyYQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZabWxuZFhKaFh6VmZNVjloY25GMWFYUmxkSFZ5WVEucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIDgtG6Lc0x~tzMwwTluuXRjwjyuvVaqRmOHwOfJhmphBAiEAno67IBmEHV-DZwKEHBf2UZBKORa3YzwtR7izY7aZ1WI_)
+![Diagrama de blocos da arquitetura implementada](chapter-system/figura_5_1_arquitetura.png)
 
 **Figura 5.2 – Diagrama de blocos do sistema implementado.**
 *Fonte: autoria própria.*
@@ -64,7 +64,7 @@ Em paralelo, o sistema solicita os mapas de explicabilidade. O CNN produz Grad-C
 
 O fluxo completo de comunicação entre os componentes é apresentado na Figura 5.3.
 
-![Diagrama de sequência da análise](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vZmlndXJhXzVfMl9zZXF1ZW5jaWE.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZabWxuZFhKaFh6VmZNbDl6WlhGMVpXNWphV0UucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIBK5MF-rWt8VM2o0GdGBL-j51FgQ4E6SylHgV5OEbkA~AiEAv7-rA2EgG9a4n89tyFsoL0x3MXLoF6P1D-KbdjSY4hU_)
+![Diagrama de sequência da análise](chapter-system/figura_5_2_sequencia.png)
 
 **Figura 5.3 – Sequência de comunicação entre usuário, interface, backend e módulos de aprendizado.**
 *Fonte: autoria própria.*
@@ -119,7 +119,7 @@ A probabilidade agregada é convertida em uma decisão binária com limiar de 0,
 
 Esta seção descreve somente a implementação do agregador. A fundamentação conceitual sobre Ensemble Learning permanece no Capítulo 3 e nas referências já utilizadas na dissertação \cite{ref_13, ref_19, ref_24}. Não foi criado neste capítulo um novo desenvolvimento teórico sobre o tema.
 
-![Cartões com as saídas individuais e a saída agregada](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDVfbW9kZWxfY2FyZHM.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURWZmJXOWtaV3hmWTJGeVpITS5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTIwMjI0MDB9fX1dfQ__&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIQD8xR918bwbiCpbmkcA0CslqsbRDPXsku1WaojGQWaKvAIgI9jvbTiq0THMij7SdDU~cH8QqxMSV-dMX9HSmBkw2ZU_)
+![Cartões com as saídas individuais e a saída agregada](chapter-system/screenshots/05_model_cards.png)
 
 **Figura 5.4 – Visualização dos resultados individuais dos modelos e da saída agregada.**
 *Fonte: autoria própria, a partir da execução local.*
@@ -160,7 +160,7 @@ $$
 
 em que $$S(x,y)$$ é a saliência normalizada e $$M(x,y)$$ é a máscara binária produzida pelo localizador. Fora da máscara, a saliência é zerada. A opacidade do overlay é proporcional à intensidade da saliência. Assim, regiões sem saliência permanecem visualmente próximas da imagem original, em vez de receberem uma coloração uniforme.
 
-![Grade com os quatro mapas de explicabilidade](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDZfeGFpX2hlYXRtYXBzX2dyaWQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURaZmVHRnBYMmhsWVhSdFlYQnpYMmR5YVdRLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEYCIQDdxPdlsfdy~TdfxQpGiqycn1OLzVWriRey7B~0oCAJjgIhANhLkUr2GNuhuDQl6synSiPSdo4tvB4C0TKi5si7Ez7G)
+![Grade com os quatro mapas de explicabilidade](chapter-system/screenshots/06_xai_heatmaps_grid.png)
 
 **Figura 5.5 – Mapas de explicabilidade produzidos para a imagem auditada.**
 *Fonte: autoria própria, a partir dos checkpoints treinados e do gate auxiliar.*
@@ -179,7 +179,7 @@ A utilização de TypeScript permite declarar os contratos das respostas, reduzi
 
 Depois que o arquivo é selecionado, a interface exibe uma prévia e os metadados básicos. Durante a análise, a barra de progresso comunica as etapas aproximadas do processamento: preparação, envio, triagem, execução dos modelos e geração dos mapas. A barra é uma indicação de estado da interface, não uma medição direta do tempo gasto em cada etapa do backend.
 
-![Pré-visualização da imagem selecionada](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDJfdXBsb2FkX3ByZXZpZXdfaGFtMTAwMDA.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURKZmRYQnNiMkZrWDNCeVpYWnBaWGRmYUdGdE1UQXdNREEucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEYCIQCpm1xdV~iV~tCmnstyAHweOuGvKZyAdr30Cgj1dDxJTQIhAMJGd84LJEVviCo7lXnXJR4goQSVTSjPD1viFNUItOVx)
+![Pré-visualização da imagem selecionada](chapter-system/screenshots/02_upload_preview_ham10000.png)
 
 **Figura 5.6 – Pré-visualização de uma imagem dermatoscópica antes da classificação.**
 *Fonte: autoria própria.*
@@ -200,7 +200,7 @@ A aba de histórico consulta os diagnósticos registrados para a sessão. Em amb
 
 A aba de métricas carrega os arquivos do experimento HAM10000 e apresenta os resultados dos quatro componentes: CNN, ViT, Hybrid e saída agregada. Cada modelo é associado ao conjunto de teste congelado com 1.527 imagens. A interface apresenta acurácia, sensibilidade, especificidade, F1-score, AUROC e precisão, além de um gráfico de barras para a comparação visual.
 
-![Painel de métricas do experimento](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/DF71v8HOoj3dRYNZcz9Zct-images_1789987897191_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDhfbWV0cmljc19kYXNoYm9hcmQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L0RGNzF2OEhPb2ozZFJZTlpjejlaY3QtaW1hZ2VzXzE3ODk5ODc4OTcxOTFfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURoZmJXVjBjbWxqYzE5a1lYTm9ZbTloY21RLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIEg617M9LIQoXETRKjQ3~GCQH4UO8wAad5EgzQ1g8ZTBAiEAqPCTGmAmR-lcUAPk7Mk4Oz8MPAGNtJWuFbFiwhczn38_)
+![Painel de métricas do experimento](chapter-system/screenshots/08_metrics_dashboard.png)
 
 **Figura 5.7 – Tabela e gráfico de métricas carregados a partir dos artefatos do experimento.**
 *Fonte: autoria própria.*
@@ -211,7 +211,7 @@ A Figura 5.7 mostra que a ferramenta não depende de números digitados manualme
 
 A execução completa começa quando o usuário seleciona a imagem. A interface valida o tipo e o tamanho do arquivo. O backend grava o arquivo e inicia a triagem. Se a imagem for elegível, os três modelos são executados e as respostas são agregadas. Em seguida, são gerados os mapas individuais e o mapa agregado. O resultado é registrado na sessão e a interface muda para a aba de resultados.
 
-![Estado intermediário de processamento](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDNfcHJvY2Vzc2luZ19waXBlbGluZQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TUROZmNISnZZMlZ6YzJsdVoxOXdhWEJsYkdsdVpRLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIQDs3G0sNemXK-w0HFx2phCfv1cNLchYqVDnHm4dI2gLkwIgXovh-5WbrJOFZqX6VIpDiIE23kvYpe65iElYRYbbT6w_)
+![Estado intermediário de processamento](chapter-system/screenshots/03_processing_pipeline.png)
 
 **Figura 5.8 – Estado da interface durante a triagem, inferência e geração dos mapas.**
 *Fonte: autoria própria.*
@@ -228,7 +228,7 @@ A primeira execução foi realizada com a imagem `ISIC_0027419.jpg`, utilizada c
 
 O resultado não deve ser lido como confirmação de câncer. A classe retornada é a saída de um modelo treinado em um conjunto de imagens, e a confiança é uma probabilidade operacional do sistema. A confirmação diagnóstica depende de avaliação clínica e, quando indicada, de procedimentos complementares.
 
-![Resultado completo da classificação](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDRfcmVzdWx0X2Z1bGw.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURSZmNtVnpkV3gwWDJaMWJHdy5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTIwMjI0MDB9fX1dfQ__&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCID2SdLexcpDWccKnb786n6rhNewpAq1fof30P1RAlNkJAiAGS529c-~oZVq~NCTB8islxjD2-nkOORpF6k6qWQoBTA__)
+![Resultado completo da classificação](chapter-system/screenshots/04_result_full.png)
 
 **Figura 5.9 – Resultado completo com imagem, elegibilidade, decisão, confiança e incerteza.**
 *Fonte: autoria própria.*
@@ -243,7 +243,7 @@ No conjunto de teste, o Ensemble apresentou o maior AUROC entre as saídas avali
 
 Depois da classificação, o diagnóstico é inserido no histórico da sessão. A interface apresenta o nome do arquivo, a data, a classe final, a confiança e a versão do modelo. Ao selecionar os detalhes, o usuário pode consultar as saídas da CNN, do ViT e do Hybrid.
 
-![Histórico de diagnósticos da sessão](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDdfaGlzdG9yeQ.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURkZmFHbHpkRzl5ZVEucG5nIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzkyMDIyNDAwfX19XX0_&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEYCIQDFCL8t7i6B-EdvQYXiYliSoSzRLizpSoX7382MPuOR8AIhAJQUpuTX-O-aEHRSLvPQ3dzaAEdDdcMKws4TlV-rZd9C)
+![Histórico de diagnósticos da sessão](chapter-system/screenshots/07_history.png)
 
 **Figura 5.10 – Histórico local após a execução de uma classificação.**
 *Fonte: autoria própria.*
@@ -254,14 +254,14 @@ A Figura 5.10 demonstra que a ferramenta mantém uma trilha mínima da execuçã
 
 Como teste de controle, foi utilizada uma imagem não dermatológica. A triagem retornou o motivo `outside_dermoscopy_domain` e impediu que a imagem fosse encaminhada aos modelos. Esse caso verifica a integração entre a referência estatística e o fluxo da aplicação.
 
-![Rejeição de imagem fora do domínio](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vc2NyZWVuc2hvdHMvMDlfb29kX3JlamVjdGlvbg.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjMk55WldWdWMyaHZkSE12TURsZmIyOWtYM0psYW1WamRHbHZiZy5wbmciLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTIwMjI0MDB9fX1dfQ__&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEUCIQDQ2qtAQZJxYYFY2tevmu6OvoS9agS-ssEspnhkemHFjQIgPBRINzLl2-R4qHiHGcbwUNzOrvuIgdw5oP4kqkkIVKo_)
+![Rejeição de imagem fora do domínio](chapter-system/screenshots/09_ood_rejection.png)
 
 **Figura 5.11 – Rejeição de uma entrada não dermatológica antes da classificação.**
 *Fonte: autoria própria.*
 
 A Figura 5.11 mostra que a rejeição não ocorre de forma silenciosa. A interface apresenta o status, o escore de qualidade, o escore OOD, a dimensão da imagem e os motivos identificados. O sistema, portanto, fornece uma justificativa operacional para não executar o classificador. O teste, porém, não mede a sensibilidade e a especificidade de um detector OOD universal. Para essa conclusão seria necessário um painel amplo, independente e rotulado com diferentes objetos, fotografias clínicas, imagens degradadas e imagens dermatoscópicas de outros equipamentos.
 
-![Painel quadruplicado dos testes da ferramenta](https://private-us-east-1.manuscdn.com/sessionFile/c9497zT8i7HtpbpJ5Adedl/sandbox/w5WuaoJ8e7S5Qa95vhRADW-images_1789751118235_na1fn_L21udC9iMTA1ZDlmYy00MzMzLTRiMGMtODk1MC02NGFjZTNhYzY2YjUvU2tpbkNhbmNlclRlbnNvckZsb3ctR2l0L2RvY3MvY2hhcHRlci1zeXN0ZW0vcGFpbmVsX3Rlc3Rlc19zaXN0ZW1h.png?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvYzk0OTd6VDhpN0h0cGJwSjVBZGVkbC9zYW5kYm94L3c1V3Vhb0o4ZTdTNVFhOTV2aFJBRFctaW1hZ2VzXzE3ODk3NTExMTgyMzVfbmExZm5fTDIxdWRDOWlNVEExWkRsbVl5MDBNek16TFRSaU1HTXRPRGsxTUMwMk5HRmpaVE5oWXpZMllqVXZVMnRwYmtOaGJtTmxjbFJsYm5OdmNrWnNiM2N0UjJsMEwyUnZZM012WTJoaGNIUmxjaTF6ZVhOMFpXMHZjR0ZwYm1Wc1gzUmxjM1JsYzE5emFYTjBaVzFoLnBuZyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5MjAyMjQwMH19fV19&Key-Pair-Id=K2QY5QTL8JSY6C&Signature=MEQCIDBjcoFpeTFf~PtkJYG4Dan-xRgeqPS~b6qrw3MpLzETAiAzNDpcDn-OQNdTnDw8Tt-g9Xpe4Fi11mYRbQM3IMqBiA__)
+![Painel quadruplicado dos testes da ferramenta](chapter-system/painel_testes_sistema.png)
 
 **Figura 5.12 – Painel com quatro estados da aplicação: upload, resultado, métricas e rejeição fora do domínio.**
 *Fonte: autoria própria, a partir das execuções locais.*

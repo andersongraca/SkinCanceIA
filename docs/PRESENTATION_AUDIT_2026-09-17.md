@@ -2,7 +2,7 @@
 
 **Data:** 17 de setembro de 2026
 
-**Autor:** Manus AI
+**Documento:** Auditoria técnica do projeto
 
 **Branch auditado:** `feat/scientific-ml-backend`
 
